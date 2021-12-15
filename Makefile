@@ -4,6 +4,9 @@ build:
 up:
 	docker-compose up
 
+stop:
+	docker-compose down
+
 dev:
 	go run ./cmd/ *.go
 
@@ -14,4 +17,4 @@ reset:
 
 
 #check for pg_admin ip 
-#docker inspect <container id> | grep IPAddress
+#docker inspect <postgre_container_id> | grep IPAddress

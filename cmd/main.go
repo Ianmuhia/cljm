@@ -1,11 +1,10 @@
 package main
 
 import (
-	"encoding/gob"
-	"log"
-
 	"bitbucket.org/wycemiro/cljm.git/internal/driver"
 	"bitbucket.org/wycemiro/cljm.git/internal/models"
+	"encoding/gob"
+	"log"
 )
 
 const porte = ":8000"
@@ -27,15 +26,14 @@ func run() (*driver.DB, error) {
 	gob.Register(models.Blogs{})
 	gob.Register(models.BlogImages{})
 	gob.Register(models.Books{})
-	gob.Register(models.Geners{})
+	gob.Register(models.Genre{})
 	gob.Register(models.Gallery{})
 	gob.Register(models.GalleryImages{})
 	gob.Register(models.Sermon{})
 
-	
 	//connect to database
 	log.Println("Connecting to database...🍃")
-	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=api password=50451103aA")
+	db, err := driver.ConnectSQL("host=postgres_clj port=5432 dbname=clj user=wise password=*20406005aA!")
 	if err != nil {
 		log.Fatal("Can't connect to the database ☠️")
 	}

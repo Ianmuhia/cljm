@@ -8,7 +8,8 @@ RUN go mod download
 COPY . .
 # Install Reflex for development
 RUN go install github.com/cespare/reflex@latest
+
 # Expose port
-EXPOSE 4800
+EXPOSE 8000
 # Start app
 CMD reflex -g '*.go' go run *.go --start-service

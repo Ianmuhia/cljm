@@ -26,12 +26,12 @@ func ValidateUser(user models.Register, err []string) []string {
 	return err
 }
 
-func ValidatePasswordReset(resetPassword models.ResetPassword)(bool,string){
-	if len(resetPassword.Password) < 6{
-		return false,"Invalid password, password should be more than 6 characters"
+func ValidatePasswordReset(resetPassword models.ResetPassword) (bool, string) {
+	if len(resetPassword.Password) < 6 {
+		return false, "Invalid password, password should be more than 6 characters"
 	}
-	if resetPassword.Password != resetPassword.ConfirmPassword{
-		return false,"Password reset failed, passwords must match"
+	if resetPassword.Password != resetPassword.ConfirmPassword {
+		return false, "Password reset failed, passwords must match"
 	}
-	return true,""
+	return true, ""
 }

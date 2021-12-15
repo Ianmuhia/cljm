@@ -7,7 +7,7 @@ import (
 // Users  holds the user model information
 type Users struct {
 	ID          int       `json:"id"`
-	UserName    string    `json:"username"`
+	Name         string    `json:"name"`
 	Email       string    `json:"email"`
 	Password    string    `json:"-"`
 	Dp          string    `json:"dp"`

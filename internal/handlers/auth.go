@@ -142,7 +142,7 @@ func Login(c *gin.Context) {
 	claims := &Claims{
 
 		Users: models.Users{
-			UserName: name, Email: email, CreatedAt: createdAt, UpdatedAt: updatedAt,
+			Name: name, Email: email, CreatedAt: createdAt, UpdatedAt: updatedAt,
 		},
 		StandardClaims: jwt.StandardClaims{
 			//expiry time, expressed as unix milliseconds

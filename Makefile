@@ -12,3 +12,13 @@ dev:
 
 reset:
 	docker-compose down --remove-orphans --volumes 
+
+shell:
+	docker exec -it clj-dev bash
+
+pgip:
+	docker inspect postgres_clj | grep IPAddress
+
+pgdrop:
+	docker stop postgres_clj && docker rm postgres_clj
+

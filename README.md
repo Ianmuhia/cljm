@@ -14,3 +14,4 @@ Handling Issues:
 - `docker exec -it [container-id] bash` to shell into specific container.
 - `docker inspect <postgre_container_id> | grep IPAddress` ...for container IP.
 - `migrate create -ext sql -dir db/migrate -seq init_schema` 
+- `migrate -path db/migration -database "db-url" -verbose up` 172.20.0.2

@@ -8,6 +8,9 @@ RUN go mod download
 COPY . .
 # Install Reflex for development
 RUN go install github.com/cespare/reflex@latest
+RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+
 
 # Expose port
 EXPOSE 8000

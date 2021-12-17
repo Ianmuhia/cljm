@@ -2,12 +2,14 @@ version: "3.8"
 
 
 services:
-  database:
+  db:
     image: postgres:latest
     container_name: postgres_clj
     restart: always
     networks:
-      - fullstack
+      fullstack:
+        aliases:
+          - database
     environment:
       - POSTGRES_USER=${DB_USER}  
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -33,7 +35,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - database
+      - db
     env_file: .env
 
   pgadmin:
@@ -43,12 +45,22 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     depends_on:
-      - database
+      - db
     ports:
       - "5050:80"
     networks:
       - fullstack
     restart: unless-stopped
+
+  migrate:
+        image: migrate/migrate
+        networks:
+            - fullstack
+        volumes:
+            - .:/migrations
+        command: ["-path", "/migrations", "-database",  "postgres://wise:*20406005aA!@database:5432/clj?sslmode=disable", "up", "3"]
+        links: 
+            - db
 
 volumes:
   dbdata:

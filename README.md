@@ -6,3 +6,11 @@ Uses:
 - The [pgx](https://github.com/jackc/pgx/v4) PostgreSQL Driver and Toolkit.
 - The [jwt-go](https://github.com/dgrijalva/jwt-go) for JSON-web-tokens.
 - The [SCS](github.com/alexedwards/scs/v2) HTTP Session Management for Go.
+
+
+
+Handling Issues:
+- Docker postgres doesn't start RUN: `sudo ss -lptn 'sport = :5432' & sudo kill PID`.
+- `docker exec -it [container-id] bash` to shell into specific container.
+- `docker inspect <postgre_container_id> | grep IPAddress` ...for container IP.
+- `migrate create -ext sql -dir db/migrate -seq init_schema` 

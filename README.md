@@ -12,6 +12,6 @@ Uses:
 Handling Issues:
 - Docker postgres doesn't start RUN: `sudo ss -lptn 'sport = :5432' & sudo kill PID`.
 - `docker exec -it [container-id] bash` to shell into specific container.
-- `docker inspect <postgre_container_id> | grep IPAddress` ...for container IP.
 - `migrate create -ext sql -dir db/migrate -seq init_schema` 
-- `migrate -path db/migration -database "db-url" -verbose up` 172.20.0.2
+- `migrate -path db/migration -database "db-url" -verbose up` 
+- Work around on dirt database delete schema before migrations.

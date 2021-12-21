@@ -1,68 +1,69 @@
 package models
 
 import (
+	"mime/multipart"
 	"time"
 )
 
 // Users  holds the user model information
 type Users struct {
-	ID          int       `json:"id"`
-	Name         string    `json:"name"`
-	Email       string    `json:"email"`
-	Password    string    `json:"-"`
-	Dp          string    `json:"dp"`
-	AccessLevel int       `json:"access_level"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          int                   `json:"id"`
+	Name        string                `json:"name"`
+	Email       string                `json:"email"`
+	Password    string                `json:"-"`
+	Dp          *multipart.FileHeader `json:"dp"`
+	AccessLevel int                   `json:"access_level"`
+	CreatedAt   time.Time             `json:"created_at"`
+	UpdatedAt   time.Time             `json:"updated_at"`
 }
 
 //News hold the news model information
 type News struct {
-	User       Users        `json:"user"`
-	CoverImage string       `json:"cover_image"`
-	Images     []NewsImages `json:"images"`
-	Title      string       `json:"title"`
-	SubTitle   string       `json:"sub_title"`
-	Content    string       `json:"content"`
-	CreatedAt  time.Time    `json:"created_at"`
-	UpdatedAt  time.Time    `json:"updated_at"`
+	User       Users                 `json:"user"`
+	CoverImage *multipart.FileHeader `json:"cover_image"`
+	Images     []NewsImages          `json:"images"`
+	Title      string                `json:"title"`
+	SubTitle   string                `json:"sub_title"`
+	Content    string                `json:"content"`
+	CreatedAt  time.Time             `json:"created_at"`
+	UpdatedAt  time.Time             `json:"updated_at"`
 }
 
 //NewsImages hold the images for the News model
 type NewsImages struct {
-	Image     string    `json:"image"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Image     *multipart.FileHeader `json:"image"`
+	CreatedAt time.Time             `json:"created_at"`
+	UpdatedAt time.Time             `json:"updated_at"`
 }
 
 //Blogs hold the blog model information
 type Blogs struct {
-	User       Users        `json:"user"`
-	CoverImage string       `json:"cover_image"`
-	Images     []BlogImages `json:"images"`
-	Title      string       `json:"title"`
-	SubTitle   string       `json:"sub_title"`
-	Content    string       `json:"content"`
-	CreatedAt  time.Time    `json:"created_at"`
-	UpdatedAt  time.Time    `json:"updated_at"`
+	User       Users                 `json:"user"`
+	CoverImage *multipart.FileHeader `json:"cover_image"`
+	Images     []BlogImages          `json:"images"`
+	Title      string                `json:"title"`
+	SubTitle   string                `json:"sub_title"`
+	Content    string                `json:"content"`
+	CreatedAt  time.Time             `json:"created_at"`
+	UpdatedAt  time.Time             `json:"updated_at"`
 }
 
 //BlogImages hold the images for the Blog model
 type BlogImages struct {
-	Image     string    `json:"image"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Image     *multipart.FileHeader `json:"image"`
+	CreatedAt time.Time             `json:"created_at"`
+	UpdatedAt time.Time             `json:"updated_at"`
 }
 
 //Books hold the Books model information
 type Books struct {
-	Title     string    `json:"title"`
-	Synopsis  string    `json:"synopsis"`
-	Author    string    `json:"author"`
-	Genre     Genre     `json:"genre"`
-	File      string    `json:"file"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Title     string                `json:"title"`
+	Synopsis  string                `json:"synopsis"`
+	Author    string                `json:"author"`
+	Genre     Genre                 `json:"genre"`
+	File      *multipart.FileHeader `json:"file"`
+	CreatedAt time.Time             `json:"created_at"`
+	UpdatedAt time.Time             `json:"updated_at"`
 }
 
 //Genre hold the Genre model information
@@ -82,9 +83,9 @@ type Gallery struct {
 
 //GalleryImages hold the images for the Gallery model
 type GalleryImages struct {
-	Image     string    `json:"image"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	Image     *multipart.FileHeader `json:"image"`
+	CreatedAt time.Time             `json:"created_at"`
+	UpdatedAt time.Time             `json:"updated_at"`
 }
 
 //Sermon holds information about hte sermon model

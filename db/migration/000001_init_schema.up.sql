@@ -13,6 +13,7 @@ CREATE TABLE "news" (
   "id" bigserial PRIMARY KEY,
   "user" varchar,
   "cover_image" varchar NOT NULL,
+  "images" varchar,
   "title" varchar NOT NULL,
   "subtitle" varchar NOT NULL,
   "content" varchar NOT NULL,
@@ -47,6 +48,7 @@ CREATE TABLE "books" (
   "id" bigserial PRIMARY KEY,
   "synopsis" varchar NOT NULL,
   "author" varchar NOT NULL,
+  "genre" varchar NOT NULL,
   "file" varchar NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())
@@ -60,6 +62,7 @@ CREATE TABLE "genre" (
 
 CREATE TABLE "gallery" (
   "id" bigserial PRIMARY KEY,
+  "image" varchar,
   "caption" varchar,
   "created_at" timestamptz NOT NULL DEFAULT (now()),
   "updated_at" timestamptz NOT NULL DEFAULT (now())
@@ -79,5 +82,9 @@ CREATE TABLE "sermon" (
   "video_data" varchar NOT NULL
 );
 
-ALTER TABLE "news" ADD FOREIGN KEY ("user") REFERENCES "users" ("name");
-ALTER TABLE "blog" ADD FOREIGN KEY ("user") REFERENCES "users" ("name");
+ALTER TABLE "news" ADD FOREIGN KEY ("user") REFERENCES "users" ("name") ON DELETE CASCADE;
+ALTER TABLE "blog" ADD FOREIGN KEY ("user") REFERENCES "users" ("name") ON DELETE CASCADE;
+ALTER TABLE "news" ADD FOREIGN KEY ("images") REFERENCES "news_images" ("image");
+ALTER TABLE "blog" ADD FOREIGN KEY ("images") REFERENCES "blog_images" ("image");
+ALTER TABLE "gallery" ADD FOREIGN KEY ("images") REFERENCES "gallery_images" ("image");
+ALTER TABLE "books" ADD FOREIGN KEY ("genre") REFERENCES "genre" ("name");

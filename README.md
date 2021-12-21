@@ -13,5 +13,5 @@ Handling Issues:
 - Docker postgres doesn't start RUN: `sudo ss -lptn 'sport = :5432' & sudo kill PID`.
 - `docker exec -it [container-id] bash` to shell into specific container.
 - `migrate create -ext sql -dir db/migrate -seq init_schema` 
-- `migrate -path db/migration -database "db-url" -verbose up` 
+- migrate -path db/migration -database "postgres://wise:*20406005@database:5432/clj?sslmode=disable" -verbose up 
 - Work around on dirt database delete schema before migrations.

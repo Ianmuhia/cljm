@@ -35,7 +35,7 @@ func init() {
 
 	// dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", username, password, host, schema)
 
-	dsn := "host=172.20.0.3 user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
+	dsn := "host=172.18.0.3 user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
 
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction:                   false,
@@ -56,9 +56,9 @@ func init() {
 		Dialector:                                nil,
 		Plugins:                                  nil,
 	})
-	
+
 	MigrateTables(database)
-	
+
 	database.Logger.LogMode(logger.Info)
 
 	//err = Client.AutoMigrate(models.Users{})
@@ -67,7 +67,7 @@ func init() {
 		panic(err)
 	}
 	Client = database
-	
+
 	log.Println("database successfully configured")
 
 }
@@ -84,7 +84,6 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 	}
 	return nil
 }
-
 
 func GetDB() *gorm.DB {
 	return Client

@@ -10,14 +10,23 @@ services:
         aliases:
           - database
     environment:
-      - POSTGRES_USER=${DB_USER}  
+      - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST} 
+      - DATABASE_HOST=${DB_HOST}
     ports:
       - "5432:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
+
+  cache:
+    image: redis:6.2.6
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
 
 
   pgadmin:
@@ -38,6 +47,8 @@ services:
 
 volumes:
   dbdata:
+  cache:
+    driver: local
 
 networks:
   fullstack:

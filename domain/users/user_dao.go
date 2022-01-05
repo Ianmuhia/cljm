@@ -27,7 +27,7 @@ func newUserResponse(user models.User) userResponse {
 	}
 }
 
-func GetUser(param string) (*errors.RestErr, *models.User) {
+func GetUserByEmail(param string) (*errors.RestErr, *models.User) {
 	var user models.User
 	err := postgresql_db.Client.Debug().Where("email = ?", param).First(&user).Scan(&user).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -50,69 +50,6 @@ func Create(user *models.User) *errors.RestErr {
 
 		return errors.NewInternalServerError("database error")
 	}
-	return nil
-}
-
-func FindByEmailAndPassword() *errors.RestErr {
-	// 	if err := users_db.Client.Ping(); err != nil {
-	// 		panic(err)
-	// 	}
-	// 	stmt, err := users_db.Client.Prepare(queryFindByEmailAndPassword)
-	// 	if err != nil {
-	// 		logger.Error("error when trying to prepare get user by email and password statement", err)
-	// 		return errors.NewInternalServerError("database error")
-	// 	}
-	// 	defer func(stmt *sql.Stmt) {
-	// 		err := stmt.Close()
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
-	// 	}(stmt)
-	// 	result := stmt.QueryRow(user.Password, user.Email, StatusActive)
-	// 	if getErr := result.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.DateCreated, &user.Status, &user.Password); getErr != nil {
-	// 		if strings.Contains(getErr.Error(), mysql_utils.ErrorNoRows) {
-	// 			return errors.NewNotFoundError("invalid user credentials")
-	// 		}
-	// 		logger.Error("error when trying to get user by email and password", getErr)
-	// 		return errors.NewInternalServerError("database error")
-	// 		//return mysql_utils.ParseError(getErr)
-
-	// 	}
-	// 	return nil
-	// }
-
-	// func (user *User) Save() *errors.RestErr {
-	// 	stmt, err := users_db.Client.Prepare(queryInsertUser)
-	// 	if err != nil {
-	// 		logger.Error("error when trying to prepare statement", err)
-	// 		return errors.NewInternalServerError("database error")
-
-	// 	}
-	// 	defer func(stmt *sql.Stmt) {
-	// 		err := stmt.Close()
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
-	// 	}(stmt)
-
-	// 	insertResult, saveErr := stmt.Exec(user.FirstName, user.LastName, user.Email, user.DateCreated, user.Status, user.Password)
-	// 	if saveErr != nil {
-	// 		logger.Error("error when trying to save user", saveErr)
-	// 		return errors.NewInternalServerError("database error")
-
-	// 		//return mysql_utils.ParseError(saveErr)
-
-	// 	}
-	// 	userId, err := insertResult.LastInsertId()
-	// 	if err != nil {
-	// 		logger.Error("error when trying to get last insert id after creating a new user", err)
-	// 		return errors.NewInternalServerError("database error")
-
-	// 		//return mysql_utils.ParseError(err)
-
-	// 	}
-	// user.Id = userId
-
 	return nil
 }
 

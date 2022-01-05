@@ -2,7 +2,6 @@ package users_controller
 
 import (
 	"fmt"
-	"log"
 	"maranatha_web/config"
 	"maranatha_web/controllers/token"
 	"maranatha_web/models"
@@ -51,16 +50,6 @@ func getUserId(userIdParams string) (int64, *errors.RestErr) {
 	return userId, nil
 }
 
-var jwtKey = []byte("secret")
-
-// var m *dbrepo.PostgresDBRepo
-
-//Claims jwt claims struct
-type Claims struct {
-	models.User
-	jwt.StandardClaims
-}
-
 // AuthMiddleware checks that token is valid, see https://godoc.org/github.com/dgrijalva/jwt-go#example-Parse--Hmac
 func AuthMiddleware(c *gin.Context, jwtKey []byte) (jwt.MapClaims, bool) {
 	//obtain session token from the requests cookies
@@ -88,7 +77,7 @@ func AuthMiddleware(c *gin.Context, jwtKey []byte) (jwt.MapClaims, bool) {
 	return nil, false
 }
 
-//Initiate Password reset email with reset url
+// InitiatePasswordReset Initiate Password reset email with reset url
 func InitiatePasswordReset(c *gin.Context) {
 	var createReset models.CreateReset
 	c.Bind(&createReset)
@@ -103,7 +92,10 @@ func InitiatePasswordReset(c *gin.Context) {
 
 func ResetPassword(c *gin.Context) {
 	var resetPassword models.ResetPassword
-	c.Bind(&resetPassword)
+	err := c.Bind(&resetPassword)
+	if err != nil {
+		return
+	}
 	if ok, errStr := utils.ValidatePasswordReset(resetPassword); ok {
 		// /password := models.CreateHashedPassword(resetPassword.Password)
 		// _, err := m.DB.Query(dbrepo.UpdateUserPasswordQuery, resetPassword.ID, password)
@@ -119,17 +111,24 @@ func ResetPassword(c *gin.Context) {
 //RegisterUser new user
 func RegisterUser(c *gin.Context) {
 
-	var register_model models.User
+	var registerModel createUserRequest
 
-	if err := c.ShouldBindJSON(&register_model); err != nil {
+	if err := c.ShouldBindJSON(&registerModel); err != nil {
 
 		restErr := errors.NewBadRequestError("invalid json body")
 		c.JSON(restErr.Status, restErr)
 		return
 	}
-	fmt.Println(register_model)
 
-	result, saveErr := services.UsersService.CreateUser(register_model)
+	user := models.User{
+		UserName: registerModel.Username,
+		FullName: registerModel.FullName,
+		Email:    registerModel.Email,
+		Password: registerModel.Password,
+	}
+	fmt.Println(registerModel)
+	fmt.Println(user)
+	result, saveErr := services.UsersService.CreateUser(user)
 
 	if saveErr != nil {
 		c.JSON(saveErr.Status, saveErr)
@@ -140,13 +139,14 @@ func RegisterUser(c *gin.Context) {
 }
 
 type loginUserRequest struct {
-	Email    string `json:"email" binding:"required,alphanum"`
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
 type loginUserResponse struct {
-	AccessToken string       `json:"access_token"`
-	User        userResponse `json:"user"`
+	AccessToken  string       `json:"access_token"`
+	RefreshToken string       `json:"refresh_token"`
+	User         userResponse `json:"user"`
 }
 
 // Login controller
@@ -154,39 +154,45 @@ func Login(ctx *gin.Context) {
 
 	var req loginUserRequest
 
+	fmt.Println("reached here")
+
 	if err := ctx.ShouldBindJSON(&req); err != nil {
+		fmt.Println(err)
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
-	user, err := services.UsersService.GetUser(req.Email)
+
+	user, err := services.UsersService.GetUserByEmail(req.Email)
 
 	if err != nil {
-		fmt.Println(err)
+
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	ok := crypto_utils.CheckPasswordHash(req.Password, user.Password)
 
 	if !ok {
-		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("email or password error"))
+		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("invalid email or password "))
 		return
 	}
 
-	var duration time.Duration
+	duration := time.Duration(time.Now().Add(time.Hour * 24 * 90).Unix())
 
-	var accessToken, erro = token.TokenService.CreateToken(req.Email, duration)
+	accessToken, erro := token.TokenService.CreateToken(req.Email, duration)
 	if erro != nil {
-		log.Println(erro)
-		return
-	}
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, erro)
 		return
 	}
 
-	fmt.Println(accessToken)
-
+	refreshToken, erro := token.TokenService.CreateRefreshToken(req.Email, duration)
+	if erro != nil {
+		ctx.JSON(http.StatusInternalServerError, erro)
+		return
+	}
 	response := loginUserResponse{
-		AccessToken: accessToken,
-		User:        newUserResponse(user),
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User:         newUserResponse(user),
 	}
 	ctx.JSON(http.StatusOK, response)
 }
@@ -202,7 +208,7 @@ func checkUserExists(user models.Register) bool {
 	return true
 }
 
-//Returns -1 as ID if the user doesnt exist in the table
+//Returns -1 as ID if the user doesn't exist in the table
 func checkAndRetrieveUserIDViaEmail(createReset models.CreateReset) (int, bool) {
 	// rows, err := m.DB.Query(dbrepo.CheckUserExists, createReset.Email)
 	// if err != nil {

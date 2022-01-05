@@ -17,7 +17,7 @@ var (
 type usersService struct{}
 
 type usersServiceInterface interface {
-	GetUser(email string) (*models.User, *errors.RestErr)
+	GetUserByEmail(email string) (*models.User, *errors.RestErr)
 	CreateUser(models.User) (*models.User, *errors.RestErr)
 	// UpdateUser(isPartial bool, user users.User) (*users.User, *errors.RestErr)
 	// DeleteUser(int64) *errors.RestErr
@@ -52,8 +52,8 @@ func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestE
 	return &user, nil
 }
 
-func (s *usersService) GetUser(email string) (*models.User, *errors.RestErr) {
-	err, user := users.GetUser(email)
+func (s *usersService) GetUserByEmail(email string) (*models.User, *errors.RestErr) {
+	err, user := users.GetUserByEmail(email)
 
 	if err != nil {
 		fmt.Println(err)

@@ -151,39 +151,30 @@ type loginUserResponse struct {
 
 // Login controller
 func Login(ctx *gin.Context) {
-
 	var req loginUserRequest
-
-	fmt.Println("reached here")
-
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		fmt.Println(err)
-		ctx.JSON(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusUnprocessableEntity, err)
 		return
 	}
-
 	user, err := services.UsersService.GetUserByEmail(req.Email)
-
 	if err != nil {
-
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	ok := crypto_utils.CheckPasswordHash(req.Password, user.Password)
-
 	if !ok {
 		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("invalid email or password "))
 		return
 	}
-
 	duration := time.Duration(time.Now().Add(time.Hour * 24 * 90).Unix())
 
 	accessToken, erro := token.TokenService.CreateToken(req.Email, duration)
+
 	if erro != nil {
 		ctx.JSON(http.StatusInternalServerError, erro)
 		return
 	}
-
 	refreshToken, erro := token.TokenService.CreateRefreshToken(req.Email, duration)
 	if erro != nil {
 		ctx.JSON(http.StatusInternalServerError, erro)

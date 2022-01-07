@@ -3,6 +3,7 @@ package postgresql_db
 import (
 	"fmt"
 	"log"
+
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
 	// "os"
@@ -35,30 +36,17 @@ func init() {
 
 	// dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", username, password, host, schema)
 
-	dsn := "host=172.20.0.3 user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
+	dsn := "host=172.17.0.3 user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
 
 	database, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		SkipDefaultTransaction:                   false,
-		NamingStrategy:                           nil,
-		FullSaveAssociations:                     false,
-		Logger:                                   logger.Default,
-		NowFunc:                                  nil,
-		DryRun:                                   false,
-		PrepareStmt:                              false,
-		DisableAutomaticPing:                     false,
-		DisableForeignKeyConstraintWhenMigrating: false,
-		DisableNestedTransaction:                 false,
-		AllowGlobalUpdate:                        false,
-		QueryFields:                              false,
-		CreateBatchSize:                          0,
-		ClauseBuilders:                           nil,
-		ConnPool:                                 nil,
-		Dialector:                                nil,
-		Plugins:                                  nil,
+		SkipDefaultTransaction: false,
+		NamingStrategy:         nil,
+		FullSaveAssociations:   false,
+		Logger:                 logger.Default,
 	})
-	
+
 	MigrateTables(database)
-	
+
 	database.Logger.LogMode(logger.Info)
 
 	//err = Client.AutoMigrate(models.Users{})
@@ -67,7 +55,7 @@ func init() {
 		panic(err)
 	}
 	Client = database
-	
+
 	log.Println("database successfully configured")
 
 }
@@ -84,7 +72,6 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 	}
 	return nil
 }
-
 
 func GetDB() *gorm.DB {
 	return Client

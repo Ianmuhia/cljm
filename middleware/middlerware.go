@@ -3,12 +3,14 @@ package middleware
 import (
 	//"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"log"
 	"maranatha_web/config"
 	"maranatha_web/controllers/token"
 	"maranatha_web/utils/errors"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // CORSMiddleware //
@@ -34,7 +36,7 @@ const (
 )
 
 // AuthMiddleware creates a gin middleware for authorization
-func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
+func AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authorizationHeader := ctx.GetHeader(authorizationHeaderKey)
 
@@ -51,16 +53,19 @@ func authMiddleware(tokenMaker token.Maker) gin.HandlerFunc {
 		}
 
 		authorizationType := strings.ToLower(fields[0])
+		log.Println(authorizationType)
+		log.Println(authorizationHeader)
 		if authorizationType != authorizationTypeBearer {
 			err := fmt.Sprintf("unsupported authorization type %s", authorizationType)
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errors.NewError(err))
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
 			return
 		}
 
 		accessToken := fields[1]
-		payload, err := tokenMaker.VerifyToken(accessToken)
+		payload, err := token.TokenService.VerifyToken(accessToken)
+		log.Println(err)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, errors.NewError(err))
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
 			return
 		}
 

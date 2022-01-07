@@ -16,8 +16,7 @@ func init() {
 		OutputPaths: []string{"stdout"},
 		Encoding:    "json",
 		EncoderConfig: zapcore.EncoderConfig{
-			MessageKey: "msg",
-
+			MessageKey:     "msg",
 			LevelKey:       "level",
 			TimeKey:        "time",
 			EncodeLevel:    zapcore.LowercaseLevelEncoder,

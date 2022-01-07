@@ -1,0 +1,44 @@
+POST http://localhost:8090/api/public/users/register/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "ianmuhiaaqq",
+  "password": "*#*Johnte2536",
+  "email": "ianmuhia3@gmail.comaqq",
+  "full_name": "ianoaqq"
+}
+
+
+
+
+###
+POST http://localhost:8090/api/public/users/login/
+Accept: application/json
+Content-Type: application/json
+
+
+{
+  "password": "*#*Johnte2536",
+  "email": "ianmuhia3@gmail.comaqq"
+}
+
+
+###
+POST http://localhost:8090/api/public/users/verifyemail/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "code": "214549",
+  "email": "ianmuhia3@gmail.comaqq"
+}
+
+
+####
+GET  http://localhost:8090/api/protected/profile/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlMzgyZTU5LTBkOWYtNDMxNS1hMDVhLTVkMjVhMzdlMmUyNiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbWFxcSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMDdUMjI6MjU6MDAuMjAzMjA0MDU4KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMDdUMjI6NDU6MDAuMjAzMjA0MTc1KzAzOjAwIn0.UK_FRIE3f3A1CiIVsmXtihfw5gRtCo6utKWLGxvDdWs
+
+

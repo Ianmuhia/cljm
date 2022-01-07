@@ -1,36 +1,36 @@
 package utils
 
 import (
-	"maranatha_web/models"
-	"regexp"
+	"context"
+	"crypto/rand"
+	"fmt"
+	"io"
+	"log"
+	"time"
+
+	redis_db "maranatha_web/datasources/redis"
 )
 
-const (
-	emailRegex = `^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`
-)
+var table = [...]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
 
-// ValidateUser returns a slice of string of validation errors
-func ValidateUser(user models.Register, err []string) []string {
-	emailCheck := regexp.MustCompile(emailRegex).MatchString(user.Email)
-	if emailCheck != true {
-		err = append(err, "Invalid email")
+func GenerateRandomExpiryCode(key string) string {
+
+	dura := 10 * time.Minute
+
+	var d = dura
+	fmt.Printf("Redis TTL %v", d.Minutes())
+	max := 6
+	value := make([]byte, max)
+	n, err := io.ReadAtLeast(rand.Reader, value, max)
+	if n != max {
+		panic(err)
 	}
-	if len(user.Password) < 6 {
-		err = append(err, "Invalid password, Password should be more than 6 characters")
-	}
-	if len(user.Name) < 1 {
-		err = append(err, "Invalid name, please enter a name")
+	for i := 0; i < len(value); i++ {
+		value[i] = table[int(value[i])%len(table)]
 	}
 
-	return err
-}
+	redis_db.RedisClient.Set(context.TODO(), key, value, d)
 
-func ValidatePasswordReset(resetPassword models.ResetPassword) (bool, string) {
-	if len(resetPassword.Password) < 6 {
-		return false, "Invalid password, password should be more than 6 characters"
-	}
-	if resetPassword.Password != resetPassword.ConfirmPassword {
-		return false, "Password reset failed, passwords must match"
-	}
-	return true, ""
+	log.Println(string(value))
+	return string(value)
 }

@@ -22,11 +22,7 @@ type usersServiceInterface interface {
 }
 
 func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestErr) {
-
 	user.PasswordHash = crypto_utils.Hash(user.PasswordHash)
-
-	log.Println(user.PasswordHash)
-
 	if err := users.Create(&user); err != nil {
 		log.Println(user.PasswordHash)
 		return nil, err
@@ -37,10 +33,8 @@ func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestE
 func (s *usersService) GetUserByEmail(email string) (*models.User, error) {
 	user, err := users.GetUserByEmail(email)
 	if err != nil {
-		//fmt.Println(err)
 		return user, err
 	}
-	//log.Println(user)
 	return user, err
 }
 

@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"maranatha_web/controllers/token"
+	"maranatha_web/models"
+	"maranatha_web/services"
 	"maranatha_web/utils/errors"
 )
 
@@ -22,25 +24,38 @@ type CreatNewsPostResponse struct {
 
 func CreatNewsPost(ctx *gin.Context) {
 	var req CreatNewsPostRequest
-	var payload token.Payload
+
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
-	payloadd, exists := ctx.Get("authorization_payload")
+	payload, exists := ctx.Get("authorization_payload")
 	if !exists {
 		restErr := errors.NewBadRequestError("could not get auth_payload from context")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
-	dc := payloadd.(*token.Payload)
-	log.Println(payload)
-	log.Println(dc)
-	log.Println(ctx.Get("authorization_payload"))
+	data := payload.(*token.Payload)
+	user, err := services.UsersService.GetUserByEmail(data.Username)
+	if err != nil {
+		//log.Println(user)
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		return
+	}
+	value := models.News{
+		AuthorID:   user.ID,
+		CoverImage: "",
+		Title:      req.Title,
+		SubTitle:   req.SubTitle,
+		Content:    req.Content,
+	}
+	news, _ := services.NewsService.CreateNewsPost(value)
 
-	ctx.JSON(http.StatusCreated, "payload")
+	log.Println(news)
+	ctx.JSON(http.StatusCreated, data)
 
 }

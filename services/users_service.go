@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"log"
 
 	"maranatha_web/domain/users"
@@ -17,7 +16,7 @@ var (
 type usersService struct{}
 
 type usersServiceInterface interface {
-	GetUserByEmail(email string) (*models.User, *errors.RestErr)
+	GetUserByEmail(email string) (*models.User, error)
 	CreateUser(models.User) (*models.User, *errors.RestErr)
 	UpdateUserStatus(email string) *errors.RestErr
 }
@@ -35,15 +34,14 @@ func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestE
 	return &user, nil
 }
 
-func (s *usersService) GetUserByEmail(email string) (*models.User, *errors.RestErr) {
-	err, user := users.GetUserByEmail(email)
-
+func (s *usersService) GetUserByEmail(email string) (*models.User, error) {
+	user, err := users.GetUserByEmail(email)
 	if err != nil {
-		fmt.Println(err)
-		return user, nil
+		//fmt.Println(err)
+		return user, err
 	}
-	log.Println(*user)
-	return user, nil
+	//log.Println(user)
+	return user, err
 }
 
 func (s *usersService) UpdateUserStatus(email string) *errors.RestErr {

@@ -3,10 +3,10 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "username": "ianmuhiaa",
+  "username": "ianmuhia",
   "password": "*#*Johnte2536",
-  "email": "ianmuhia3@gmail.coma",
-  "full_name": "ianoa"
+  "email": "ianmuhia3@gmail.com",
+  "full_name": "iano"
 }
 
 
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
   "password": "*#*Johnte2536",
-  "email": "ianmuhia3@gmail.comaqq"
+  "email": "ianmuhia3@gmail.com"
 }
 
 
@@ -30,8 +30,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "code": "214549",
-  "email": "ianmuhia3@gmail.comaqq"
+  "code": "134165",
+  "email": "ianmuhia3@gmail.com"
 }
 
 
@@ -40,6 +40,19 @@ GET  http://localhost:8090/api/protected/profile/
 Accept: application/json
 Content-Type: application/json
 # Content-Type: multipart/form-data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlMzgyZTU5LTBkOWYtNDMxNS1hMDVhLTVkMjVhMzdlMmUyNiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbWFxcSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMDdUMjI6MjU6MDAuMjAzMjA0MDU4KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMDdUMjI6NDU6MDAuMjAzMjA0MTc1KzAzOjAwIn0.UK_FRIE3f3A1CiIVsmXtihfw5gRtCo6utKWLGxvDdWs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI3ZDA5M2ViLWVlN2EtNGJlZi1iMmEwLWNjNDZlOGUzMWVjMSIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMTFUMDE6NTU6NTAuOTc5NzA3NDM2KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMTFUMDI6MTU6NTAuOTc5NzA3NTUxKzAzOjAwIn0.XtT0iW-c4GoJvM2Vvs6Typu0NAYBm1_3hSeL82cswXg
 
 
+###
+POST http://localhost:8090/api/protected/create-news/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlZDM2NWU3LWExY2YtNGRhNy1hYjhkLTlkNzQwNzg3YzMwNSIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMTFUMDI6MjU6NTAuNjI3MzM3MzQ2KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMTFUMjI6MjU6NTAuNjI3MzM3NDc2KzAzOjAwIn0.X7gl2R6mIEoy169WIjCCOY6dc4l2h0jZ0Cj9JEXNubE
+
+
+
+{
+  "title": "*#*Johnte2536",
+  "sub_title": "ianmuhia3@gmail.comaqq",
+  "content": "ianmuhia3@gmail.comaqq"
+}

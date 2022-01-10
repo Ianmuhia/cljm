@@ -147,8 +147,8 @@ func Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("invalid email or password "))
 		return
 	}
-	duration := 20 * time.Minute
-	fmt.Println(duration.Minutes())
+	duration := 20 * time.Hour
+	fmt.Println(duration.Hours())
 
 	accessToken, erro := token.TokenService.CreateToken(req.Email, duration)
 
@@ -156,7 +156,7 @@ func Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, erro)
 		return
 	}
-	duration = time.Duration(time.Now().Add(time.Minute * 20).Unix())
+	duration = time.Duration(time.Now().Add(time.Hour * 20).Unix())
 
 	refreshToken, erro := token.TokenService.CreateRefreshToken(req.Email, duration)
 

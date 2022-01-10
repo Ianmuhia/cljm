@@ -64,7 +64,9 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		accessToken := fields[1]
 		payload, err := token.TokenService.VerifyToken(accessToken)
+
 		log.Println(payload.ExpiredAt)
+		log.Println(payload.Username)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
 			return

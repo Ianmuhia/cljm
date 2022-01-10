@@ -29,6 +29,7 @@ func SetupRouter() *gin.Engine {
 		protected := api.Group("/protected").Use(middleware.CORSMiddleware(), middleware.AuthMiddleware())
 		{
 			protected.GET("/profile/", users_controller.TryAuthMiddlewareMiddleware)
+			protected.POST("/create-news/", users_controller.CreatNewsPost)
 		}
 	}
 

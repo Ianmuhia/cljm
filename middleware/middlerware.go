@@ -4,11 +4,12 @@ import (
 	//"errors"
 	"fmt"
 	"log"
+	"net/http"
+	"strings"
+
 	"maranatha_web/config"
 	"maranatha_web/controllers/token"
 	"maranatha_web/utils/errors"
-	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -63,7 +64,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		accessToken := fields[1]
 		payload, err := token.TokenService.VerifyToken(accessToken)
-		log.Println(err)
+		log.Println(payload.ExpiredAt)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
 			return

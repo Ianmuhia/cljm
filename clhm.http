@@ -3,10 +3,10 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "username": "ianmuhiaaqq",
+  "username": "ianmuhiaa",
   "password": "*#*Johnte2536",
-  "email": "ianmuhia3@gmail.comaqq",
-  "full_name": "ianoaqq"
+  "email": "ianmuhia3@gmail.coma",
+  "full_name": "ianoa"
 }
 
 
@@ -39,6 +39,7 @@ Content-Type: application/json
 GET  http://localhost:8090/api/protected/profile/
 Accept: application/json
 Content-Type: application/json
+# Content-Type: multipart/form-data
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNlMzgyZTU5LTBkOWYtNDMxNS1hMDVhLTVkMjVhMzdlMmUyNiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbWFxcSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMDdUMjI6MjU6MDAuMjAzMjA0MDU4KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMDdUMjI6NDU6MDAuMjAzMjA0MTc1KzAzOjAwIn0.UK_FRIE3f3A1CiIVsmXtihfw5gRtCo6utKWLGxvDdWs
 
 

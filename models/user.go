@@ -1,12 +1,20 @@
 package models
 
+import (
+	"time"
+
+	"github.com/uptrace/bun"
+)
+
 type User struct {
-	ID         int    `gorm:"PRIMARY_KEY;AUTO_INCREMENT;UNIQUE" json:"id"`
-	UserName   string `gorm:"size:255;NOT NULL;UNIQUE" json:"username"`
-	FullName   string `gorm:"size:255;NOT NULL;UNIQUE" json:"fullname"`
-	Email      string `gorm:"size:100;NOT NULL;UNIQUE" json:"email"`
-	Password   string `gorm:"size:100;NOT NULL;" json:"password"`
-	IsVerified bool   `gorm:"default:false" json:"isverified" sql:"isverified"`
-	CreatedAt  string `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt  string `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	bun.BaseModel `bun:"table:users,alias:u"`
+	ID            int64     `bun:"id,pk,autoincrement"`
+	UserName      string    `bun:",notnull,unique"`
+	FullName      string    `bun:",notnull,unique"`
+	Email         string    `bun:",notnull,unique"`
+	ProfileImage  string    `bun:",default:''"`
+	PasswordHash  string    `bun:",notnull"`
+	IsVerified    bool      `bun:",notnull,type:bool,default:'false'"`
+	CreatedAt     time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	UpdatedAt     time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 }

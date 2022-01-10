@@ -1,7 +1,7 @@
 package app
 
 import (
-	users_controller "maranatha_web/controllers/users"
+	users_controller "maranatha_web/controllers"
 	"maranatha_web/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -9,10 +9,7 @@ import (
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
-	// tokenMaker, err :=
-	// if err != nil {
-	// 	return nil, fmt.Errorf("cannot create token maker: %w", err)
-	// }
+
 	router.SetTrustedProxies([]string{"0.0.0.0", "localhost"}) //nolint:errcheck
 
 	// Middlewares

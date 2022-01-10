@@ -8,7 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-const minSecretKeySize = 32
+const minSecretKeySize = 5
 
 // JWTMaker is a JSON Web Token maker
 type JWTMaker struct {
@@ -36,7 +36,7 @@ func (maker *JWTMaker) CreateToken(email string, duration time.Duration) (string
 
 // VerifyToken checks if the token is valid or not
 func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
-	
+
 	keyFunc := func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
@@ -57,7 +57,7 @@ func (maker *JWTMaker) VerifyToken(token string) (*Payload, error) {
 	}
 
 	payload, ok := jwtToken.Claims.(*Payload)
-	
+
 	if !ok {
 		return nil, ErrInvalidToken
 	}

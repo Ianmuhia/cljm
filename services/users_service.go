@@ -7,7 +7,6 @@ import (
 	"maranatha_web/domain/users"
 	"maranatha_web/models"
 	"maranatha_web/utils/crypto_utils"
-	"maranatha_web/utils/date_utils"
 	"maranatha_web/utils/errors"
 )
 
@@ -25,16 +24,12 @@ type usersServiceInterface interface {
 
 func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestErr) {
 
-	user.CreatedAt = date_utils.GetNowDBFormat()
+	user.PasswordHash = crypto_utils.Hash(user.PasswordHash)
 
-	user.UpdatedAt = date_utils.GetNowDBFormat()
-
-	user.Password = crypto_utils.Hash(user.Password)
-
-	log.Println(user.Password)
+	log.Println(user.PasswordHash)
 
 	if err := users.Create(&user); err != nil {
-		log.Println(user.Password)
+		log.Println(user.PasswordHash)
 		return nil, err
 	}
 	return &user, nil

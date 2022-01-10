@@ -2,22 +2,20 @@ package redis_db
 
 import (
 	"context"
-	"errors"
-	"fmt"
+	"log"
 
-	"github.com/go-redis/redis/v8"
-	"maranatha_web/logger"
+	"github.com/go-redis/redis/v8" //nolint:goimports
+	"maranatha_web/logger"         //nolint:goimports
 )
 
 var (
 	RedisClient *redis.Client
 )
 var (
-	ErrNil = errors.New("no matching record found in redis database")
-	Ctx    = context.Background()
+	Ctx = context.Background()
 )
 
-func init() {
+func GetRedisClient() *redis.Client {
 
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
@@ -31,9 +29,6 @@ func init() {
 		panic(err)
 
 	}
-	fmt.Println(pong, err)
-}
-
-func GetRedisClient() *redis.Client {
+	log.Println(pong, "Redis db connected")
 	return RedisClient
 }

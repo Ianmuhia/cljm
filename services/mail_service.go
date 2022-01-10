@@ -2,12 +2,14 @@ package services
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
-	"time"
 
+	"github.com/hibiken/asynq"
 	mail "github.com/xhit/go-simple-mail/v2" //nolint:goimports
+	mail_client "maranatha_web/datasources/mail"
 	redis_db "maranatha_web/datasources/redis"
 )
 
@@ -18,7 +20,7 @@ var (
 type mailService struct{}
 
 type mailServiceInterface interface {
-	SendMsg(m Mail) error
+	SendMsg(m Mail) (*asynq.Task, error)
 	ListenForMail()
 	VerifyMailCode(key string) string
 	RemoveMailCode(key string)
@@ -48,7 +50,7 @@ func (s *mailService) ListenForMail() {
 	go func() {
 		for {
 			msg := <-mailChan
-			err := s.SendMsg(msg)
+			err, _ := s.SendMsg(msg)
 			if err != nil {
 				panic(err)
 			}
@@ -56,43 +58,46 @@ func (s *mailService) ListenForMail() {
 	}()
 }
 
-func (s *mailService) SendMsg(m Mail) error {
-	server := mail.NewSMTPClient()
-	server.Host = "localhost"
-	server.Port = 1025
-	server.KeepAlive = false
-	server.ConnectTimeout = 10 * time.Second
-	server.SendTimeout = 10 * time.Second
-
-	client, err := server.Connect()
+func (s *mailService) SendMsg(m Mail) (*asynq.Task, error) {
+	marshal, err := json.Marshal(m)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
+	return asynq.NewTask("Mail", marshal), nil
+}
 
+func SendVerifyMail(m Mail) *asynq.Task {
+	marshal, err := json.Marshal(m)
+	if err != nil {
+		log.Println(err)
+		return nil
+	}
+	return asynq.NewTask("email:welcome", marshal)
+}
+
+func HandleVerifyEmailTask(ctx context.Context, t *asynq.Task) error {
+	var m Mail
+	if err := json.Unmarshal(t.Payload(), &m); err != nil {
+		return err
+	}
 	email := mail.NewMSG()
-
 	email.SetFrom(m.From).AddTo(m.To).SetSubject(m.Subject).SetBody(mail.TextPlain, m.Content)
-
-	err = email.Send(client)
-
+	err := email.Send(mail_client.MailClient)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
+	log.Printf(" [*] Send Welcome Email to User %s", m.To)
 	return nil
 }
 
 func (s *mailService) VerifyMailCode(key string) string {
-
 	data, err := redis_db.RedisClient.Get(context.TODO(), key).Result()
-
 	log.Printf("Redis Code %v or %v", data, err)
-
 	if err != nil {
 		log.Println(err)
 		return "Invalid key provided or key not found"
 	}
-
 	return data
 }
 

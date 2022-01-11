@@ -76,7 +76,7 @@ func GetBunDB() *bun.DB {
 	//}
 
 	Client = db
-	log.Println("bun db connected")
+	log.Println("Postgres database connection successful..")
 	return db
 }
 

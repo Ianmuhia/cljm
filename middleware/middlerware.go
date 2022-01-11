@@ -3,7 +3,6 @@ package middleware
 import (
 	//"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -54,8 +53,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		authorizationType := strings.ToLower(fields[0])
-		log.Println(authorizationType)
-		log.Println(authorizationHeader)
+
 		if authorizationType != authorizationTypeBearer {
 			err := fmt.Sprintf("unsupported authorization type %s", authorizationType)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
@@ -65,8 +63,6 @@ func AuthMiddleware() gin.HandlerFunc {
 		accessToken := fields[1]
 		payload, err := token.TokenService.VerifyToken(accessToken)
 
-		log.Println(payload.ExpiredAt)
-		log.Println(payload.Username)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, err)
 			return

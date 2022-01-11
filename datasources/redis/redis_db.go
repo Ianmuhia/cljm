@@ -23,12 +23,12 @@ func GetRedisClient() *redis.Client {
 		DB:       0,
 	})
 
-	pong, err := RedisClient.Ping(Ctx).Result()
+	_, err := RedisClient.Ping(Ctx).Result()
 	if err != nil {
 		logger.Error("error connecting to redis", err)
 		panic(err)
 
 	}
-	log.Println(pong, "Redis db connected")
+	log.Println("Redis database  connected successfully...")
 	return RedisClient
 }

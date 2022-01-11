@@ -52,7 +52,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlZDM2NWU3L
 
 
 {
-  "title": "*#*Johnte2536",
-  "sub_title": "ianmuhia3@gmail.comaqq",
-  "content": "ianmuhia3@gmail.comaqq"
+  "title": "Test Title",
+  "sub_title": "sub_title",
+  "content": "Content Test"
 }
+
+###
+GET http://localhost:8090/api/protected/get-news/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIyYjg0ZWM2LTEyYWMtNDRkYi05N2M1LTQ2MzMyNzNmMWRmNSIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMTFUMTk6Mzg6MzIuMTMxMjY2MTQ5KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMTJUMTU6Mzg6MzIuMTMxMjY2MzQxKzAzOjAwIn0.q2idYt5oXp4hztP1Cb7VwyZQoyd749hNhv4Dk5onbjM"

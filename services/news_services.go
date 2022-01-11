@@ -16,6 +16,7 @@ type newsService struct{}
 
 type newsServiceInterface interface {
 	CreateNewsPost(news_model models.News) (*models.News, *errors.RestErr)
+	GetAllNewsPost() ([]models.News, *errors.RestErr)
 }
 
 func (s *newsService) CreateNewsPost(news_model models.News) (*models.News, *errors.RestErr) {
@@ -24,6 +25,15 @@ func (s *newsService) CreateNewsPost(news_model models.News) (*models.News, *err
 	}
 	log.Println(news_model)
 	return &news_model, nil
+}
+
+func (s *newsService) GetAllNewsPost() ([]models.News, *errors.RestErr) {
+	data, err := news.GetAllNewsPost()
+	if err != nil {
+		return data, errors.NewBadRequestError("Could not get post")
+
+	}
+	return data, nil
 }
 
 //func (s *newsService) GetUserByEmail(email string) (*models.User, error) {

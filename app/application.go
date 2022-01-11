@@ -1,32 +1,30 @@
 package app
 
 import (
-	"fmt"
 	"log"
 
-	"go.uber.org/zap" //nolint:goimports
 	"maranatha_web/controllers/token"
 	mail_client "maranatha_web/datasources/mail"
+	"maranatha_web/datasources/minio"
 	postgresql_db "maranatha_web/datasources/postgresql"
 	redis_db "maranatha_web/datasources/redis"
 )
 
-type Config struct {
-	DC *zap.Logger
-}
-
 const jwtKey = "*#*Johnte2536290248"
 
 func StartApplication() {
-	maker, err := token.NewJWTMaker(jwtKey)
+	_, err := token.NewJWTMaker(jwtKey)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	fmt.Println(maker)
-	//postgresql_db.GetDB()
 	postgresql_db.GetBunDB()
+	connection, err := minio.MinioConnection()
 
+	if err != nil {
+		log.Panicln(err)
+	}
+	log.Printf("mino endpoint is %s", connection.EndpointURL())
 	redis_db.GetRedisClient()
 	//task_client.GetTasksClient()
 	mail_client.GetMailServer()
@@ -39,5 +37,5 @@ func StartApplication() {
 	}
 	//worker.GetTasksWorker()
 	//task_client.GetTasksClient()
-
+	//
 }

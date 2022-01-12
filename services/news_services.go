@@ -1,8 +1,6 @@
 package services
 
 import (
-	"log"
-
 	"maranatha_web/domain/news"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
@@ -16,24 +14,24 @@ type newsService struct{}
 
 type newsServiceInterface interface {
 	CreateNewsPost(news_model models.News) (*models.News, *errors.RestErr)
-	GetAllNewsPost() ([]models.News, *errors.RestErr)
+	GetAllNewsPost() ([]models.News, int64, *errors.RestErr)
 }
 
 func (s *newsService) CreateNewsPost(news_model models.News) (*models.News, *errors.RestErr) {
 	if err := news.CreateNewsPost(&news_model); err != nil {
 		return nil, err
 	}
-	log.Println(news_model)
 	return &news_model, nil
 }
 
-func (s *newsService) GetAllNewsPost() ([]models.News, *errors.RestErr) {
-	data, err := news.GetAllNewsPost()
+func (s *newsService) GetAllNewsPost() ([]models.News, int64, *errors.RestErr) {
+	data, count, err := news.GetAllNewsPost()
 	if err != nil {
-		return data, errors.NewBadRequestError("Could not get post")
+		return data, count, errors.NewBadRequestError("Could not get post")
 
 	}
-	return data, nil
+
+	return data, count, nil
 }
 
 //func (s *newsService) GetUserByEmail(email string) (*models.User, error) {

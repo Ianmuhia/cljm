@@ -22,6 +22,9 @@ Content-Type: application/json
   "password": "*#*Johnte2536",
   "email": "ianmuhia3@gmail.com"
 }
+> {%
+    client.global.set("auth_token", response.body.access_token);
+%}
 
 
 ###
@@ -30,7 +33,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "code": "134165",
+  "code": "951562",
   "email": "ianmuhia3@gmail.com"
 }
 
@@ -40,14 +43,14 @@ GET  http://localhost:8090/api/protected/profile/
 Accept: application/json
 Content-Type: application/json
 # Content-Type: multipart/form-data
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImI3ZDA5M2ViLWVlN2EtNGJlZi1iMmEwLWNjNDZlOGUzMWVjMSIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMTFUMDE6NTU6NTAuOTc5NzA3NDM2KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMTFUMDI6MTU6NTAuOTc5NzA3NTUxKzAzOjAwIn0.XtT0iW-c4GoJvM2Vvs6Typu0NAYBm1_3hSeL82cswXg
+Authorization: Bearer {{auth_token}}
 
 
 ###
 POST http://localhost:8090/api/protected/create-news/
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlZDM2NWU3LWExY2YtNGRhNy1hYjhkLTlkNzQwNzg3YzMwNSIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMTFUMDI6MjU6NTAuNjI3MzM3MzQ2KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMTFUMjI6MjU6NTAuNjI3MzM3NDc2KzAzOjAwIn0.X7gl2R6mIEoy169WIjCCOY6dc4l2h0jZ0Cj9JEXNubE
+Authorization: Bearer {{auth_token}}
 
 
 
@@ -61,4 +64,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNlZDM2NWU3L
 GET http://localhost:8090/api/protected/get-news/
 Accept: application/json
 Content-Type: application/json
-Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIyYjg0ZWM2LTEyYWMtNDRkYi05N2M1LTQ2MzMyNzNmMWRmNSIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMTFUMTk6Mzg6MzIuMTMxMjY2MTQ5KzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMTJUMTU6Mzg6MzIuMTMxMjY2MzQxKzAzOjAwIn0.q2idYt5oXp4hztP1Cb7VwyZQoyd749hNhv4Dk5onbjM"
+Authorization: Bearer {{auth_token}}

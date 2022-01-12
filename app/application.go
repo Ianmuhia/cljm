@@ -6,7 +6,6 @@ import (
 	"maranatha_web/controllers/token"
 	mail_client "maranatha_web/datasources/mail"
 	"maranatha_web/datasources/minio"
-	postgresql_db "maranatha_web/datasources/postgresql"
 	redis_db "maranatha_web/datasources/redis"
 )
 
@@ -18,7 +17,7 @@ func StartApplication() {
 		log.Println(err)
 		return
 	}
-	postgresql_db.GetBunDB()
+	//postgresql_db.GetBunDB()
 	connection, err := minio.MinioConnection()
 
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin" //nolint:goimports
 	"github.com/minio/minio-go/v7"
 	"maranatha_web/controllers/token"
 	"maranatha_web/models"
@@ -14,14 +14,14 @@ import (
 )
 
 type CreatNewsPostRequest struct {
-	//CoverImage string `json:"cover_image" binding:"required"`
 	Title    string `json:"title" binding:"required"`
 	SubTitle string `json:"sub_title" binding:"required"`
 	Content  string `json:"content" binding:"required"`
 }
 
-type CreatNewsPostResponse struct {
-	Message string `json:"message"`
+type GetAllNewsResponse struct {
+	Total int64         `json:"total"`
+	News  []models.News `json:"news"`
 }
 
 func CreatNewsPost(ctx *gin.Context) {
@@ -45,14 +45,6 @@ func CreatNewsPost(ctx *gin.Context) {
 		Content:  ctx.PostForm("content"),
 	}
 	req_data = CreatNewsPostRequest(post_data)
-
-	//if err := ctx.ShouldBindJSON(&req_data); err != nil {
-	//	log.Println(err)
-	//	restErr := errors.NewBadRequestError("invalid json body")
-	//	ctx.JSON(restErr.Status, restErr)
-	//	ctx.Abort()
-	//	return
-	//}
 	fileContentType := m.Header["Content-Type"][0]
 
 	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
@@ -105,13 +97,17 @@ func CreatNewsPost(ctx *gin.Context) {
 }
 
 func GetAllNewsPost(ctx *gin.Context) {
-	news, err := services.NewsService.GetAllNewsPost()
+	news, count, err := services.NewsService.GetAllNewsPost()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusOK, news)
+	data := GetAllNewsResponse{
+		Total: count,
+		News:  news,
+	}
+	ctx.JSON(http.StatusOK, data)
 
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"gorm.io/gorm/clause"
 	postgresql_db "maranatha_web/datasources/postgresql"
 	"maranatha_web/logger"
 	"maranatha_web/models"
@@ -32,14 +33,20 @@ func DeleteNewsPost(news *models.News, id int64) *errors.RestErr {
 
 func GetAllNewsPost() ([]models.News, int64, error) {
 	var news []models.News
+	var news2 []models.News
 	var count int64
+	val := postgresql_db.Client.Debug().Preload(clause.Associations).Find(&news2).Error
+	if val != nil {
+		log.Println(val)
+	}
+	log.Println(news2)
 	err := postgresql_db.Client.Debug().Find(&news).Count(&count).Error
 	if err != nil {
 		log.Println(err)
 		return news, count, err
 	}
 	//TODO:Add password conform field
-	return news, count, nil
+	return news2, count, nil
 }
 
 //TODO:chrch patna image, name, since_date

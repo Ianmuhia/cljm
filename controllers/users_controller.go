@@ -224,6 +224,18 @@ func TryAuthMiddlewareMiddleware(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, "hello welcome")
 }
 
+func GetAllUsers(ctx *gin.Context) {
+	data, err := services.UsersService.GetAllUsers()
+	if err != nil {
+		restErr := errors.NewBadRequestError("Error getting all users.")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, data)
+}
+
 func UpdateUserProfileImage(ctx *gin.Context) {
 	//var uploadedInfo minio.UploadInfo
 	payload, exists := ctx.Get("authorization_payload")

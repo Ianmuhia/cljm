@@ -65,3 +65,10 @@ GET http://localhost:8090/api/protected/get-news/
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
+
+
+###
+GET http://localhost:8090/api/protected/get-users/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}

@@ -38,17 +38,17 @@ func Create(user *models.User) *errors.RestErr {
 	return nil
 }
 
-func GetAllUsers() error {
+func GetAllUsers() ([]models.User, error) {
 	var users []models.User
 	err := postgresql_db.Client.Debug().Find(&users).Error
 	// Get all records
 	//result := db.Find(&users)
 	if err != nil {
 		logger.Error("error when trying to save user", err)
-		return err
+		return users, err
 	}
 	log.Println(users)
-	return nil
+	return users, nil
 }
 
 func UpdateUserImage(email, imageName string) error {

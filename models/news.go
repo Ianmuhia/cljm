@@ -7,7 +7,7 @@ import (
 type News struct {
 	gorm.Model
 	Author     User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	AuthorID   int64
+	AuthorID   uint
 	CoverImage string
 	Title      string
 	SubTitle   string

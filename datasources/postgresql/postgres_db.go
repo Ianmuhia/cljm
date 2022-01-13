@@ -44,7 +44,7 @@ func init() {
 		Logger:                 logger.Default,
 	})
 
-	//MigrateTables(database)
+	MigrateTables(database)
 
 	database.Logger.LogMode(logger.Silent)
 	// database.Logger.Trace()

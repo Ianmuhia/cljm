@@ -220,18 +220,58 @@ func VerifyEmailCode(ctx *gin.Context) {
 
 }
 
-type resetEmailRequest struct {
-	Email string `json:"email" binding:"required"`
-}
-
-type resetEmailResponse struct {
-	Message string `json:"message"`
-}
-
-func ResetUserPassword(ctx *gin.Context) {
-
-}
-
 func TryAuthMiddlewareMiddleware(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, "hello welcome")
+}
+
+func UpdateUserProfileImage(ctx *gin.Context) {
+	//var uploadedInfo minio.UploadInfo
+	payload, exists := ctx.Get("authorization_payload")
+	if !exists {
+		restErr := errors.NewBadRequestError("could not get auth_payload from context")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	data := payload.(*token.Payload)
+	user, err := services.UsersService.GetUserByEmail(data.Username)
+	if err != nil {
+		//log.Println(user)
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	file, m, err := ctx.Request.FormFile("profile_image")
+
+	if err != nil {
+		restErr := errors.NewBadRequestError("Please attach image to the request")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+
+	fmt.Println(file, m.Header, m.Filename, m.Size)
+	fileContentType := m.Header["Content-Type"][0]
+
+	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
+	if err != nil {
+		restErr := errors.NewBadRequestError("could not upload image to server")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+	log.Println(uploadFile)
+
+	err = services.UsersService.UpdateUserImage(user.Email, uploadFile.Key)
+	if err != nil {
+		data := errors.NewBadRequestError("Error Processing upload profile image request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, "Profile image upload successful")
+
 }

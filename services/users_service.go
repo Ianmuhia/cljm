@@ -19,6 +19,7 @@ type usersServiceInterface interface {
 	GetUserByEmail(email string) (*models.User, error)
 	CreateUser(models.User) (*models.User, *errors.RestErr)
 	UpdateUserStatus(email string) *errors.RestErr
+	UpdateUserImage(email, imageName string) error
 }
 
 func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestErr) {
@@ -36,6 +37,23 @@ func (s *usersService) GetUserByEmail(email string) (*models.User, error) {
 		return user, err
 	}
 	return user, err
+}
+
+func (s *usersService) GetAllUsers() error {
+	err := users.GetAllUsers()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *usersService) UpdateUserImage(email, imageName string) error {
+	err := users.UpdateUserImage(email, imageName)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return err
 }
 
 func (s *usersService) UpdateUserStatus(email string) *errors.RestErr {

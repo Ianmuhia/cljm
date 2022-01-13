@@ -1,17 +1,14 @@
 package news
 
 import (
-	"context"
 	"log"
 
-	"gorm.io/gorm/clause"
+	"gorm.io/gorm/clause" //nolint:goimports
 	postgresql_db "maranatha_web/datasources/postgresql"
 	"maranatha_web/logger"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
 )
-
-var ctx = context.Background()
 
 func CreateNewsPost(news *models.News) *errors.RestErr {
 	err := postgresql_db.Client.Debug().Create(&news).Error
@@ -22,8 +19,9 @@ func CreateNewsPost(news *models.News) *errors.RestErr {
 	return nil
 }
 
-func DeleteNewsPost(news *models.News, id int64) *errors.RestErr {
-	err := postgresql_db.Client.Debug().Unscoped().Delete(&news).Where("id = ?", id).Error
+func DeleteNewsPost(id uint) *errors.RestErr {
+	var news models.News
+	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&news).Error
 	if err != nil {
 		logger.Error("error when trying to delete news post", err)
 		return errors.NewInternalServerError("database error")
@@ -33,20 +31,20 @@ func DeleteNewsPost(news *models.News, id int64) *errors.RestErr {
 
 func GetAllNewsPost() ([]models.News, int64, error) {
 	var news []models.News
-	var news2 []models.News
 	var count int64
-	val := postgresql_db.Client.Debug().Preload(clause.Associations).Find(&news2).Error
+	val := postgresql_db.Client.Debug().Preload(clause.Associations).Find(&news).Error
 	if val != nil {
 		log.Println(val)
+		return nil, 0, val
 	}
-	log.Println(news2)
-	err := postgresql_db.Client.Debug().Find(&news).Count(&count).Error
-	if err != nil {
-		log.Println(err)
-		return news, count, err
-	}
+
+	//err := postgresql_db.Client.Debug().Find(&news).Count(&count).Error
+	//if err != nil {
+	//	log.Println(err)
+	//	return news, count, err
+	//}
 	//TODO:Add password conform field
-	return news2, count, nil
+	return news, count, nil
 }
 
 //TODO:chrch patna image, name, since_date

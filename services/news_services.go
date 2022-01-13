@@ -1,6 +1,8 @@
 package services
 
 import (
+	"log"
+
 	"maranatha_web/domain/news"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
@@ -13,15 +15,16 @@ var (
 type newsService struct{}
 
 type newsServiceInterface interface {
-	CreateNewsPost(news_model models.News) (*models.News, *errors.RestErr)
+	CreateNewsPost(newsModel models.News) (*models.News, *errors.RestErr)
 	GetAllNewsPost() ([]models.News, int64, *errors.RestErr)
+	DeleteNewsPost(id uint) *errors.RestErr
 }
 
-func (s *newsService) CreateNewsPost(news_model models.News) (*models.News, *errors.RestErr) {
-	if err := news.CreateNewsPost(&news_model); err != nil {
+func (s *newsService) CreateNewsPost(newsModel models.News) (*models.News, *errors.RestErr) {
+	if err := news.CreateNewsPost(&newsModel); err != nil {
 		return nil, err
 	}
-	return &news_model, nil
+	return &newsModel, nil
 }
 
 func (s *newsService) GetAllNewsPost() ([]models.News, int64, *errors.RestErr) {
@@ -32,6 +35,15 @@ func (s *newsService) GetAllNewsPost() ([]models.News, int64, *errors.RestErr) {
 	}
 
 	return data, count, nil
+}
+
+func (s *newsService) DeleteNewsPost(id uint) *errors.RestErr {
+	err := news.DeleteNewsPost(id)
+	if err != nil {
+		log.Println(err)
+		return errors.NewBadRequestError("Could not delete post")
+	}
+	return nil
 }
 
 //func (s *newsService) GetUserByEmail(email string) (*models.User, error) {

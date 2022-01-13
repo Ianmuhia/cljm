@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin" //nolint:goimports
 	"github.com/minio/minio-go/v7"
@@ -109,5 +110,36 @@ func GetAllNewsPost(ctx *gin.Context) {
 		News:  news,
 	}
 	ctx.JSON(http.StatusOK, data)
+
+}
+
+func DeleteNewsPost(ctx *gin.Context) {
+	id := ctx.Query("id")
+	value, _ := strconv.ParseInt(id, 10, 32)
+	if id == "" || value == 0 {
+		data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	i, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		data := errors.NewBadRequestError("Provide an id to the request.")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+
+	}
+	errr := services.NewsService.DeleteNewsPost(uint(i))
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"Message": "Successfully deleted news",
+	})
 
 }

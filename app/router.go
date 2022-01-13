@@ -33,6 +33,7 @@ func SetupRouter() *gin.Engine {
 			protected.POST("/create-news/", users_controller.CreatNewsPost)
 			protected.GET("/get-users/", users_controller.GetAllUsers)
 			protected.GET("/get-news/", users_controller.GetAllNewsPost)
+			protected.DELETE("/delete-news/", users_controller.DeleteNewsPost)
 		}
 	}
 

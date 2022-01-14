@@ -3,6 +3,7 @@ package news
 import (
 	"log"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause" //nolint:goimports
 	postgresql_db "maranatha_web/datasources/postgresql"
 	"maranatha_web/logger"
@@ -28,6 +29,17 @@ func DeleteNewsPost(id uint) *errors.RestErr {
 	}
 	return nil
 }
+func GetSingleNewsPost(id uint) (*models.News, *errors.RestErr) {
+	var news models.News
+	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&news).Error
+
+	//log.Println(news.)
+	if err != nil || err == gorm.ErrRecordNotFound {
+		logger.Error("error when trying to get  news post", err)
+		return &news, errors.NewInternalServerError("database error")
+	}
+	return &news, nil
+}
 
 func GetAllNewsPost() ([]models.News, int64, error) {
 	var news []models.News
@@ -37,13 +49,6 @@ func GetAllNewsPost() ([]models.News, int64, error) {
 		log.Println(val)
 		return nil, 0, val
 	}
-
-	//err := postgresql_db.Client.Debug().Find(&news).Count(&count).Error
-	//if err != nil {
-	//	log.Println(err)
-	//	return news, count, err
-	//}
-	//TODO:Add password conform field
 	return news, count, nil
 }
 

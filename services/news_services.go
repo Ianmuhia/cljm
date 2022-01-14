@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"log"
 
 	"maranatha_web/domain/news"
@@ -18,6 +19,7 @@ type newsServiceInterface interface {
 	CreateNewsPost(newsModel models.News) (*models.News, *errors.RestErr)
 	GetAllNewsPost() ([]models.News, int64, *errors.RestErr)
 	DeleteNewsPost(id uint) *errors.RestErr
+	GetSingleNewsPost(id uint) (*models.News, *errors.RestErr)
 }
 
 func (s *newsService) CreateNewsPost(newsModel models.News) (*models.News, *errors.RestErr) {
@@ -44,6 +46,17 @@ func (s *newsService) DeleteNewsPost(id uint) *errors.RestErr {
 		return errors.NewBadRequestError("Could not delete post")
 	}
 	return nil
+}
+
+func (s *newsService) GetSingleNewsPost(id uint) (*models.News, *errors.RestErr) {
+	news, err := news.GetSingleNewsPost(id)
+	url := fmt.Sprintf("http://localhost:9000/mono/%s", news.CoverImage)
+	news.CoverImage = url
+	if err != nil {
+		log.Println(err)
+		return news, errors.NewBadRequestError("Could not get single post")
+	}
+	return news, nil
 }
 
 //func (s *newsService) GetUserByEmail(email string) (*models.User, error) {

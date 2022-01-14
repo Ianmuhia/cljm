@@ -3,7 +3,7 @@ package news
 import (
 	"log"
 
-	"gorm.io/gorm"
+	"gorm.io/gorm"        //nolint:goimports
 	"gorm.io/gorm/clause" //nolint:goimports
 	postgresql_db "maranatha_web/datasources/postgresql"
 	"maranatha_web/logger"
@@ -40,11 +40,22 @@ func GetSingleNewsPost(id uint) (*models.News, *errors.RestErr) {
 	}
 	return &news, nil
 }
+func UpdateNewsPost(id uint, newsModel models.News) (*models.News, *errors.RestErr) {
+	//var news models.News
+	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&newsModel).Error
+
+	//log.Println(newsModel.)
+	if err != nil || err == gorm.ErrRecordNotFound {
+		logger.Error("error when trying to update  news post", err)
+		return &newsModel, errors.NewInternalServerError("database error")
+	}
+	return &newsModel, nil
+}
 
 func GetAllNewsPost() ([]models.News, int64, error) {
 	var news []models.News
 	var count int64
-	val := postgresql_db.Client.Debug().Preload(clause.Associations).Find(&news).Error
+	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

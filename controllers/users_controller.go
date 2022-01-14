@@ -93,7 +93,7 @@ func RegisterUser(c *gin.Context) {
 		logger.Info("could not send email ")
 		return
 	}
-	message := fmt.Sprintf("Thank %s you for creating and account.Please verify your email %s ", result.UserName, result.Email)
+	message := fmt.Sprintf("Thank %s you for creating and account.Please verify your email %s code is %s", result.UserName, result.Email, code)
 
 	response := registerUserResponse{
 		Message:  message,

@@ -35,6 +35,7 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-news/", users_controller.GetAllNewsPost)
 			protected.DELETE("/delete-news/", users_controller.DeleteNewsPost)
 			protected.GET("/get-single-news/", users_controller.GeSingleNewsPost)
+			protected.PUT("/update-news/", users_controller.UpdateNewsPost)
 		}
 	}
 

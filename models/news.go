@@ -7,7 +7,7 @@ import (
 type News struct {
 	gorm.Model
 	Author     User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	AuthorID   uint
+	AuthorID   uint `gorm:"index:,option:CONCURRENTLY"`
 	CoverImage string
 	Title      string
 	SubTitle   string

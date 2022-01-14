@@ -11,7 +11,7 @@ import (
 	"maranatha_web/controllers/token"
 	"maranatha_web/models"
 	"maranatha_web/services"
-	"maranatha_web/utils/errors"
+	"maranatha_web/utils/errors" //nolint:goimports
 )
 
 type CreatNewsPostRequest struct {
@@ -27,9 +27,10 @@ type GetAllNewsResponse struct {
 
 func CreatNewsPost(ctx *gin.Context) {
 	type req CreatNewsPostRequest
-	var req_data CreatNewsPostRequest
-
+	var reqData CreatNewsPostRequest
 	var uploadedInfo minio.UploadInfo
+
+	data := GetPayloadFromContext(ctx)
 	file, m, err := ctx.Request.FormFile("cover_image")
 
 	if err != nil {
@@ -40,12 +41,12 @@ func CreatNewsPost(ctx *gin.Context) {
 	}
 
 	fmt.Println(file, m.Header, m.Filename, m.Size)
-	post_data := req{
+	postData := req{
 		Title:    ctx.PostForm("title"),
 		SubTitle: ctx.PostForm("sub_title"),
 		Content:  ctx.PostForm("content"),
 	}
-	req_data = CreatNewsPostRequest(post_data)
+	reqData = CreatNewsPostRequest(postData)
 	fileContentType := m.Header["Content-Type"][0]
 
 	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
@@ -58,32 +59,25 @@ func CreatNewsPost(ctx *gin.Context) {
 	}
 	log.Println(uploadFile)
 	uploadedInfo = uploadFile
-
-	payload, exists := ctx.Get("authorization_payload")
-	if !exists {
-		restErr := errors.NewBadRequestError("could not get auth_payload from context")
-		ctx.JSON(restErr.Status, restErr)
-		ctx.Abort()
-		return
-	}
-	data := payload.(*token.Payload)
+	//TODO: Rework this.
 	user, err := services.UsersService.GetUserByEmail(data.Username)
 	if err != nil {
-		//log.Println(user)
+
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
 
+	log.Println(&user)
 	//TODO:upload news images
 	//TODO:Work on user profile, reset password , forgot password
 	value := models.News{
 		AuthorID:   user.ID,
 		CoverImage: uploadedInfo.Key,
-		Title:      req_data.Title,
-		SubTitle:   req_data.SubTitle,
-		Content:    req_data.Content,
+		Title:      reqData.Title,
+		SubTitle:   reqData.SubTitle,
+		Content:    reqData.Content,
 	}
 	news, errr := services.NewsService.CreateNewsPost(value)
 	if errr != nil {
@@ -97,6 +91,75 @@ func CreatNewsPost(ctx *gin.Context) {
 
 }
 
+func UpdateNewsPost(ctx *gin.Context) {
+	type req CreatNewsPostRequest
+	var reqData CreatNewsPostRequest
+	var uploadedInfo minio.UploadInfo
+
+	data := GetPayloadFromContext(ctx)
+	id := ctx.Query("id")
+	value, _ := strconv.ParseInt(id, 10, 32)
+	if id == "" || value == 0 {
+		data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	i, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		data := errors.NewBadRequestError("Provide an id to the request.")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+
+	}
+	file, m, err := ctx.Request.FormFile("cover_image")
+
+	if err != nil {
+		restErr := errors.NewBadRequestError("Please attach image to the request")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+
+	//TODO:Create separate method to handle image upload
+	postData := req{
+		Title:    ctx.PostForm("title"),
+		SubTitle: ctx.PostForm("sub_title"),
+		Content:  ctx.PostForm("content"),
+	}
+	reqData = CreatNewsPostRequest(postData)
+	fileContentType := m.Header["Content-Type"][0]
+
+	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
+	if err != nil {
+		restErr := errors.NewBadRequestError("could not upload image to server")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+	log.Println(data)
+	uploadedInfo = uploadFile
+	newsData := models.News{
+		CoverImage: uploadedInfo.Key,
+		Title:      reqData.Title,
+		SubTitle:   reqData.SubTitle,
+		Content:    reqData.Content,
+	}
+	errr := services.NewsService.UpdateNewsPost(uint(i), newsData)
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing create news post request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "news model updated",
+	})
+
+}
 func GetAllNewsPost(ctx *gin.Context) {
 	news, count, err := services.NewsService.GetAllNewsPost()
 	if err != nil {
@@ -170,5 +233,30 @@ func GeSingleNewsPost(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, news)
+
+}
+
+func GetPayloadFromContext(ctx *gin.Context) *token.Payload {
+	payload, exists := ctx.Get("authorization_payload")
+	if !exists {
+		restErr := errors.NewBadRequestError("could not get auth_payload from context")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+
+	}
+	data := payload.(*token.Payload)
+	user, err := services.UsersService.GetUserByEmail(data.Username)
+	if err != nil {
+		//log.Println(user)
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+
+	}
+	log.Println(user)
+	//TODO:upload news images
+	//TODO:Work on user profile, reset password , forgot password
+
+	return data
 
 }

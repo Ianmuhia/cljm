@@ -21,6 +21,7 @@ type newsServiceInterface interface {
 	DeleteNewsPost(id uint) *errors.RestErr
 	GetSingleNewsPost(id uint) (*models.News, *errors.RestErr)
 	UpdateNewsPost(id uint, newModel models.News) *errors.RestErr
+	GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, *errors.RestErr)
 }
 
 func (s *newsService) CreateNewsPost(newsModel models.News) (*models.News, *errors.RestErr) {
@@ -69,6 +70,18 @@ func (s *newsService) UpdateNewsPost(id uint, newModel models.News) *errors.Rest
 		return errors.NewBadRequestError("Could not get single post")
 	}
 	return nil
+}
+
+func (s *newsService) GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, *errors.RestErr) {
+	newsData, count, err := news.GetAllNewsPostByAuthor(id)
+	for _, v := range newsData {
+		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
+	}
+	if err != nil {
+		log.Println(err)
+		return newsData, count, errors.NewBadRequestError("Could not get post by author.")
+	}
+	return newsData, count, nil
 }
 
 //func (s *newsService) GetUserByEmail(email string) (*models.User, error) {

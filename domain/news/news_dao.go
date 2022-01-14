@@ -32,8 +32,6 @@ func DeleteNewsPost(id uint) *errors.RestErr {
 func GetSingleNewsPost(id uint) (*models.News, *errors.RestErr) {
 	var news models.News
 	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&news).Error
-
-	//log.Println(news.)
 	if err != nil || err == gorm.ErrRecordNotFound {
 		logger.Error("error when trying to get  news post", err)
 		return &news, errors.NewInternalServerError("database error")
@@ -41,10 +39,7 @@ func GetSingleNewsPost(id uint) (*models.News, *errors.RestErr) {
 	return &news, nil
 }
 func UpdateNewsPost(id uint, newsModel models.News) (*models.News, *errors.RestErr) {
-	//var news models.News
 	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&newsModel).Error
-
-	//log.Println(newsModel.)
 	if err != nil || err == gorm.ErrRecordNotFound {
 		logger.Error("error when trying to update  news post", err)
 		return &newsModel, errors.NewInternalServerError("database error")
@@ -56,6 +51,17 @@ func GetAllNewsPost() ([]models.News, int64, error) {
 	var news []models.News
 	var count int64
 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
+	if val != nil {
+		log.Println(val)
+		return nil, 0, val
+	}
+	return news, count, nil
+}
+
+func GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
+	var news []*models.News
+	var count int64
+	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Count(&count).Error
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

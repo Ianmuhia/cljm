@@ -17,7 +17,7 @@ func SetupRouter() *gin.Engine {
 
 	api := router.Group("/api")
 	{
-		public := api.Group("/public")
+		public := api.Group("/auth")
 		{
 			public.POST("/users/login/", users_controller.Login)
 			public.POST("/users/register/", users_controller.RegisterUser)
@@ -29,8 +29,9 @@ func SetupRouter() *gin.Engine {
 		protected := api.Group("/protected").Use(middleware.CORSMiddleware(), middleware.AuthMiddleware())
 		{
 			protected.GET("/profile/", users_controller.TryAuthMiddlewareMiddleware)
-			protected.GET("/update-profile-image/", users_controller.UpdateUserProfileImage)
+			protected.POST("/update-profile-image/", users_controller.UpdateUserProfileImage)
 			protected.POST("/create-news/", users_controller.CreatNewsPost)
+			protected.POST("/get-author-news/", users_controller.GetAllNewsPostByAuthor)
 			protected.GET("/get-users/", users_controller.GetAllUsers)
 			protected.GET("/get-news/", users_controller.GetAllNewsPost)
 			protected.DELETE("/delete-news/", users_controller.DeleteNewsPost)

@@ -176,6 +176,42 @@ func GetAllNewsPost(ctx *gin.Context) {
 
 }
 
+func GetAllNewsPostByAuthor(ctx *gin.Context) {
+	id := ctx.Query("id")
+	value, _ := strconv.ParseInt(id, 10, 32)
+	if id == "" || value == 0 {
+		data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	i, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		data := errors.NewBadRequestError("Provide an id to the request.")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+
+	}
+	news, count, errr := services.NewsService.GetAllNewsPostByAuthor(uint(i))
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	type GetAllNewsResponse2 struct {
+		Total int64          `json:"total"`
+		News  []*models.News `json:"news"`
+	}
+	data := GetAllNewsResponse2{
+		Total: count,
+		News:  news,
+	}
+	ctx.JSON(http.StatusOK, data)
+
+}
+
 func DeleteNewsPost(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
@@ -208,6 +244,7 @@ func DeleteNewsPost(ctx *gin.Context) {
 }
 
 func GeSingleNewsPost(ctx *gin.Context) {
+	//TODO:Create method for getting and converting this id
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

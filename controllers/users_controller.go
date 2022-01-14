@@ -237,23 +237,7 @@ func GetAllUsers(ctx *gin.Context) {
 }
 
 func UpdateUserProfileImage(ctx *gin.Context) {
-	//var uploadedInfo minio.UploadInfo
-	payload, exists := ctx.Get("authorization_payload")
-	if !exists {
-		restErr := errors.NewBadRequestError("could not get auth_payload from context")
-		ctx.JSON(restErr.Status, restErr)
-		ctx.Abort()
-		return
-	}
-	data := payload.(*token.Payload)
-	user, err := services.UsersService.GetUserByEmail(data.Username)
-	if err != nil {
-		//log.Println(user)
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
+	data := GetPayloadFromContext(ctx)
 	file, m, err := ctx.Request.FormFile("profile_image")
 
 	if err != nil {
@@ -276,7 +260,7 @@ func UpdateUserProfileImage(ctx *gin.Context) {
 	}
 	log.Println(uploadFile)
 
-	err = services.UsersService.UpdateUserImage(user.Email, uploadFile.Key)
+	err = services.UsersService.UpdateUserImage(data.Username, uploadFile.Key)
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing upload profile image request")
 		ctx.JSON(data.Status, data)

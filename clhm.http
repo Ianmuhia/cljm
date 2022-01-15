@@ -13,7 +13,7 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:8090/api/public/users/login/
+POST http://localhost:8090/api/auth/users/login/
 Accept: application/json
 Content-Type: application/json
 

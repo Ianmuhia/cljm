@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	"context"
 	"log"
 	"net/http"
 	"strconv"
@@ -32,6 +32,15 @@ func CreatNewsPost(ctx *gin.Context) {
 
 	data := GetPayloadFromContext(ctx)
 	file, m, err := ctx.Request.FormFile("cover_image")
+	form, _ := ctx.MultipartForm()
+	files := form.File["other_images"]
+
+	for _, file := range files {
+		log.Println(file.Filename)
+
+		// Upload the file to specific dst.
+		// c.SaveUploadedFile(file, dst)
+	}
 
 	if err != nil {
 		restErr := errors.NewBadRequestError("Please attach image to the request")
@@ -39,8 +48,6 @@ func CreatNewsPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
-	fmt.Println(file, m.Header, m.Filename, m.Size)
 	postData := req{
 		Title:    ctx.PostForm("title"),
 		SubTitle: ctx.PostForm("sub_title"),
@@ -57,7 +64,6 @@ func CreatNewsPost(ctx *gin.Context) {
 		return
 
 	}
-	log.Println(uploadFile)
 	uploadedInfo = uploadFile
 	//TODO: Rework this.
 	user, err := services.UsersService.GetUserByEmail(data.Username)
@@ -68,10 +74,6 @@ func CreatNewsPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
-	log.Println(&user)
-	//TODO:upload news images
-	//TODO:Work on user profile, reset password , forgot password
 	value := models.News{
 		AuthorID:   user.ID,
 		CoverImage: uploadedInfo.Key,
@@ -160,7 +162,14 @@ func UpdateNewsPost(ctx *gin.Context) {
 	})
 
 }
+
 func GetAllNewsPost(ctx *gin.Context) {
+	cacheData, errr := services.CacheService.GetNewsList(context.Background(), "news-list")
+
+	if errr == nil {
+		ctx.JSON(http.StatusOK, cacheData)
+		return
+	}
 	news, count, err := services.NewsService.GetAllNewsPost()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
@@ -168,6 +177,9 @@ func GetAllNewsPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
+
+	_ = services.CacheService.SetNewsList(context.Background(), news)
+
 	data := GetAllNewsResponse{
 		Total: count,
 		News:  news,
@@ -261,6 +273,14 @@ func GeSingleNewsPost(ctx *gin.Context) {
 		return
 
 	}
+
+	newsData, bg := services.CacheService.GetNews(context.Background(), "single-news")
+	if bg == nil {
+		log.Println(newsData)
+		ctx.JSON(http.StatusOK, newsData)
+		return
+	}
+
 	news, errr := services.NewsService.GetSingleNewsPost(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
@@ -268,7 +288,7 @@ func GeSingleNewsPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
+	_ = services.CacheService.SetNews(context.Background(), news)
 	ctx.JSON(http.StatusOK, news)
 
 }

@@ -20,7 +20,7 @@ func GetRedisClient() *redis.Client {
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",
-		DB:       0,
+		DB:       1,
 	})
 
 	_, err := RedisClient.Ping(Ctx).Result()

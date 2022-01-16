@@ -83,20 +83,3 @@ func (s *newsService) GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, *e
 	}
 	return newsData, count, nil
 }
-
-//func (s *newsService) GetUserByEmail(email string) (*models.User, error) {
-//	user, err := users.GetUserByEmail(email)
-//	if err != nil {
-//		return user, err
-//	}
-//	return user, err
-//}
-//
-//func (s *newsService) UpdateUserStatus(email string) *errors.RestErr {
-//	err := users.UpdateVerifiedUserStatus(email)
-//	if err != nil {
-//		log.Println(err)
-//		return err
-//	}
-//	return nil
-//}

@@ -1,7 +1,7 @@
 package app
 
 import (
-	users_controller "maranatha_web/controllers"
+	"maranatha_web/controllers"
 	"maranatha_web/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -10,33 +10,41 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	router.SetTrustedProxies([]string{"0.0.0.0", "localhost"}) //nolint:errcheck
-
-	// Middlewares
-	// router.Use(middleware.CORSMiddleware())
+	_ = router.SetTrustedProxies([]string{"0.0.0.0", "localhost"})
 
 	api := router.Group("/api")
 	{
 		public := api.Group("/auth")
 		{
-			public.POST("/users/login/", users_controller.Login)
-			public.POST("/users/register/", users_controller.RegisterUser)
-			public.POST("/users/verifyemail/", users_controller.VerifyEmailCode)
+			public.POST("/users/login/", controllers.Login)
+			public.POST("/users/register/", controllers.RegisterUser)
+			public.POST("/users/verifyemail/", controllers.VerifyEmailCode)
 
 		}
 
 		// here
 		protected := api.Group("/protected").Use(middleware.CORSMiddleware(), middleware.AuthMiddleware())
 		{
-			protected.GET("/profile/", users_controller.TryAuthMiddlewareMiddleware)
-			protected.POST("/update-profile-image/", users_controller.UpdateUserProfileImage)
-			protected.POST("/create-news/", users_controller.CreatNewsPost)
-			protected.POST("/get-author-news/", users_controller.GetAllNewsPostByAuthor)
-			protected.GET("/get-users/", users_controller.GetAllUsers)
-			protected.GET("/get-news/", users_controller.GetAllNewsPost)
-			protected.DELETE("/delete-news/", users_controller.DeleteNewsPost)
-			protected.GET("/get-single-news/", users_controller.GeSingleNewsPost)
-			protected.PUT("/update-news/", users_controller.UpdateNewsPost)
+			///Users Routes
+			protected.GET("/profile/", controllers.TryAuthMiddlewareMiddleware)
+			protected.POST("/update-profile-image/", controllers.UpdateUserProfileImage)
+			protected.GET("/get-users/", controllers.GetAllUsers)
+
+			///News Routes
+			protected.POST("/create-news/", controllers.CreatNewsPost)
+			protected.POST("/get-author-news/", controllers.GetAllNewsPostByAuthor)
+			protected.GET("/get-news/", controllers.GetAllNewsPost)
+			protected.DELETE("/delete-news/", controllers.DeleteNewsPost)
+			protected.GET("/get-single-news/", controllers.GeSingleNewsPost)
+			protected.PUT("/update-news/", controllers.UpdateNewsPost)
+
+			///Church Partners Routes
+			protected.POST("/create-partner/", controllers.CreateChurchPartner)
+			protected.GET("/get-partner/", controllers.GetSingleChurchPartner)
+			protected.DELETE("/delete-partner/", controllers.DeleteChurchPartner)
+			protected.GET("/get-partners/", controllers.GetAllChurchPartner)
+			protected.PUT("/update-partner/", controllers.UpdateChurchPartner)
+
 		}
 	}
 

@@ -85,8 +85,8 @@ func RegisterUser(c *gin.Context) {
 		Subject: "hello",
 		Content: code,
 	}
-	dc, err := services.MailService.SendMsg(services.Mail(m))
-	log.Println(&dc)
+	err := services.MailService.SendMsg(services.Mail(m))
+	//log.Println(&dc)
 
 	if err != nil {
 		log.Println(err)

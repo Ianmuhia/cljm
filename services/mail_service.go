@@ -11,17 +11,23 @@ import (
 	mail "github.com/xhit/go-simple-mail/v2" //nolint:goimports
 	mail_client "maranatha_web/datasources/mail"
 	redis_db "maranatha_web/datasources/redis"
+	tasks_client "maranatha_web/tasks/client"
 )
 
 var (
 	MailService mailServiceInterface = &mailService{}
 )
 
+// A list of task types.
+const (
+	TypeWelcomeEmail  = "email:welcome"
+	TypeReminderEmail = "email:reminder"
+)
+
 type mailService struct{}
 
 type mailServiceInterface interface {
-	SendMsg(m Mail) (*asynq.Task, error)
-	ListenForMail()
+	SendMsg(m Mail) error
 	VerifyMailCode(key string) string
 	RemoveMailCode(key string)
 }
@@ -44,46 +50,36 @@ type Mail struct {
 	Content string
 }
 
-var mailChan chan Mail
-
-func (s *mailService) ListenForMail() {
-	go func() {
-		for {
-			msg := <-mailChan
-			err, _ := s.SendMsg(msg)
-			if err != nil {
-				panic(err)
-			}
-		}
-	}()
-}
-
-func (s *mailService) SendMsg(m Mail) (*asynq.Task, error) {
+func (s *mailService) SendMsg(m Mail) error {
+	log.Println("send message has been called.")
 	marshal, err := json.Marshal(m)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return asynq.NewTask("Mail", marshal), nil
-}
+	//return
 
-func SendVerifyMail(m Mail) *asynq.Task {
-	marshal, err := json.Marshal(m)
+	t1 := asynq.NewTask(TypeWelcomeEmail, marshal)
+	info, err := tasks_client.TasksClient.Enqueue(t1)
 	if err != nil {
-		log.Println(err)
-		return nil
+		log.Fatal(err)
 	}
-	return asynq.NewTask("email:welcome", marshal)
+	log.Printf(" [*] Successfully enqueued task: %+v", info)
+	return nil
 }
 
 func HandleVerifyEmailTask(ctx context.Context, t *asynq.Task) error {
 	var m Mail
+
 	if err := json.Unmarshal(t.Payload(), &m); err != nil {
 		return err
 	}
 	email := mail.NewMSG()
 	email.SetFrom(m.From).AddTo(m.To).SetSubject(m.Subject).SetBody(mail.TextPlain, m.Content)
+
 	err := email.Send(mail_client.MailClient)
+
 	if err != nil {
+		log.Println("failing here.")
 		log.Println(err)
 		return err
 	}

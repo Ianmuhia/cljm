@@ -8,18 +8,12 @@ import (
 	task "maranatha_web/tasks"
 )
 
-var (
-	TasksServer *asynq.Server
-)
-
 // workers.go
 func main() {
 	srv := asynq.NewServer(
 		asynq.RedisClientOpt{Addr: "localhost:6379"},
 		asynq.Config{Concurrency: 10},
 	)
-
-	TasksServer = srv
 
 	mux := asynq.NewServeMux()
 	mux.HandleFunc(task.TypeWelcomeEmail, services.HandleVerifyEmailTask)
@@ -29,7 +23,3 @@ func main() {
 		log.Fatal(err)
 	}
 }
-
-//func GetTasksWorker() *asynq.Server {
-//	return TasksServer
-//}

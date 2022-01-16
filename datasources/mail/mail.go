@@ -24,11 +24,7 @@ func GetMailServer() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	MailServer = server
 	MailClient = client
+	MailServer = server
 
 }
-
-//func GetMailServer() *mail.SMTPServer {
-//	return MailServer
-//}

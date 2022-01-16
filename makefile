@@ -23,3 +23,6 @@ pgdrop:
 	docker stop postgres_clj && docker rm postgres_clj
 
 
+start:
+	air
+

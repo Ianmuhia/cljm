@@ -31,6 +31,7 @@ var (
 type users models.User
 type news models.News
 type churchPartner models.ChurchPartner
+type sermon models.Sermon
 
 func init() {
 
@@ -65,7 +66,7 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 
 	db.Logger.LogMode(logger.Info)
 
-	if err := db.AutoMigrate(&users{}, &news{}, &churchPartner{}); err != nil {
+	if err := db.AutoMigrate(&users{}, &news{}, &churchPartner{}, &sermon{}); err != nil {
 		fmt.Println(err)
 		panic(err)
 	} else {

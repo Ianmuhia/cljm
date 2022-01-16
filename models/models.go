@@ -58,11 +58,3 @@ type GalleryImages struct {
 }
 
 //Sermon holds information about the sermon model
-type Sermon struct {
-	Title     string    `json:"title"`
-	SubTitle  string    `json:"sub_title"`
-	Content   string    `json:"content"`
-	VideoData string    `json:"video"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}

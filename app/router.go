@@ -45,6 +45,13 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-partners/", controllers.GetAllChurchPartner)
 			protected.PUT("/update-partner/", controllers.UpdateChurchPartner)
 
+			///Sermon Routes
+			protected.POST("/create-sermon/", controllers.CreateSermon)
+			protected.GET("/get-sermon/", controllers.GetSingleSermon)
+			protected.DELETE("/delete-sermon/", controllers.DeleteSermon)
+			protected.GET("/get-sermons/", controllers.GetAllSermons)
+			protected.PUT("/update-sermon/", controllers.UpdateSermon)
+
 		}
 	}
 

@@ -69,7 +69,6 @@ func GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
 	return news, count, nil
 }
 
-//TODO:chrch patna image, name, since_date
 //TODO:Prayer request prayer date...GetAll Getbyid Update,DEl
 //TODO:Testimonial testimony ,user , date, GET testmony Edit Testimony Del testimony
 //TODO:Sermon url . title , date_pub, duration

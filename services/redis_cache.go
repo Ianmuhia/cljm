@@ -81,7 +81,7 @@ func (c *cacheService) GetPartner(key string, ctx context.Context, n interface{}
 		log.Println(err)
 		return err
 	}
-	return redis_db.RedisClient.Set(ctx, key, b.Bytes(), 30*time.Second).Err()
+	return redis_db.RedisClient.Set(ctx, key, b.Bytes(), 1*time.Minute).Err()
 }
 
 func (c *cacheService) SetPartnersList(key string, ctx context.Context, n interface{}) error {

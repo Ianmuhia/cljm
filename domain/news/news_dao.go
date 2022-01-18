@@ -47,8 +47,8 @@ func UpdateNewsPost(id uint, newsModel models.News) (*models.News, *errors.RestE
 	return &newsModel, nil
 }
 
-func GetAllNewsPost() ([]models.News, int64, error) {
-	var news []models.News
+func GetAllNewsPost() ([]*models.News, int64, error) {
+	var news []*models.News
 	var count int64
 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
 	if val != nil {
@@ -71,7 +71,6 @@ func GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
 
 //TODO:Prayer request prayer date...GetAll Getbyid Update,DEl
 //TODO:Testimonial testimony ,user , date, GET testmony Edit Testimony Del testimony
-//TODO:Sermon url . title , date_pub, duration
 //TODO:Events, title ,sub_title, tag(marriage, wedo) schedule date
 //TODO:Events, title ,sub_title, tag)
 //TODO:Events,, Voluntia for event

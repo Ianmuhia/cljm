@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"maranatha_web/domain/news"
 	"maranatha_web/models"
@@ -17,7 +18,7 @@ type newsService struct{}
 
 type newsServiceInterface interface {
 	CreateNewsPost(newsModel models.News) (*models.News, *errors.RestErr)
-	GetAllNewsPost() ([]models.News, int64, *errors.RestErr)
+	GetAllNewsPost() ([]*models.News, int64, *errors.RestErr)
 	DeleteNewsPost(id uint) *errors.RestErr
 	GetSingleNewsPost(id uint) (*models.News, *errors.RestErr)
 	UpdateNewsPost(id uint, newModel models.News) *errors.RestErr
@@ -31,8 +32,26 @@ func (s *newsService) CreateNewsPost(newsModel models.News) (*models.News, *erro
 	return &newsModel, nil
 }
 
-func (s *newsService) GetAllNewsPost() ([]models.News, int64, *errors.RestErr) {
+func (s *newsService) GetAllNewsPost() ([]*models.News, int64, *errors.RestErr) {
 	data, count, err := news.GetAllNewsPost()
+	for _, v := range data {
+		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
+
+		d := v.CreatedAt.Format(time.RFC822)
+
+		myDate, err := time.Parse(time.RFC822, d)
+		if err != nil {
+			panic(err)
+		}
+
+		v.CreatedAt = myDate
+		fmt.Println(v.CreatedAt.Format(time.RFC1123))
+		// d, e := time.Parse("January 02, 2006",string(v.CreatedAt))
+		// if e!=nil {
+		// 	log.Println(e)
+		// }
+		// v.CreatedAt = d
+	}
 	if err != nil {
 		return data, count, errors.NewBadRequestError("Could not get post")
 

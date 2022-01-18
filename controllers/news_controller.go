@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin" //nolint:goimports
-	"github.com/minio/minio-go/v7"
 	"maranatha_web/controllers/token"
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors" //nolint:goimports
+
+	"github.com/gin-gonic/gin" //nolint:goimports
+	"github.com/minio/minio-go/v7"
 )
 
 type CreatNewsPostRequest struct {
@@ -21,8 +22,8 @@ type CreatNewsPostRequest struct {
 }
 
 type GetAllNewsResponse struct {
-	Total int64         `json:"total"`
-	News  []models.News `json:"news"`
+	Total int64          `json:"total"`
+	News  []*models.News `json:"news"`
 }
 
 func CreatNewsPost(ctx *gin.Context) {
@@ -178,7 +179,7 @@ func GetAllNewsPost(ctx *gin.Context) {
 		return
 	}
 
-	_ = services.CacheService.SetNewsList(context.Background(), news)
+	// _ = services.CacheService.SetNewsList(context.Background(), news)
 
 	data := GetAllNewsResponse{
 		Total: count,

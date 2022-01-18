@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-gonic/gin" //nolint:goimports
-	"github.com/minio/minio-go/v7"
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors" //nolint:goimports
+
+	"github.com/gin-gonic/gin" //nolint:goimports
+	"github.com/minio/minio-go/v7"
 )
 
 type CreatChurchPartnerRequest struct {
@@ -19,8 +20,8 @@ type CreatChurchPartnerRequest struct {
 }
 
 type GetAllChurchPartnersResponse struct {
-	Total int64                  `json:"total"`
-	News  []models.ChurchPartner `json:"news"`
+	Total    int64                  `json:"total"`
+	Partners []models.ChurchPartner `json:"news"`
 }
 
 func CreateChurchPartner(ctx *gin.Context) {
@@ -166,8 +167,8 @@ func GetAllChurchPartner(ctx *gin.Context) {
 	log.Println(e)
 
 	data := GetAllChurchPartnersResponse{
-		Total: count,
-		News:  partners,
+		Total:    count,
+		Partners: partners,
 	}
 	ctx.JSON(http.StatusOK, data)
 

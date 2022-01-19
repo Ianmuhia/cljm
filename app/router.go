@@ -52,6 +52,35 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-sermons/", controllers.GetAllSermons)
 			protected.PUT("/update-sermon/", controllers.UpdateSermon)
 
+			///Books Routes
+			protected.POST("/create-book/", controllers.CreateBook)
+			protected.GET("/get-book/", controllers.GetSingleBookPost)
+			protected.PUT("/update-book/", controllers.UpdateBook)
+			protected.GET("/get-books/", controllers.GetAllBooksPost)
+
+			//Prayer_request Routes
+			protected.POST("/create-prayer/", controllers.CreatPrayerPost)
+			protected.POST("/get-author-prayer/", controllers.GetAllPrayerPostByAuthor)
+			protected.GET("/get-prayer/", controllers.GetAllPrayerPost)
+			protected.DELETE("/delete-prayer/", controllers.DeletePrayerPost)
+			protected.GET("/get-single-prayer/", controllers.GetSinglePrayerPost)
+			protected.PUT("/update-prayer/", controllers.UpdatePrayerPost)
+
+			//Testimonies Routes
+			protected.POST("/create-testimonies/", controllers.CreatTestimoniesPost)
+			protected.POST("/get-author-testimonies/", controllers.GetAllTestimoniesPostByAuthor)
+			protected.GET("/get-testimonies/", controllers.GetAllTestimoniesPost)
+			protected.DELETE("/delete-testimonies/", controllers.DeleteTestimoniesPost)
+			protected.GET("/get-single-testimonies/", controllers.GetSingleTestimoniesPost)
+			protected.PUT("/update-testimonies/", controllers.UpdateTestimoniesPost)
+
+			//Events Routes
+			protected.POST("/create-events/", controllers.CreatEventsPost)
+			protected.POST("/get-author-events/", controllers.GetAllEventsPostByAuthor)
+			protected.GET("/get-events/", controllers.GetAllEventsPost)
+			protected.DELETE("/delete-events/", controllers.DeleteEventsPost)
+			protected.GET("/get-single-events/", controllers.GetSingleEventsPost)
+			protected.PUT("/update-events/", controllers.UpdateEventsPost)
 		}
 	}
 

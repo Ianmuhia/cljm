@@ -24,8 +24,6 @@ type BlogImages struct {
 	UpdatedAt time.Time             `json:"updated_at"`
 }
 
-//Books hold the Books model information
-
 //Gallery hold the Gallery model information
 type Gallery struct {
 	Image     []GalleryImages `json:"images"`

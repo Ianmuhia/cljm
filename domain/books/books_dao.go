@@ -68,12 +68,3 @@ func GetAllBookByAuthor(id uint) ([]*models.Books, int64, error) {
 	}
 	return book, count, nil
 }
-
-//TODO:Prayer request prayer date...GetAll Getbyid Update,DEl
-//TODO:Testimonial testimony ,user , date, GET testmony Edit Testimony Del testimony
-//TODO:Events, title ,sub_title, tag(marriage, wedo) schedule date
-//TODO:Events, title ,sub_title, tag)
-//TODO:Events,, Voluntia for event
-//TODO:Books, genre title, file
-//TODO:Get user voluntiad jobs...
-//Get all users

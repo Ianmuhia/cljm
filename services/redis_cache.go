@@ -44,9 +44,9 @@ type cacheServiceInterface interface {
 	SetTestimonies(ctx context.Context, n *models.Testimonies) error
 
 	//GetEventsList for cache
-	GetEventsList(ctx context.Context, id string) ([]models.Event, error)
-	GetEvents(ctx context.Context, id string) (models.Event, error)
-	SetEvents(ctx context.Context, n *models.Event) error
+	GetEventsList(ctx context.Context, id string) ([]models.ChurchEvent, error)
+	GetEvents(ctx context.Context, id string) (models.ChurchEvent, error)
+	SetEvents(ctx context.Context, n *models.ChurchEvent) error
 
 	//GetGenreList
 	GetGenreList(ctx context.Context, id string) ([]models.Genre, error)
@@ -240,8 +240,8 @@ func (c *cacheService) SetTestimonies(ctx context.Context, n *models.Testimonies
 }
 
 // Events /***
-func (c *cacheService) GetEventsList(ctx context.Context, id string) ([]models.Event, error) {
-	var events []models.Event
+func (c *cacheService) GetEventsList(ctx context.Context, id string) ([]models.ChurchEvent, error) {
+	var events []models.ChurchEvent
 	cmd := redis_db.RedisClient.Get(ctx, id)
 	cmdb, err := cmd.Bytes()
 	if err != nil {
@@ -253,8 +253,8 @@ func (c *cacheService) GetEventsList(ctx context.Context, id string) ([]models.E
 	}
 	return events, nil
 }
-func (c *cacheService) GetEvents(ctx context.Context, id string) (models.Event, error) {
-	var events models.Event
+func (c *cacheService) GetEvents(ctx context.Context, id string) (models.ChurchEvent, error) {
+	var events models.ChurchEvent
 	cmd := redis_db.RedisClient.Get(ctx, id)
 	cmdb, err := cmd.Bytes()
 	if err != nil {
@@ -266,7 +266,7 @@ func (c *cacheService) GetEvents(ctx context.Context, id string) (models.Event, 
 	}
 	return events, nil
 }
-func (c *cacheService) SetEvents(ctx context.Context, n *models.Event) error {
+func (c *cacheService) SetEvents(ctx context.Context, n *models.ChurchEvent) error {
 	var b bytes.Buffer
 	if err := gob.NewEncoder(&b).Encode(n); err != nil {
 		log.Println(err)

@@ -3,10 +3,11 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
+
 	"maranatha_web/domain/books"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
-	"time"
 )
 
 var (
@@ -33,7 +34,7 @@ func (b *booksService) CreateBooksPost(booksModel models.Books) (*models.Books, 
 func (b *booksService) GetAllBooks() ([]*models.Books, int64, *errors.RestErr) {
 	data, count, err := books.GetAllBook()
 	for _, v := range data {
-		v.File = fmt.Sprint("http://localhost:9000/mono/%s", v.File)
+		v.File = fmt.Sprintf("http://localhost:9000/mono/%s", v.File)
 		d := v.CreatedAt.Format(time.RFC822)
 		myDate, err := time.Parse(time.RFC822, d)
 		if err != nil {

@@ -34,16 +34,17 @@ type churchPartner models.ChurchPartner
 type sermon models.Sermon
 type books models.Books
 type genre models.Genre
-type prayer models.Prayer
-type events models.Event
-type eventJob models.EventJob
+
+//type prayer models.Prayer
+type churchEvent models.ChurchEvent
+type churchJob models.ChurchJob
 type volunteerEventTable models.VolunteerEventTable
 
 func init() {
 
 	// dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", username, password, host, schema)
 
-	dsn := "host=localhost user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
+	dsn := "host=localhost user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
 
 	database, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: false,
@@ -78,10 +79,11 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 		&churchPartner{},
 		&sermon{},
 		&books{},
-		&genre{},
-		&eventJob{},
+		genre{},
+		&churchJob{},
+		&churchEvent{},
+		//&events{},
 		&volunteerEventTable{},
-		&events{},
 
 		//prayer{},
 		//events{},

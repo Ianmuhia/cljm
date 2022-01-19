@@ -34,7 +34,7 @@ func CreatPrayerPost(ctx *gin.Context) {
 		Content: req.Content,
 	}
 
-	prayer, errr := services.GenreService.CreateGenrePost(postData)
+	prayer, errr := services.PrayerService.CreatePrayerPost(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)

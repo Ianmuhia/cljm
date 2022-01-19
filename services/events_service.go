@@ -3,10 +3,11 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
+
 	"maranatha_web/domain/events"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
-	"time"
 )
 
 var (
@@ -16,22 +17,22 @@ var (
 type eventsService struct{}
 
 type eventsServiceInterface interface {
-	CreateEventsPost(eventsModel models.Event) (*models.Event, *errors.RestErr)
-	GetAllEventsPost() ([]*models.Event, int64, *errors.RestErr)
+	CreateEventsPost(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr)
+	GetAllEventsPost() ([]*models.ChurchEvent, int64, *errors.RestErr)
 	DeleteEventsPost(id uint) *errors.RestErr
-	GetSingleEventsPost(id uint) (*models.Event, *errors.RestErr)
-	UpdateEventsPost(id uint, newModel models.Event) *errors.RestErr
-	GetAllEventsPostByAuthor(id uint) ([]*models.Event, int64, *errors.RestErr)
+	GetSingleEventsPost(id uint) (*models.ChurchEvent, *errors.RestErr)
+	UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr
+	GetAllEventsPostByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr)
 }
 
-func (s *eventsService) CreateEventsPost(eventsModel models.Event) (*models.Event, *errors.RestErr) {
+func (s *eventsService) CreateEventsPost(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr) {
 	if err := events.CreateEventsPost(&eventsModel); err != nil {
 		return nil, err
 	}
 	return &eventsModel, nil
 }
 
-func (s *eventsService) GetAllEventsPost() ([]*models.Event, int64, *errors.RestErr) {
+func (s *eventsService) GetAllEventsPost() ([]*models.ChurchEvent, int64, *errors.RestErr) {
 	data, count, err := events.GetAllEventsPost()
 	for _, v := range data {
 		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
@@ -64,7 +65,7 @@ func (s *eventsService) DeleteEventsPost(id uint) *errors.RestErr {
 	return nil
 }
 
-func (s *eventsService) GetSingleEventsPost(id uint) (*models.Event, *errors.RestErr) {
+func (s *eventsService) GetSingleEventsPost(id uint) (*models.ChurchEvent, *errors.RestErr) {
 	events, err := events.GetSingleEventsPost(id)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
@@ -75,7 +76,7 @@ func (s *eventsService) GetSingleEventsPost(id uint) (*models.Event, *errors.Res
 	return events, nil
 }
 
-func (s *eventsService) UpdateEventsPost(id uint, newModel models.Event) *errors.RestErr {
+func (s *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr {
 	events, err := events.UpdateEventsPost(id, newModel)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
@@ -86,7 +87,7 @@ func (s *eventsService) UpdateEventsPost(id uint, newModel models.Event) *errors
 	return nil
 }
 
-func (s *eventsService) GetAllEventsPostByAuthor(id uint) ([]*models.Event, int64, *errors.RestErr) {
+func (s *eventsService) GetAllEventsPostByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr) {
 	eventsData, count, err := events.GetAllEventsPostByAuthor(id)
 	for _, v := range eventsData {
 		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)

@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"context"
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
+
+	"gorm.io/gorm"
 
 	"maranatha_web/models"
 	"maranatha_web/services"
@@ -23,8 +24,8 @@ type CreatEventsPostRequest struct {
 }
 
 type GetAllEventsResponse struct {
-	Total  int64           `json:"total"`
-	Events []*models.Event `json:"events"`
+	Total  int64                 `json:"total"`
+	Events []*models.ChurchEvent `json:"events"`
 }
 
 //TODO: Fix volunteer to event
@@ -76,7 +77,7 @@ func CreatEventsPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	value := models.Event{
+	value := models.ChurchEvent{
 		Model:       gorm.Model{},
 		OrganizerID: 0,
 		//AuthorID:   user.ID,
@@ -149,7 +150,7 @@ func UpdateEventsPost(ctx *gin.Context) {
 	}
 	log.Println(data)
 	uploadedInfo = uploadFile
-	eventsData := models.Event{
+	eventsData := models.ChurchEvent{
 		CoverImage: uploadedInfo.Key,
 		Title:      reqData.Title,
 		SubTitle:   reqData.SubTitle,
@@ -219,8 +220,8 @@ func GetAllEventsPostByAuthor(ctx *gin.Context) {
 		return
 	}
 	type GetAllEventsResponse2 struct {
-		Total  int64           `json:"total"`
-		Events []*models.Event `json:"events"`
+		Total  int64                 `json:"total"`
+		Events []*models.ChurchEvent `json:"events"`
 	}
 	data := GetAllEventsResponse2{
 		Total:  count,

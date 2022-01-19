@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors"
-	"net/http"
-	"strconv"
 )
 
 type CreateGenrePostRequest struct {
@@ -169,7 +170,7 @@ func GetSingleGenrePost(ctx *gin.Context) {
 		return
 	}
 
-	genre, errr := services.GenreService.GetSingleGenrePost(string(i))
+	genre, errr := services.GenreService.GetSingleGenrePost(strconv.FormatUint(i, 10)) //nolint:govet
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

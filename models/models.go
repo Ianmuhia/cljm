@@ -25,22 +25,6 @@ type BlogImages struct {
 }
 
 //Books hold the Books model information
-type Books struct {
-	Title     string                `json:"title"`
-	Synopsis  string                `json:"synopsis"`
-	Author    string                `json:"author"`
-	Genre     Genre                 `json:"genre"`
-	File      *multipart.FileHeader `json:"file"`
-	CreatedAt time.Time             `json:"created_at"`
-	UpdatedAt time.Time             `json:"updated_at"`
-}
-
-//Genre hold the Genre model information
-type Genre struct {
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-}
 
 //Gallery hold the Gallery model information
 type Gallery struct {

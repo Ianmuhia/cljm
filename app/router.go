@@ -81,6 +81,13 @@ func SetupRouter() *gin.Engine {
 			protected.DELETE("/delete-events/", controllers.DeleteEventsPost)
 			protected.GET("/get-single-events/", controllers.GetSingleEventsPost)
 			protected.PUT("/update-events/", controllers.UpdateEventsPost)
+
+			//Genre Routes
+			protected.POST("/create-genre/", controllers.CreatGenrePost)
+			protected.GET("/get-genre/", controllers.GetAllGenrePost)
+			protected.DELETE("/delete-genre/", controllers.DeleteGenrePost)
+			protected.GET("/get-single-genre/", controllers.GetSingleGenrePost)
+			protected.PUT("/update-genre/", controllers.UpdateGenrePost)
 		}
 	}
 

@@ -4,16 +4,11 @@ import "gorm.io/gorm"
 
 type Books struct {
 	gorm.Model
-	Title    string
-	Synopsis string
-	Author   string
-	GenreID  int
-	Genre    Genre
-	File     string
-}
-
-//Genre hold the Genre model information
-type Genre struct {
-	gorm.Model
-	Name string
+	Title       string
+	Synopsis    string
+	CreatedBy   User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	CreatedByID uint `gorm:"index:,option:CONCURRENTLY"`
+	GenreID     int
+	Genre       Genre
+	File        string
 }

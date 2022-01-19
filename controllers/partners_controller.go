@@ -30,7 +30,6 @@ func CreateChurchPartner(ctx *gin.Context) {
 	var reqData CreatChurchPartnerRequest
 	var uploadedInfo minio.UploadInfo
 
-	//TODO:Create middleware for checking if the user admin
 	file, m, err := ctx.Request.FormFile("image")
 
 	if err != nil {

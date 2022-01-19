@@ -2,20 +2,31 @@ package models
 
 import "gorm.io/gorm"
 
-type Events struct {
+type Event struct {
 	gorm.Model
-	Author      User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	AuthorID    uint `gorm:"index:,option:CONCURRENTLY"`
+	Organizer   *User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	OrganizerID uint  `gorm:"index:,option:CONCURRENTLY"`
 	CoverImage  string
 	Title       string
 	SubTitle    string
 	Content     string
 	ScheduledOn string
-	VolunteerId int
-	Volunteer   Volunteers
+	//Jobs        []*EventJob
 }
 
-type Volunteers struct {
-	Volunteer  User
-	Assignment string
+type VolunteerEventTable struct {
+	gorm.Model
+	Volunteer   *User
+	VolunteerID int
+	Event       *Event
+	EventID     int
+}
+
+type EventJob struct {
+	gorm.Model
+	Event                 *Event
+	EventID               int
+	VolunteerEventTable   *VolunteerEventTable
+	VolunteerEventTableID int
+	Duty                  string
 }

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
@@ -22,17 +23,18 @@ type CreatEventsPostRequest struct {
 }
 
 type GetAllEventsResponse struct {
-	Total  int64            `json:"total"`
-	Events []*models.Events `json:"events"`
+	Total  int64           `json:"total"`
+	Events []*models.Event `json:"events"`
 }
 
 //TODO: Fix volunteer to event
 func CreatEventsPost(ctx *gin.Context) {
+
 	type req CreatEventsPostRequest
 	var reqData CreatEventsPostRequest
 	var uploadedInfo minio.UploadInfo
 
-	data := GetPayloadFromContext(ctx)
+	//data := GetPayloadFromContext(ctx)
 	file, m, err := ctx.Request.FormFile("cover_image")
 	form, _ := ctx.MultipartForm()
 	files := form.File["other_images"]
@@ -66,7 +68,7 @@ func CreatEventsPost(ctx *gin.Context) {
 	}
 	uploadedInfo = uploadFile
 	//TODO: Rework this.
-	user, err := services.UsersService.GetUserByEmail(data.Username)
+	//user, err := services.UsersService.GetUserByEmail(data.Username)
 	if err != nil {
 
 		data := errors.NewBadRequestError("Error Processing request")
@@ -74,12 +76,16 @@ func CreatEventsPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	value := models.Events{
-		AuthorID:   user.ID,
-		CoverImage: uploadedInfo.Key,
-		Title:      reqData.Title,
-		SubTitle:   reqData.SubTitle,
-		Content:    reqData.Content,
+	value := models.Event{
+		Model:       gorm.Model{},
+		OrganizerID: 0,
+		//AuthorID:   user.ID,
+		CoverImage:  uploadedInfo.Key,
+		Title:       reqData.Title,
+		SubTitle:    reqData.SubTitle,
+		Content:     reqData.Content,
+		ScheduledOn: "",
+		//Jobs:        nil,/./
 	}
 	events, errr := services.EventsService.CreateEventsPost(value)
 	if errr != nil {
@@ -143,7 +149,7 @@ func UpdateEventsPost(ctx *gin.Context) {
 	}
 	log.Println(data)
 	uploadedInfo = uploadFile
-	eventsData := models.Events{
+	eventsData := models.Event{
 		CoverImage: uploadedInfo.Key,
 		Title:      reqData.Title,
 		SubTitle:   reqData.SubTitle,
@@ -213,8 +219,8 @@ func GetAllEventsPostByAuthor(ctx *gin.Context) {
 		return
 	}
 	type GetAllEventsResponse2 struct {
-		Total  int64            `json:"total"`
-		Events []*models.Events `json:"events"`
+		Total  int64           `json:"total"`
+		Events []*models.Event `json:"events"`
 	}
 	data := GetAllEventsResponse2{
 		Total:  count,

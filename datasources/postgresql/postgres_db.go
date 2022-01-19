@@ -35,7 +35,9 @@ type sermon models.Sermon
 type books models.Books
 type genre models.Genre
 type prayer models.Prayer
-type events models.Events
+type events models.Event
+type eventJob models.EventJob
+type volunteerEventTable models.VolunteerEventTable
 
 func init() {
 
@@ -70,11 +72,17 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 
 	db.Logger.LogMode(logger.Info)
 
-	if err := db.AutoMigrate(&users{},
+	if err := db.AutoMigrate(
+		&users{},
 		&news{},
 		&churchPartner{},
-		&sermon{}, &books{},
-		genre{},
+		&sermon{},
+		&books{},
+		&genre{},
+		&eventJob{},
+		&volunteerEventTable{},
+		&events{},
+
 		//prayer{},
 		//events{},
 	); err != nil {

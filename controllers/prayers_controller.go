@@ -21,29 +21,22 @@ type GetAllPrayerResponse struct {
 }
 
 func CreatPrayerPost(ctx *gin.Context) {
-	type req CreatePrayerPostRequest
-	var reqData CreatePrayerPostRequest
+	var req CreatePrayerPostRequest
 
-	data := GetPayloadFromContext(ctx)
-	postData := req{
-		Content: ctx.PostForm("content"),
-	}
-	reqData = CreatePrayerPostRequest(postData)
-
-	user, err := services.UsersService.GetUserByEmail(data.Username)
-	if err != nil {
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
-	value := models.Prayer{
-		AuthorID: user.ID,
-		Content:  reqData.Content,
+
+	postData := models.Prayer{
+		Content: req.Content,
 	}
-	prayer, errr := services.PrayerService.CreatePrayerPost(value)
+
+	prayer, errr := services.GenreService.CreateGenrePost(postData)
 	if errr != nil {
-		data := errors.NewBadRequestError("Error Processing create prayer post request")
+		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return

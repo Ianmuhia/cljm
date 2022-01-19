@@ -51,6 +51,7 @@ func GetAllBook() ([]*models.Books, int64, error) {
 	var book []*models.Books
 	var count int64
 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&book).Error
+	count = int64(len(book))
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

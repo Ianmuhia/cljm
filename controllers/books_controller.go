@@ -13,9 +13,10 @@ import (
 )
 
 type CreateBookPostRequest struct {
-	Title    string `json:"title" binding:"required"`
-	Synopsis string `json:"synopsis" binding:"required"`
-	Author   string `json:"author" binding:"required"`
+	Title     string `json:"title" binding:"required"`
+	Synopsis  string `json:"synopsis" binding:"required"`
+	CreatedBy string `json:"createdBy" binding:"required"`
+	Genre     string `json:"genre" binding:"required"`
 }
 
 type GetAllBooksResponse struct {
@@ -39,11 +40,13 @@ func CreateBook(ctx *gin.Context) {
 	}
 
 	postData := req{
-		Title:    ctx.PostForm("title"),
-		Synopsis: ctx.PostForm("synopsis"),
-		Author:   ctx.PostForm("author"),
+		Title:     ctx.PostForm("title"),
+		Synopsis:  ctx.PostForm("synopsis"),
+		CreatedBy: ctx.PostForm("createdBy"),
+		Genre:     ctx.PostForm("genre"),
 	}
 	reqData = CreateBookPostRequest(postData)
+
 	fileContentType := m.Header["Content-Type"][0]
 	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
 	if err != nil {
@@ -61,11 +64,32 @@ func CreateBook(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
+
+	creator := GetPayloadFromContext(ctx)
+	user, err := services.UsersService.GetUserByEmail(creator.Username)
+	if err != nil {
+
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	log.Println(user)
+
+	genre, errr := services.GenreService.GetSingleGenrePost(postData.Genre)
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+
 	value := models.Books{
-		Title:    reqData.Title,
-		Synopsis: reqData.Synopsis,
-		Author:   reqData.Author,
-		File:     uploadedInfo.Key,
+		Title:     reqData.Title,
+		Synopsis:  reqData.Synopsis,
+		CreatedBy: user,
+		Genre:     genre,
+		File:      uploadedInfo.Key,
 	}
 	books, errr := services.BooksService.CreateBooksPost(value)
 	if errr != nil {
@@ -110,7 +134,7 @@ func UpdateBook(ctx *gin.Context) {
 	postData := req{
 		Title:    ctx.PostForm("title"),
 		Synopsis: ctx.PostForm("synopsis"),
-		Author:   ctx.PostForm("author"),
+		//Author:   ctx.PostForm("author"),
 	}
 	reqData = CreateBookPostRequest(postData)
 	fileContentType := m.Header["Content-Type"][0]
@@ -135,8 +159,8 @@ func UpdateBook(ctx *gin.Context) {
 	booksData := models.Books{
 		Title:    reqData.Title,
 		Synopsis: reqData.Synopsis,
-		Author:   reqData.Author,
-		File:     uploadedInfo.Key,
+		//CreatedBy:   reqData.Author,
+		File: uploadedInfo.Key,
 	}
 	errr := services.BooksService.UpdateBooksPost(uint(i), booksData)
 	if errr != nil {

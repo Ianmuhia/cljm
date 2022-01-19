@@ -12,7 +12,7 @@ import (
 )
 
 type CreateGenrePostRequest struct {
-	Name string `json:"nem" binding:"required"`
+	Name string `json:"name" binding:"required"`
 }
 
 type GetAllGenreResponse struct {
@@ -21,17 +21,20 @@ type GetAllGenreResponse struct {
 }
 
 func CreatGenrePost(ctx *gin.Context) {
-	type req CreateGenrePostRequest
-	var reqData CreateGenrePostRequest
+	var req CreateGenrePostRequest
 
-	postData := req{
-		Name: ctx.PostForm("name"),
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
 	}
-	reqData = CreateGenrePostRequest(postData)
-	value := models.Genre{
-		Name: reqData.Name,
+
+	postData := models.Genre{
+		Name: req.Name,
 	}
-	genre, errr := services.GenreService.CreateGenrePost(value)
+
+	genre, errr := services.GenreService.CreateGenrePost(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)
@@ -44,10 +47,7 @@ func CreatGenrePost(ctx *gin.Context) {
 }
 
 func UpdateGenrePost(ctx *gin.Context) {
-	type req CreateGenrePostRequest
-	var reqData CreateGenrePostRequest
 
-	data := GetPayloadFromContext(ctx)
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -65,16 +65,16 @@ func UpdateGenrePost(ctx *gin.Context) {
 
 	}
 
-	//TODO:Create separate method to handle image upload
-	postData := req{
+	var req CreateGenrePostRequest
 
-		Name: ctx.PostForm("name"),
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
 	}
-	reqData = CreateGenrePostRequest(postData)
-
-	log.Println(data)
 	genreData := models.Genre{
-		Name: reqData.Name,
+		Name: req.Name,
 	}
 	errr := services.GenreService.UpdateGenrePost(uint(i), genreData)
 	if errr != nil {
@@ -92,7 +92,6 @@ func UpdateGenrePost(ctx *gin.Context) {
 
 func GetAllGenrePost(ctx *gin.Context) {
 	cacheData, errr := services.CacheService.GetGenreList(context.Background(), "genres-list")
-
 	if errr == nil {
 		ctx.JSON(http.StatusOK, cacheData)
 		return
@@ -170,7 +169,7 @@ func GetSingleGenrePost(ctx *gin.Context) {
 		return
 	}
 
-	genre, errr := services.GenreService.GetSingleGenrePost(uint(i))
+	genre, errr := services.GenreService.GetSingleGenrePost(string(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

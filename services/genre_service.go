@@ -19,7 +19,7 @@ type genreServiceInterface interface {
 	CreateGenrePost(genreModel models.Genre) (*models.Genre, *errors.RestErr)
 	GetAllGenrePost() ([]*models.Genre, int64, *errors.RestErr)
 	DeleteGenrePost(id uint) *errors.RestErr
-	GetSingleGenrePost(id uint) (*models.Genre, *errors.RestErr)
+	GetSingleGenrePost(name string) (*models.Genre, *errors.RestErr)
 	UpdateGenrePost(id uint, genreModel models.Genre) *errors.RestErr
 }
 
@@ -60,8 +60,8 @@ func (s *genreService) DeleteGenrePost(id uint) *errors.RestErr {
 	return nil
 }
 
-func (s *genreService) GetSingleGenrePost(id uint) (*models.Genre, *errors.RestErr) {
-	genre, err := genre.GetSingleGenrePost(id)
+func (s *genreService) GetSingleGenrePost(name string) (*models.Genre, *errors.RestErr) {
+	genre, err := genre.GetSingleGenrePost(name)
 	if err != nil {
 		log.Println(err)
 		return genre, errors.NewBadRequestError("Could not get single genre")

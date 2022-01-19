@@ -43,6 +43,7 @@ func (b *booksService) GetAllBooks() ([]*models.Books, int64, *errors.RestErr) {
 		v.CreatedAt = myDate
 		fmt.Println(v.CreatedAt.Format(time.RFC1123))
 	}
+
 	if err != nil {
 		return data, count, errors.NewBadRequestError("Could not get post")
 

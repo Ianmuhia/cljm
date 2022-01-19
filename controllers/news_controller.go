@@ -55,6 +55,16 @@ func CreatNewsPost(ctx *gin.Context) {
 		Content:  ctx.PostForm("content"),
 	}
 	reqData = CreatNewsPostRequest(postData)
+
+	//TODO: Rework this.
+	user, err := services.UsersService.GetUserByEmail(data.Username)
+	if err != nil {
+
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
 	fileContentType := m.Header["Content-Type"][0]
 
 	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
@@ -66,15 +76,6 @@ func CreatNewsPost(ctx *gin.Context) {
 
 	}
 	uploadedInfo = uploadFile
-	//TODO: Rework this.
-	user, err := services.UsersService.GetUserByEmail(data.Username)
-	if err != nil {
-
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
 	value := models.News{
 		AuthorID:   user.ID,
 		CoverImage: uploadedInfo.Key,

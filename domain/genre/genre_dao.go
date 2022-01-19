@@ -28,9 +28,9 @@ func DeleteGenrePost(id uint) *errors.RestErr {
 	}
 	return nil
 }
-func GetSingleGenrePost(id uint) (*models.Genre, *errors.RestErr) {
+func GetSingleGenrePost(name string) (*models.Genre, *errors.RestErr) {
 	var genre models.Genre
-	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&genre).Error
+	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("name = ?", name).First(&genre).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
 		logger.Error("error when trying to get genre post", err)
 		return &genre, errors.NewInternalServerError("database error")

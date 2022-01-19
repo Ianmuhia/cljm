@@ -33,12 +33,15 @@ type news models.News
 type churchPartner models.ChurchPartner
 type sermon models.Sermon
 type books models.Books
+type genre models.Genre
+type prayer models.Prayer
+type events models.Events
 
 func init() {
 
 	// dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", username, password, host, schema)
 
-	dsn := "host=localhost user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
+	dsn := "host=localhost user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
 
 	database, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: false,
@@ -67,7 +70,14 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 
 	db.Logger.LogMode(logger.Info)
 
-	if err := db.AutoMigrate(&users{}, &news{}, &churchPartner{}, &sermon{}, &books{}); err != nil {
+	if err := db.AutoMigrate(&users{},
+		&news{},
+		&churchPartner{},
+		&sermon{}, &books{},
+		genre{},
+		//prayer{},
+		//events{},
+	); err != nil {
 		fmt.Println(err)
 		panic(err)
 	} else {

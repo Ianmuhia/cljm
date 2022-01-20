@@ -11,7 +11,7 @@ import (
 	"maranatha_web/utils/errors"
 )
 
-func CreateEventsPost(events *models.ChurchEvent) *errors.RestErr {
+func CreateEvent(events *models.ChurchEvent) *errors.RestErr {
 	err := postgresql_db.Client.Debug().Create(&events).Error
 	if err != nil {
 		logger.Error("error when trying to save user", err)
@@ -20,7 +20,7 @@ func CreateEventsPost(events *models.ChurchEvent) *errors.RestErr {
 	return nil
 }
 
-func DeleteEventsPost(id uint) *errors.RestErr {
+func DeleteEvent(id uint) *errors.RestErr {
 	var events models.ChurchEvent
 	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&events).Error
 	if err != nil {
@@ -29,7 +29,7 @@ func DeleteEventsPost(id uint) *errors.RestErr {
 	}
 	return nil
 }
-func GetSingleEventsPost(id uint) (*models.ChurchEvent, *errors.RestErr) {
+func GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr) {
 	var events models.ChurchEvent
 	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&events).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
@@ -47,7 +47,7 @@ func UpdateEventsPost(id uint, eventsModel models.ChurchEvent) (*models.ChurchEv
 	return &eventsModel, nil
 }
 
-func GetAllEventsPost() ([]*models.ChurchEvent, int64, error) {
+func GetAllEvents() ([]*models.ChurchEvent, int64, error) {
 	var events []*models.ChurchEvent
 	var count int64
 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&events).Error
@@ -58,7 +58,7 @@ func GetAllEventsPost() ([]*models.ChurchEvent, int64, error) {
 	return events, count, nil
 }
 
-func GetAllEventsPostByAuthor(id uint) ([]*models.ChurchEvent, int64, error) {
+func GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, error) {
 	var events []*models.ChurchEvent
 	var count int64
 	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&events).Count(&count).Error

@@ -67,7 +67,6 @@ func UpdateGenrePost(ctx *gin.Context) {
 	}
 
 	var req CreateGenrePostRequest
-
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)
@@ -145,7 +144,6 @@ func DeleteGenrePost(ctx *gin.Context) {
 }
 
 func GetSingleGenrePost(ctx *gin.Context) {
-	//TODO:Create method for getting and converting this id
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

@@ -3,10 +3,11 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
+
 	"maranatha_web/domain/testimonies"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
-	"time"
 )
 
 var (
@@ -16,23 +17,23 @@ var (
 type testimoniesService struct{}
 
 type testimoniesServiceInterface interface {
-	CreateTestimoniesPost(testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr)
-	GetAllTestimoniesPost() ([]*models.Testimonies, int64, *errors.RestErr)
-	DeleteTestimoniesPost(id uint) *errors.RestErr
-	GetSingleTestimoniesPost(id uint) (*models.Testimonies, *errors.RestErr)
-	UpdateTestimoniesPost(id uint, testimoniesModel models.Testimonies) *errors.RestErr
-	GetAllTestimoniesPostByAuthor(id uint) ([]*models.Testimonies, int64, *errors.RestErr)
+	CreateTestimony(testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr)
+	GetAllTestimonies() ([]*models.Testimonies, int64, *errors.RestErr)
+	DeleteTestimony(id uint) *errors.RestErr
+	GetSingleTestimony(id uint) (*models.Testimonies, *errors.RestErr)
+	UpdateTestimony(id uint, testimoniesModel models.Testimonies) *errors.RestErr
+	GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, *errors.RestErr)
 }
 
-func (s *testimoniesService) CreateTestimoniesPost(testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr) {
-	if err := testimonies.CreateTestimoniesPost(&testimoniesModel); err != nil {
+func (s *testimoniesService) CreateTestimony(testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr) {
+	if err := testimonies.CreateTestimony(&testimoniesModel); err != nil {
 		return nil, err
 	}
 	return &testimoniesModel, nil
 }
 
-func (s *testimoniesService) GetAllTestimoniesPost() ([]*models.Testimonies, int64, *errors.RestErr) {
-	data, count, err := testimonies.GetAllTestimoniesPost()
+func (s *testimoniesService) GetAllTestimonies() ([]*models.Testimonies, int64, *errors.RestErr) {
+	data, count, err := testimonies.GetAllTestimonies()
 	for _, v := range data {
 		d := v.CreatedAt.Format(time.RFC822)
 
@@ -52,8 +53,8 @@ func (s *testimoniesService) GetAllTestimoniesPost() ([]*models.Testimonies, int
 	return data, count, nil
 }
 
-func (s *testimoniesService) DeleteTestimoniesPost(id uint) *errors.RestErr {
-	err := testimonies.DeleteTestimoniesPost(id)
+func (s *testimoniesService) DeleteTestimony(id uint) *errors.RestErr {
+	err := testimonies.DeleteTestimony(id)
 	if err != nil {
 		log.Println(err)
 		return errors.NewBadRequestError("Could not delete testimonies")
@@ -61,8 +62,8 @@ func (s *testimoniesService) DeleteTestimoniesPost(id uint) *errors.RestErr {
 	return nil
 }
 
-func (s *testimoniesService) GetSingleTestimoniesPost(id uint) (*models.Testimonies, *errors.RestErr) {
-	testimonies, err := testimonies.GetSingleTestimoniesPost(id)
+func (s *testimoniesService) GetSingleTestimony(id uint) (*models.Testimonies, *errors.RestErr) {
+	testimonies, err := testimonies.GetSingleTestimony(id)
 	if err != nil {
 		log.Println(err)
 		return testimonies, errors.NewBadRequestError("Could not get single testimonies")
@@ -70,8 +71,8 @@ func (s *testimoniesService) GetSingleTestimoniesPost(id uint) (*models.Testimon
 	return testimonies, nil
 }
 
-func (s *testimoniesService) UpdateTestimoniesPost(id uint, testimoniesModel models.Testimonies) *errors.RestErr {
-	_, err := testimonies.UpdateTestimoniesPost(id, testimoniesModel)
+func (s *testimoniesService) UpdateTestimony(id uint, testimoniesModel models.Testimonies) *errors.RestErr {
+	_, err := testimonies.UpdateTestimony(id, testimoniesModel)
 	if err != nil {
 		log.Println(err)
 		return errors.NewBadRequestError("Could not get single testimonies")
@@ -79,8 +80,8 @@ func (s *testimoniesService) UpdateTestimoniesPost(id uint, testimoniesModel mod
 	return nil
 }
 
-func (s *testimoniesService) GetAllTestimoniesPostByAuthor(id uint) ([]*models.Testimonies, int64, *errors.RestErr) {
-	testimoniesData, count, err := testimonies.GetAllTestimoniesPostByAuthor(id)
+func (s *testimoniesService) GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, *errors.RestErr) {
+	testimoniesData, count, err := testimonies.GetAllTestimoniesByAuthor(id)
 	if err != nil {
 		log.Println(err)
 		return testimoniesData, count, errors.NewBadRequestError("Could not get post by author.")

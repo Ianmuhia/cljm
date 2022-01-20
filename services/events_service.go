@@ -17,23 +17,23 @@ var (
 type eventsService struct{}
 
 type eventsServiceInterface interface {
-	CreateEventsPost(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr)
-	GetAllEventsPost() ([]*models.ChurchEvent, int64, *errors.RestErr)
-	DeleteEventsPost(id uint) *errors.RestErr
-	GetSingleEventsPost(id uint) (*models.ChurchEvent, *errors.RestErr)
+	CreateEvent(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr)
+	GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr)
+	DeleteEvent(id uint) *errors.RestErr
+	GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr)
 	UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr
-	GetAllEventsPostByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr)
+	GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr)
 }
 
-func (s *eventsService) CreateEventsPost(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr) {
-	if err := events.CreateEventsPost(&eventsModel); err != nil {
+func (s *eventsService) CreateEvent(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr) {
+	if err := events.CreateEvent(&eventsModel); err != nil {
 		return nil, err
 	}
 	return &eventsModel, nil
 }
 
-func (s *eventsService) GetAllEventsPost() ([]*models.ChurchEvent, int64, *errors.RestErr) {
-	data, count, err := events.GetAllEventsPost()
+func (s *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr) {
+	data, count, err := events.GetAllEvents()
 	for _, v := range data {
 		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
 
@@ -56,8 +56,8 @@ func (s *eventsService) GetAllEventsPost() ([]*models.ChurchEvent, int64, *error
 	return data, count, nil
 }
 
-func (s *eventsService) DeleteEventsPost(id uint) *errors.RestErr {
-	err := events.DeleteEventsPost(id)
+func (s *eventsService) DeleteEvent(id uint) *errors.RestErr {
+	err := events.DeleteEvent(id)
 	if err != nil {
 		log.Println(err)
 		return errors.NewBadRequestError("Could not delete post")
@@ -65,8 +65,8 @@ func (s *eventsService) DeleteEventsPost(id uint) *errors.RestErr {
 	return nil
 }
 
-func (s *eventsService) GetSingleEventsPost(id uint) (*models.ChurchEvent, *errors.RestErr) {
-	events, err := events.GetSingleEventsPost(id)
+func (s *eventsService) GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr) {
+	events, err := events.GetSingleEvent(id)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
 	if err != nil {
@@ -87,8 +87,8 @@ func (s *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) *
 	return nil
 }
 
-func (s *eventsService) GetAllEventsPostByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr) {
-	eventsData, count, err := events.GetAllEventsPostByAuthor(id)
+func (s *eventsService) GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr) {
+	eventsData, count, err := events.GetAllEventsByAuthor(id)
 	for _, v := range eventsData {
 		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
 	}

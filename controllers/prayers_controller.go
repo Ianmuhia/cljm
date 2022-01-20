@@ -2,26 +2,27 @@ package controllers
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors"
-	"net/http"
-	"strconv"
 )
 
-type CreatePrayerPostRequest struct {
+type CreatePrayerRequest struct {
 	Content string `json:"content" binding:"required"`
 }
 
-type GetAllPrayerResponse struct {
+type GetAllPrayerRequestResponse struct {
 	Total  int64            `json:"total"`
 	Prayer []*models.Prayer `json:"prayer"`
 }
 
-func CreatPrayerPost(ctx *gin.Context) {
-	var req CreatePrayerPostRequest
+func CreatPrayerRequest(ctx *gin.Context) {
+	var req CreatePrayerRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
@@ -34,7 +35,7 @@ func CreatPrayerPost(ctx *gin.Context) {
 		Content: req.Content,
 	}
 
-	prayer, errr := services.PrayerService.CreatePrayerPost(postData)
+	prayer, errr := services.PrayerService.CreatePrayerRequest(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)
@@ -46,9 +47,9 @@ func CreatPrayerPost(ctx *gin.Context) {
 
 }
 
-func UpdatePrayerPost(ctx *gin.Context) {
-	type req CreatePrayerPostRequest
-	var reqData CreatePrayerPostRequest
+func UpdatePrayerRequest(ctx *gin.Context) {
+	type req CreatePrayerRequest
+	var reqData CreatePrayerRequest
 
 	data := GetPayloadFromContext(ctx)
 	id := ctx.Query("id")
@@ -73,13 +74,13 @@ func UpdatePrayerPost(ctx *gin.Context) {
 
 		Content: ctx.PostForm("content"),
 	}
-	reqData = CreatePrayerPostRequest(postData)
+	reqData = CreatePrayerRequest(postData)
 
 	log.Println(data)
 	prayerData := models.Prayer{
 		Content: reqData.Content,
 	}
-	errr := services.PrayerService.UpdatePrayerPost(uint(i), prayerData)
+	errr := services.PrayerService.UpdatePrayerRequest(uint(i), prayerData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create prayer post request")
 		ctx.JSON(data.Status, data)
@@ -93,14 +94,14 @@ func UpdatePrayerPost(ctx *gin.Context) {
 
 }
 
-func GetAllPrayerPost(ctx *gin.Context) {
+func GetAllPrayerRequests(ctx *gin.Context) {
 	cacheData, errr := services.CacheService.GetPrayerList(context.Background(), "prayers-list")
 
 	if errr == nil {
 		ctx.JSON(http.StatusOK, cacheData)
 		return
 	}
-	prayer, count, err := services.PrayerService.GetAllPrayerPost()
+	prayer, count, err := services.PrayerService.GetAllPrayerRequests()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -108,7 +109,7 @@ func GetAllPrayerPost(ctx *gin.Context) {
 		return
 	}
 
-	data := GetAllPrayerResponse{
+	data := GetAllPrayerRequestResponse{
 		Total:  count,
 		Prayer: prayer,
 	}
@@ -116,7 +117,7 @@ func GetAllPrayerPost(ctx *gin.Context) {
 
 }
 
-func GetAllPrayerPostByAuthor(ctx *gin.Context) {
+func GetAllPrayerRequestsByAuthor(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -133,7 +134,7 @@ func GetAllPrayerPostByAuthor(ctx *gin.Context) {
 		return
 
 	}
-	prayer, count, errr := services.PrayerService.GetAllPrayerPostByAuthor(uint(i))
+	prayer, count, errr := services.PrayerService.GetAllPrayerRequestsByAuthor(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -152,7 +153,7 @@ func GetAllPrayerPostByAuthor(ctx *gin.Context) {
 
 }
 
-func DeletePrayerPost(ctx *gin.Context) {
+func DeletePrayerRequest(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -169,7 +170,7 @@ func DeletePrayerPost(ctx *gin.Context) {
 		return
 
 	}
-	errr := services.PrayerService.DeletePrayerPost(uint(i))
+	errr := services.PrayerService.DeletePrayerRequest(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -183,8 +184,8 @@ func DeletePrayerPost(ctx *gin.Context) {
 
 }
 
-func GetSinglePrayerPost(ctx *gin.Context) {
-	//TODO:Create method for getting and converting this id
+func GetSinglePrayerRequest(ctx *gin.Context) {
+
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -209,7 +210,7 @@ func GetSinglePrayerPost(ctx *gin.Context) {
 		return
 	}
 
-	prayer, errr := services.PrayerService.GetSinglePrayerPost(uint(i))
+	prayer, errr := services.PrayerService.GetSinglePrayerRequest(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

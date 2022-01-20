@@ -2,16 +2,17 @@ package controllers
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"strconv"
+
+	"github.com/gin-gonic/gin"
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors"
-	"net/http"
-	"strconv"
 )
 
-type CreateTestimoniesPostRequest struct {
+type CreateTestimonyRequest struct {
 	Content string `json:"content" binding:"required"`
 }
 
@@ -20,15 +21,15 @@ type GetAllTestimoniesResponse struct {
 	Testimonies []*models.Testimonies `json:"testimonies"`
 }
 
-func CreatTestimoniesPost(ctx *gin.Context) {
-	type req CreateTestimoniesPostRequest
-	var reqData CreateTestimoniesPostRequest
+func CreateTestimony(ctx *gin.Context) {
+	type req CreateTestimonyRequest
+	var reqData CreateTestimonyRequest
 
 	data := GetPayloadFromContext(ctx)
 	postData := req{
 		Content: ctx.PostForm("content"),
 	}
-	reqData = CreateTestimoniesPostRequest(postData)
+	reqData = CreateTestimonyRequest(postData)
 
 	user, err := services.UsersService.GetUserByEmail(data.Username)
 	if err != nil {
@@ -41,7 +42,7 @@ func CreatTestimoniesPost(ctx *gin.Context) {
 		AuthorID: user.ID,
 		Content:  reqData.Content,
 	}
-	prayer, errr := services.TestimoniesService.CreateTestimoniesPost(value)
+	prayer, errr := services.TestimoniesService.CreateTestimony(value)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create testimonies post request")
 		ctx.JSON(data.Status, data)
@@ -53,9 +54,9 @@ func CreatTestimoniesPost(ctx *gin.Context) {
 
 }
 
-func UpdateTestimoniesPost(ctx *gin.Context) {
-	type req CreateTestimoniesPostRequest
-	var reqData CreateTestimoniesPostRequest
+func UpdateTestimony(ctx *gin.Context) {
+	type req CreateTestimonyRequest
+	var reqData CreateTestimonyRequest
 
 	data := GetPayloadFromContext(ctx)
 	id := ctx.Query("id")
@@ -80,14 +81,14 @@ func UpdateTestimoniesPost(ctx *gin.Context) {
 
 		Content: ctx.PostForm("content"),
 	}
-	reqData = CreateTestimoniesPostRequest(postData)
+	reqData = CreateTestimonyRequest(postData)
 
 	log.Println(data)
 	testimoniesData := models.Testimonies{
 
 		Content: reqData.Content,
 	}
-	errr := services.TestimoniesService.UpdateTestimoniesPost(uint(i), testimoniesData)
+	errr := services.TestimoniesService.UpdateTestimony(uint(i), testimoniesData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create testimonies post request")
 		ctx.JSON(data.Status, data)
@@ -101,14 +102,14 @@ func UpdateTestimoniesPost(ctx *gin.Context) {
 
 }
 
-func GetAllTestimoniesPost(ctx *gin.Context) {
+func GetAllTestimonies(ctx *gin.Context) {
 	cacheData, errr := services.CacheService.GetTestimoniesList(context.Background(), "testimonies-list")
 
 	if errr == nil {
 		ctx.JSON(http.StatusOK, cacheData)
 		return
 	}
-	testimonies, count, err := services.TestimoniesService.GetAllTestimoniesPost()
+	testimonies, count, err := services.TestimoniesService.GetAllTestimonies()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -124,7 +125,7 @@ func GetAllTestimoniesPost(ctx *gin.Context) {
 
 }
 
-func GetAllTestimoniesPostByAuthor(ctx *gin.Context) {
+func GetAllTestimoniesByAuthor(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -141,7 +142,7 @@ func GetAllTestimoniesPostByAuthor(ctx *gin.Context) {
 		return
 
 	}
-	testimonies, count, errr := services.TestimoniesService.GetAllTestimoniesPostByAuthor(uint(i))
+	testimonies, count, errr := services.TestimoniesService.GetAllTestimoniesByAuthor(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -160,7 +161,7 @@ func GetAllTestimoniesPostByAuthor(ctx *gin.Context) {
 
 }
 
-func DeleteTestimoniesPost(ctx *gin.Context) {
+func DeleteTestimony(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -177,7 +178,7 @@ func DeleteTestimoniesPost(ctx *gin.Context) {
 		return
 
 	}
-	errr := services.TestimoniesService.DeleteTestimoniesPost(uint(i))
+	errr := services.TestimoniesService.DeleteTestimony(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -191,8 +192,8 @@ func DeleteTestimoniesPost(ctx *gin.Context) {
 
 }
 
-func GetSingleTestimoniesPost(ctx *gin.Context) {
-	//TODO:Create method for getting and converting this id
+func GetSingleTestimony(ctx *gin.Context) {
+
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -217,7 +218,7 @@ func GetSingleTestimoniesPost(ctx *gin.Context) {
 		return
 	}
 
-	testimonies, errr := services.TestimoniesService.GetSingleTestimoniesPost(uint(i))
+	testimonies, errr := services.TestimoniesService.GetSingleTestimony(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

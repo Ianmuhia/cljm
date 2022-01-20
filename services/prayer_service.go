@@ -3,10 +3,11 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
+
 	"maranatha_web/domain/prayer_request"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
-	"time"
 )
 
 var (
@@ -16,23 +17,23 @@ var (
 type prayerService struct{}
 
 type prayerServiceInterface interface {
-	CreatePrayerPost(prayerModel models.Prayer) (*models.Prayer, *errors.RestErr)
-	GetAllPrayerPost() ([]*models.Prayer, int64, *errors.RestErr)
-	DeletePrayerPost(id uint) *errors.RestErr
-	GetSinglePrayerPost(id uint) (*models.Prayer, *errors.RestErr)
-	UpdatePrayerPost(id uint, prayerModel models.Prayer) *errors.RestErr
-	GetAllPrayerPostByAuthor(id uint) ([]*models.Prayer, int64, *errors.RestErr)
+	CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, *errors.RestErr)
+	GetAllPrayerRequests() ([]*models.Prayer, int64, *errors.RestErr)
+	DeletePrayerRequest(id uint) *errors.RestErr
+	GetSinglePrayerRequest(id uint) (*models.Prayer, *errors.RestErr)
+	UpdatePrayerRequest(id uint, prayerModel models.Prayer) *errors.RestErr
+	GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, *errors.RestErr)
 }
 
-func (s *prayerService) CreatePrayerPost(prayerModel models.Prayer) (*models.Prayer, *errors.RestErr) {
-	if err := prayer_request.CreatePrayerPost(&prayerModel); err != nil {
+func (s *prayerService) CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, *errors.RestErr) {
+	if err := prayer_request.CreatePrayerRequest(&prayerModel); err != nil {
 		return nil, err
 	}
 	return &prayerModel, nil
 }
 
-func (s *prayerService) GetAllPrayerPost() ([]*models.Prayer, int64, *errors.RestErr) {
-	data, count, err := prayer_request.GetAllPrayerPost()
+func (s *prayerService) GetAllPrayerRequests() ([]*models.Prayer, int64, *errors.RestErr) {
+	data, count, err := prayer_request.GetAllPrayerRequests()
 	for _, v := range data {
 		d := v.CreatedAt.Format(time.RFC822)
 
@@ -52,8 +53,8 @@ func (s *prayerService) GetAllPrayerPost() ([]*models.Prayer, int64, *errors.Res
 	return data, count, nil
 }
 
-func (s *prayerService) DeletePrayerPost(id uint) *errors.RestErr {
-	err := prayer_request.DeletePrayerPost(id)
+func (s *prayerService) DeletePrayerRequest(id uint) *errors.RestErr {
+	err := prayer_request.DeletePrayerRequest(id)
 	if err != nil {
 		log.Println(err)
 		return errors.NewBadRequestError("Could not delete prayer")
@@ -61,8 +62,8 @@ func (s *prayerService) DeletePrayerPost(id uint) *errors.RestErr {
 	return nil
 }
 
-func (s *prayerService) GetSinglePrayerPost(id uint) (*models.Prayer, *errors.RestErr) {
-	prayer, err := prayer_request.GetSinglePrayerPost(id)
+func (s *prayerService) GetSinglePrayerRequest(id uint) (*models.Prayer, *errors.RestErr) {
+	prayer, err := prayer_request.GetSinglePrayerRequest(id)
 	if err != nil {
 		log.Println(err)
 		return prayer, errors.NewBadRequestError("Could not get single prayer")
@@ -70,8 +71,8 @@ func (s *prayerService) GetSinglePrayerPost(id uint) (*models.Prayer, *errors.Re
 	return prayer, nil
 }
 
-func (s *prayerService) UpdatePrayerPost(id uint, prayerModel models.Prayer) *errors.RestErr {
-	_, err := prayer_request.UpdatePrayerPost(id, prayerModel)
+func (s *prayerService) UpdatePrayerRequest(id uint, prayerModel models.Prayer) *errors.RestErr {
+	_, err := prayer_request.UpdatePrayerRequest(id, prayerModel)
 	if err != nil {
 		log.Println(err)
 		return errors.NewBadRequestError("Could not get single prayer")
@@ -79,8 +80,8 @@ func (s *prayerService) UpdatePrayerPost(id uint, prayerModel models.Prayer) *er
 	return nil
 }
 
-func (s *prayerService) GetAllPrayerPostByAuthor(id uint) ([]*models.Prayer, int64, *errors.RestErr) {
-	prayerData, count, err := prayer_request.GetAllPrayerPostByAuthor(id)
+func (s *prayerService) GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, *errors.RestErr) {
+	prayerData, count, err := prayer_request.GetAllPrayerRequestsByAuthor(id)
 	if err != nil {
 		log.Println(err)
 		return prayerData, count, errors.NewBadRequestError("Could not get post by author.")

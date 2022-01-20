@@ -28,16 +28,16 @@ type GetAllEventsResponse struct {
 
 func CreatEventsPost(ctx *gin.Context) {
 
-	type req CreatEventsPostRequest
-	var reqData CreatEventsPostRequest
-
-	if err != nil {
-
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
+	//type req CreatEventsPostRequest
+	//var reqData CreatEventsPostRequest
+	//
+	//if err != nil {
+	//
+	//	data := errors.NewBadRequestError("Error Processing request")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//}
 	value := models.ChurchEvent{
 
 		Organizer:   nil,
@@ -49,7 +49,7 @@ func CreatEventsPost(ctx *gin.Context) {
 		ScheduledOn: "",
 		ChurchJobs:  nil,
 	}
-	events, errr := services.EventsService.CreateEventsPost(value)
+	events, errr := services.EventsService.CreateEvent(value)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create events post request")
 		ctx.JSON(data.Status, data)
@@ -131,14 +131,14 @@ func UpdateEventsPost(ctx *gin.Context) {
 
 }
 
-func GetAllEventsPost(ctx *gin.Context) {
+func GetAllEvents(ctx *gin.Context) {
 	cacheData, errr := services.CacheService.GetEventsList(context.Background(), "events-list")
 
 	if errr == nil {
 		ctx.JSON(http.StatusOK, cacheData)
 		return
 	}
-	events, count, err := services.EventsService.GetAllEventsPost()
+	events, count, err := services.EventsService.GetAllEvents()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -156,7 +156,7 @@ func GetAllEventsPost(ctx *gin.Context) {
 
 }
 
-func GetAllEventsPostByAuthor(ctx *gin.Context) {
+func GetAllEventsByAuthor(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -173,7 +173,7 @@ func GetAllEventsPostByAuthor(ctx *gin.Context) {
 		return
 
 	}
-	events, count, errr := services.EventsService.GetAllEventsPostByAuthor(uint(i))
+	events, count, errr := services.EventsService.GetAllEventsByAuthor(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -192,7 +192,7 @@ func GetAllEventsPostByAuthor(ctx *gin.Context) {
 
 }
 
-func DeleteEventsPost(ctx *gin.Context) {
+func DeleteEvent(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -209,7 +209,7 @@ func DeleteEventsPost(ctx *gin.Context) {
 		return
 
 	}
-	errr := services.EventsService.DeleteEventsPost(uint(i))
+	errr := services.EventsService.DeleteEvent(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -223,7 +223,7 @@ func DeleteEventsPost(ctx *gin.Context) {
 
 }
 
-func GetSingleEventsPost(ctx *gin.Context) {
+func GetSingleEvent(ctx *gin.Context) {
 	//TODO:Create method for getting and converting this id
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
@@ -249,7 +249,7 @@ func GetSingleEventsPost(ctx *gin.Context) {
 		return
 	}
 
-	events, errr := services.EventsService.GetSingleEventsPost(uint(i))
+	events, errr := services.EventsService.GetSingleEvent(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

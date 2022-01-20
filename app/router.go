@@ -59,27 +59,27 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-books/", controllers.GetAllBooksPost)
 
 			//Prayer_request Routes
-			protected.POST("/create-prayer/", controllers.CreatPrayerPost)
-			protected.GET("/get-author-prayer/", controllers.GetAllPrayerPostByAuthor)
-			protected.GET("/get-prayer/", controllers.GetAllPrayerPost)
-			protected.DELETE("/delete-prayer/", controllers.DeletePrayerPost)
-			protected.GET("/get-single-prayer/", controllers.GetSinglePrayerPost)
-			protected.PUT("/update-prayer/", controllers.UpdatePrayerPost)
+			protected.POST("/create-prayer/", controllers.CreatPrayerRequest)
+			protected.GET("/get-author-prayer/", controllers.GetAllPrayerRequestsByAuthor)
+			protected.GET("/get-prayer/", controllers.GetAllPrayerRequests)
+			protected.DELETE("/delete-prayer/", controllers.DeletePrayerRequest)
+			protected.GET("/get-single-prayer/", controllers.GetSinglePrayerRequest)
+			protected.PUT("/update-prayer/", controllers.UpdatePrayerRequest)
 
 			//Testimonies Routes
-			protected.POST("/create-testimonies/", controllers.CreatTestimoniesPost)
-			protected.POST("/get-author-testimonies/", controllers.GetAllTestimoniesPostByAuthor)
-			protected.GET("/get-testimonies/", controllers.GetAllTestimoniesPost)
-			protected.DELETE("/delete-testimonies/", controllers.DeleteTestimoniesPost)
-			protected.GET("/get-single-testimonies/", controllers.GetSingleTestimoniesPost)
-			protected.PUT("/update-testimonies/", controllers.UpdateTestimoniesPost)
+			protected.POST("/create-testimonies/", controllers.CreateTestimony)
+			protected.POST("/get-author-testimonies/", controllers.GetAllTestimoniesByAuthor)
+			protected.GET("/get-testimonies/", controllers.GetAllTestimonies)
+			protected.DELETE("/delete-testimonies/", controllers.DeleteTestimony)
+			protected.GET("/get-single-testimonies/", controllers.GetSingleTestimony)
+			protected.PUT("/update-testimonies/", controllers.UpdateTestimony)
 
 			//Events Routes
 			protected.POST("/create-events/", controllers.CreatEventsPost)
-			protected.POST("/get-author-events/", controllers.GetAllEventsPostByAuthor)
-			protected.GET("/get-events/", controllers.GetAllEventsPost)
-			protected.DELETE("/delete-events/", controllers.DeleteEventsPost)
-			protected.GET("/get-single-events/", controllers.GetSingleEventsPost)
+			protected.POST("/get-author-events/", controllers.GetAllEventsByAuthor)
+			protected.GET("/get-events/", controllers.GetAllEvents)
+			protected.DELETE("/delete-events/", controllers.DeleteEvent)
+			protected.GET("/get-single-events/", controllers.GetSingleEvent)
 			protected.PUT("/update-events/", controllers.UpdateEventsPost)
 
 			//Genre Routes

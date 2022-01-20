@@ -11,7 +11,7 @@ type ChurchEvent struct {
 	SubTitle    string
 	Content     string
 	ScheduledOn string
-	ChurchJobs  []ChurchJob `gorm:"foreignKey:Id2;"`
+	ChurchJobs  []ChurchJob `gorm:"foreignKey:Id;"`
 }
 
 type VolunteerEventTable struct {
@@ -23,7 +23,7 @@ type VolunteerEventTable struct {
 
 type ChurchJob struct {
 	//gorm.Model
-	Id2           uint `gorm:"autoIncrement;primaryKey;type:int" json:"id"`
+	Id            uint `gorm:"autoIncrement;primaryKey;type:int" json:"id"`
 	Duty          string
 	ChurchEventID int
 	ChurchEvent   ChurchEvent `gorm:"foreignKey:ID;references:ChurchEventID"`

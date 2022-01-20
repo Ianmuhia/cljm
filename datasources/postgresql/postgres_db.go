@@ -44,7 +44,7 @@ func init() {
 
 	// dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", username, password, host, schema)
 
-	dsn := "host=localhost user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
+	dsn := "host=localhost user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
 
 	database, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: false,

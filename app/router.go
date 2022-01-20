@@ -60,7 +60,7 @@ func SetupRouter() *gin.Engine {
 
 			//Prayer_request Routes
 			protected.POST("/create-prayer/", controllers.CreatPrayerPost)
-			protected.POST("/get-author-prayer/", controllers.GetAllPrayerPostByAuthor)
+			protected.GET("/get-author-prayer/", controllers.GetAllPrayerPostByAuthor)
 			protected.GET("/get-prayer/", controllers.GetAllPrayerPost)
 			protected.DELETE("/delete-prayer/", controllers.DeletePrayerPost)
 			protected.GET("/get-single-prayer/", controllers.GetSinglePrayerPost)

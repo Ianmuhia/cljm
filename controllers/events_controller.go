@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"gorm.io/gorm"
-
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors" //nolint:goimports
@@ -28,48 +26,11 @@ type GetAllEventsResponse struct {
 	Events []*models.ChurchEvent `json:"events"`
 }
 
-//TODO: Fix volunteer to event
 func CreatEventsPost(ctx *gin.Context) {
 
 	type req CreatEventsPostRequest
 	var reqData CreatEventsPostRequest
-	var uploadedInfo minio.UploadInfo
 
-	//data := GetPayloadFromContext(ctx)
-	file, m, err := ctx.Request.FormFile("cover_image")
-	form, _ := ctx.MultipartForm()
-	files := form.File["other_images"]
-
-	for _, file := range files {
-		log.Println(file.Filename)
-	}
-
-	if err != nil {
-		restErr := errors.NewBadRequestError("Please attach image to the request")
-		ctx.JSON(restErr.Status, restErr)
-		ctx.Abort()
-		return
-	}
-	postData := req{
-		Title:       ctx.PostForm("title"),
-		SubTitle:    ctx.PostForm("sub_title"),
-		Content:     ctx.PostForm("content"),
-		ScheduledOn: ctx.PostForm("scheduledOn"),
-	}
-	reqData = CreatEventsPostRequest(postData)
-	fileContentType := m.Header["Content-Type"][0]
-
-	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
-	if err != nil {
-		restErr := errors.NewBadRequestError("could not upload image to server")
-		ctx.JSON(restErr.Status, restErr)
-		ctx.Abort()
-		return
-
-	}
-	uploadedInfo = uploadFile
-	//TODO: Rework this.
-	//user, err := services.UsersService.GetUserByEmail(data.Username)
 	if err != nil {
 
 		data := errors.NewBadRequestError("Error Processing request")
@@ -78,15 +39,15 @@ func CreatEventsPost(ctx *gin.Context) {
 		return
 	}
 	value := models.ChurchEvent{
-		Model:       gorm.Model{},
+
+		Organizer:   nil,
 		OrganizerID: 0,
-		//AuthorID:   user.ID,
-		CoverImage:  uploadedInfo.Key,
-		Title:       reqData.Title,
-		SubTitle:    reqData.SubTitle,
-		Content:     reqData.Content,
+		CoverImage:  "",
+		Title:       "",
+		SubTitle:    "",
+		Content:     "",
 		ScheduledOn: "",
-		//Jobs:        nil,/./
+		ChurchJobs:  nil,
 	}
 	events, errr := services.EventsService.CreateEventsPost(value)
 	if errr != nil {

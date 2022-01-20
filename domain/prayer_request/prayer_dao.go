@@ -60,6 +60,7 @@ func GetAllPrayerPostByAuthor(id uint) ([]*models.Prayer, int64, error) {
 	var prayer []*models.Prayer
 	var count int64
 	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&prayer).Count(&count).Error
+	log.Println(val)
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

@@ -4,14 +4,14 @@ import "gorm.io/gorm"
 
 type ChurchEvent struct {
 	gorm.Model
-	Organizer      *User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	OrganizerID    uint  `gorm:"index:,option:CONCURRENTLY"`
-	CoverImage     string
-	Title          string
-	SubTitle       string
-	Content        string
-	ScheduledOn    string
-	ChurchJobsList []ChurchJob `gorm:"foreignKey:Id2;references:ChurchJobId2,constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Organizer   *User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	OrganizerID uint  `gorm:"index:,option:CONCURRENTLY"`
+	CoverImage  string
+	Title       string
+	SubTitle    string
+	Content     string
+	ScheduledOn string
+	ChurchJobs  []ChurchJob `gorm:"foreignKey:Id2;"`
 }
 
 type VolunteerEventTable struct {
@@ -23,7 +23,8 @@ type VolunteerEventTable struct {
 
 type ChurchJob struct {
 	//gorm.Model
-	Id2         uint `gorm:"autoIncrement;primaryKey;type:int" json:"id"`
-	Duty        string
-	ChurchEvent ChurchEvent `gorm:"foreignKey:ID;references:ChurchEventID"`
+	Id2           uint `gorm:"autoIncrement;primaryKey;type:int" json:"id"`
+	Duty          string
+	ChurchEventID int
+	ChurchEvent   ChurchEvent `gorm:"foreignKey:ID;references:ChurchEventID"`
 }

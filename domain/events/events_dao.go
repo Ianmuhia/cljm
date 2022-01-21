@@ -48,24 +48,21 @@ func UpdateEventsPost(id uint, eventsModel models.ChurchEvent) (*models.ChurchEv
 	return &eventsModel, nil
 }
 
-func GetAllEvents() ([]models.ChurchEvent, int64, error) {
-	var events []models.ChurchEvent
-	var jobs []models.ChurchJob
-	var users []models.User
+func GetAllEvents() ([]*models.ChurchEvent, int64, error) {
+	var events []*models.ChurchEvent
 	var count int64
 
 	//val := postgresql_db.Client.Raw("SELECT ce.*,eo.*, cj.* FROM church_events AS ce, church_jobs AS cj, users AS eo\nWHERE cj.church_event_id = ce.id and eo.id = ce.organizer_id and ce.deleted_at IS NULL and cj.deleted_at IS NULL;").Preload(clause.Associations).Scan(&events).Error
 	val := postgresql_db.Client.Table("church_events").Preload("ChurchJobs").Preload("Organizer").Find(&events).Error
 	//val := postgresql_db.Client.Model(events).
 	//	Scan(&events).Error
+	count = int64(len(events))
 	if val != nil {
 		log.Println(val)
 		return events, 0, val
 	}
 
 	log.Println(&events)
-	log.Println(&jobs)
-	log.Println(&users)
 	return events, count, nil
 }
 

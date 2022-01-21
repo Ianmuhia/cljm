@@ -23,8 +23,8 @@ type CreatEventsPostRequest struct {
 }
 
 type GetAllEventsResponse struct {
-	Total  int64                `json:"total"`
-	Events []models.ChurchEvent `json:"events"`
+	Total  int64                 `json:"total"`
+	Events []*models.ChurchEvent `json:"events"`
 }
 
 func CreatEventsPost(ctx *gin.Context) {

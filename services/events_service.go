@@ -18,7 +18,7 @@ type eventsService struct{}
 
 type eventsServiceInterface interface {
 	CreateEvent(eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr)
-	GetAllEvents() ([]models.ChurchEvent, int64, *errors.RestErr)
+	GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr)
 	DeleteEvent(id uint) *errors.RestErr
 	GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr)
 	UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr
@@ -32,7 +32,7 @@ func (s *eventsService) CreateEvent(eventsModel models.ChurchEvent) (*models.Chu
 	return &eventsModel, nil
 }
 
-func (s *eventsService) GetAllEvents() ([]models.ChurchEvent, int64, *errors.RestErr) {
+func (s *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr) {
 	data, count, err := events.GetAllEvents()
 	for _, v := range data {
 		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)

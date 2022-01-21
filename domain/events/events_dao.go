@@ -1,5 +1,6 @@
 package events
 
+import "C"
 import (
 	"log"
 
@@ -47,14 +48,24 @@ func UpdateEventsPost(id uint, eventsModel models.ChurchEvent) (*models.ChurchEv
 	return &eventsModel, nil
 }
 
-func GetAllEvents() ([]*models.ChurchEvent, int64, error) {
-	var events []*models.ChurchEvent
+func GetAllEvents() ([]models.ChurchEvent, int64, error) {
+	var events []models.ChurchEvent
+	var jobs []models.ChurchJob
+	var users []models.User
 	var count int64
-	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&events).Error
+
+	//val := postgresql_db.Client.Raw("SELECT ce.*,eo.*, cj.* FROM church_events AS ce, church_jobs AS cj, users AS eo\nWHERE cj.church_event_id = ce.id and eo.id = ce.organizer_id and ce.deleted_at IS NULL and cj.deleted_at IS NULL;").Preload(clause.Associations).Scan(&events).Error
+	val := postgresql_db.Client.Table("church_events").Preload("ChurchJobs").Preload("Organizer").Find(&events).Error
+	//val := postgresql_db.Client.Model(events).
+	//	Scan(&events).Error
 	if val != nil {
 		log.Println(val)
-		return nil, 0, val
+		return events, 0, val
 	}
+
+	log.Println(&events)
+	log.Println(&jobs)
+	log.Println(&users)
 	return events, count, nil
 }
 

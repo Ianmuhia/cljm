@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"maranatha_web/models"
 	"maranatha_web/services"
@@ -22,22 +23,12 @@ type CreatEventsPostRequest struct {
 }
 
 type GetAllEventsResponse struct {
-	Total  int64                 `json:"total"`
-	Events []*models.ChurchEvent `json:"events"`
+	Total  int64                `json:"total"`
+	Events []models.ChurchEvent `json:"events"`
 }
 
 func CreatEventsPost(ctx *gin.Context) {
 
-	//type req CreatEventsPostRequest
-	//var reqData CreatEventsPostRequest
-	//
-	//if err != nil {
-	//
-	//	data := errors.NewBadRequestError("Error Processing request")
-	//	ctx.JSON(data.Status, data)
-	//	ctx.Abort()
-	//	return
-	//}
 	value := models.ChurchEvent{
 
 		Organizer:   nil,
@@ -46,7 +37,7 @@ func CreatEventsPost(ctx *gin.Context) {
 		Title:       "",
 		SubTitle:    "",
 		Content:     "",
-		ScheduledOn: "",
+		ScheduledOn: time.Now(),
 		ChurchJobs:  nil,
 	}
 	events, errr := services.EventsService.CreateEvent(value)
@@ -224,7 +215,6 @@ func DeleteEvent(ctx *gin.Context) {
 }
 
 func GetSingleEvent(ctx *gin.Context) {
-	//TODO:Create method for getting and converting this id
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

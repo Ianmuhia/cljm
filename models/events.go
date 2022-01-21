@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ChurchEvent struct {
 	gorm.Model
@@ -10,8 +14,8 @@ type ChurchEvent struct {
 	Title       string
 	SubTitle    string
 	Content     string
-	ScheduledOn string
-	ChurchJobs  []ChurchJob `gorm:"foreignKey:Id;"`
+	ScheduledOn time.Time
+	ChurchJobs  []*ChurchJob
 }
 
 type VolunteerEventTable struct {
@@ -22,9 +26,7 @@ type VolunteerEventTable struct {
 }
 
 type ChurchJob struct {
-	//gorm.Model
-	Id            uint `gorm:"autoIncrement;primaryKey;type:int" json:"id"`
+	gorm.Model
 	Duty          string
-	ChurchEventID int
-	ChurchEvent   ChurchEvent `gorm:"foreignKey:ID;references:ChurchEventID"`
+	ChurchEventID uint
 }

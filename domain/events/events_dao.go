@@ -30,6 +30,7 @@ func DeleteEvent(id uint) *errors.RestErr {
 	}
 	return nil
 }
+
 func GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr) {
 	var events models.ChurchEvent
 	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&events).Error

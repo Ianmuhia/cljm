@@ -75,12 +75,12 @@ func SetupRouter() *gin.Engine {
 			protected.PUT("/update-testimonies/", controllers.UpdateTestimony)
 
 			//Events Routes
-			protected.POST("/create-events/", controllers.CreatEventsPost)
+			protected.POST("/create-event/", controllers.CreatEventsPost)
 			protected.GET("/get-author-events/", controllers.GetAllEventsByAuthor)
 			protected.GET("/get-events/", controllers.GetAllEvents)
-			protected.DELETE("/delete-events/", controllers.DeleteEvent)
-			protected.GET("/get-single-events/", controllers.GetSingleEvent)
-			protected.PUT("/update-events/", controllers.UpdateEventsPost)
+			protected.DELETE("/delete-event/", controllers.DeleteEvent)
+			protected.GET("/get-single-event/", controllers.GetSingleEvent)
+			protected.PUT("/update-event/", controllers.UpdateEventsPost)
 
 			//Genre Routes
 			protected.POST("/create-genre/", controllers.CreatGenrePost)

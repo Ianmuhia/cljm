@@ -86,3 +86,9 @@ GET http://localhost:8090/api/protected/get-author-events/?id=3
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
+
+###
+DELETE http://localhost:8090/api/protected/delete-event/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}

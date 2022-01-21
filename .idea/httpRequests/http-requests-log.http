@@ -1,3 +1,21 @@
+DELETE http://localhost:8090/api/protected/delete-event/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T144117.200.json
+
+###
+
+DELETE http://localhost:8090/api/protected/delete-events/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T144106.404.txt
+
+###
+
 GET http://localhost:8090/api/protected/get-author-events/?id=3
 Accept: application/json
 Content-Type: application/json
@@ -427,22 +445,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
 
 <> 2022-01-21T035838.200.json
-
-###
-
-GET http://localhost:8090/api/protected/get-events/
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
-
-<> 2022-01-21T035645.200.json
-
-###
-
-GET http://localhost:8090/api/protected/get-events/
-Accept: application/json
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
 
 ###
 

@@ -1,9 +1,10 @@
 package genre
 
 import (
+	"log"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
-	"log"
 	postgresql_db "maranatha_web/datasources/postgresql"
 	"maranatha_web/logger"
 	"maranatha_web/models"
@@ -19,7 +20,7 @@ func CreateGenrePost(genre *models.Genre) *errors.RestErr {
 	return nil
 }
 
-func DeleteGenrePost(id uint) *errors.RestErr {
+func DeleteGenre(id uint) *errors.RestErr {
 	var genre models.Genre
 	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&genre).Error
 	if err != nil {
@@ -28,34 +29,34 @@ func DeleteGenrePost(id uint) *errors.RestErr {
 	}
 	return nil
 }
-func GetSingleGenrePost(name string) (*models.Genre, *errors.RestErr) {
+func GetSingleGenre(name string) (*models.Genre, *errors.RestErr) {
 	var genre models.Genre
 	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("name = ?", name).First(&genre).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
 		logger.Error("error when trying to get genre post", err)
-		return &genre, errors.NewInternalServerError("database error")
+		return &genre, errors.NewNotFoundError("The provided genre does not exist.")
 	}
 	return &genre, nil
 }
-func UpdateGenrePost(id uint, genreModel models.Genre) (*models.Genre, *errors.RestErr) {
+func UpdateGenre(id uint, genreModel models.Genre) (*models.Genre, *errors.RestErr) {
 	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&genreModel).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
 		logger.Error("error when trying to update genre post", err)
-		return &genreModel, errors.NewInternalServerError("database error")
+		return &genreModel, errors.NewNotFoundError("The requested genre does not exist.")
 	}
 	return &genreModel, nil
 }
-func GetAllGenrePost() ([]*models.Genre, int64, error) {
+func GetAllGenres() ([]*models.Genre, int64, error) {
 	var genre []*models.Genre
 	var count int64
-	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&genre).Error
+	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&genre).Count(&count).Error
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val
 	}
 	return genre, count, nil
 }
-func GetAllGenrePostByAuthor(id uint) ([]*models.Genre, int64, error) {
+func GetAllGenresByAuthor(id uint) ([]*models.Genre, int64, error) {
 	var genre []*models.Genre
 	var count int64
 	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&genre).Count(&count).Error

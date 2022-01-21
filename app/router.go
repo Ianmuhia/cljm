@@ -57,6 +57,7 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-book/", controllers.GetSingleBookPost)
 			protected.PUT("/update-book/", controllers.UpdateBook)
 			protected.GET("/get-books/", controllers.GetAllBooksPost)
+			protected.DELETE("/delete-book/", controllers.DeleteBook)
 
 			//Prayer_request Routes
 			protected.POST("/create-prayer/", controllers.CreatPrayerRequest)
@@ -84,10 +85,10 @@ func SetupRouter() *gin.Engine {
 
 			//Genre Routes
 			protected.POST("/create-genre/", controllers.CreatGenrePost)
-			protected.GET("/get-genre/", controllers.GetAllGenrePost)
-			protected.DELETE("/delete-genre/", controllers.DeleteGenrePost)
-			protected.GET("/get-single-genre/", controllers.GetSingleGenrePost)
-			protected.PUT("/update-genre/", controllers.UpdateGenrePost)
+			protected.GET("/get-genres/", controllers.GetAllGenres)
+			protected.DELETE("/delete-genre/", controllers.DeleteGenre)
+			protected.GET("/get-single-genre/", controllers.GetSingleGenre)
+			protected.PUT("/update-genre/", controllers.UpdateGenre)
 		}
 	}
 

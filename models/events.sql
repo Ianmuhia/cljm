@@ -53,3 +53,6 @@ FROM church_events AS ce,
 WHERE ce.id = cj.church_event_id
   and ce.deleted_at IS NULL
   and cj.deleted_at IS NULL;
+
+ALTER TABLE church_jobs
+    ADD PRIMARY KEY (id);

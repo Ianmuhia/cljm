@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"maranatha_web/models"
 	"maranatha_web/services"
@@ -72,6 +73,8 @@ func CreatEventsPost(ctx *gin.Context) {
 	uploadedInfo = uploadFile
 
 	dt := date_utils.StringToDate(reqData.ScheduledOn)
+	log.Println(time.Now().UTC())
+	log.Println(dt)
 	eventsData := models.ChurchEvent{
 		OrganizerID: user.ID,
 		CoverImage:  uploadedInfo.Key,

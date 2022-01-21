@@ -18,11 +18,12 @@ type ChurchEvent struct {
 	ChurchJobs  []*ChurchJob
 }
 
-type VolunteerEventTable struct {
+type VolunteerChurchJob struct {
 	gorm.Model
-	Volunteer   *User
-	VolunteerID uint
-	DataID      uint
+	Volunteer   *User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	VolunteerID uint       `gorm:"index:,option:CONCURRENTLY"`
+	ChurchJob   *ChurchJob `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	ChurchJobID uint       `gorm:"index:,option:CONCURRENTLY"`
 }
 
 type ChurchJob struct {

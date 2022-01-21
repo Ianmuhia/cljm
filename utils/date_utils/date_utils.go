@@ -1,8 +1,9 @@
 package date_utils
 
 import (
-	"fmt"
 	"time"
+
+	"maranatha_web/logger"
 )
 
 const (
@@ -25,11 +26,12 @@ func GetNowDBFormat() string {
 }
 
 func StringToDate(str string) time.Time {
-	layout := "2006-01-02T15:04:05.000Z"
+	layout := "2006-01-02"
 	t, err := time.Parse(layout, str)
 
 	if err != nil {
-		fmt.Println(err)
+		logger.Error("Please provide a valid date format.", err)
+		logger.GetLogger().Fatal("Please provide a valid date format.")
 	}
 	return t
 }

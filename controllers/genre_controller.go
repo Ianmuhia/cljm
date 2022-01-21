@@ -34,7 +34,6 @@ func CreatGenrePost(ctx *gin.Context) {
 	postData := models.Genre{
 		Name: req.Name,
 	}
-
 	genre, errr := services.GenreService.CreateGenrePost(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create genre post request")
@@ -47,7 +46,7 @@ func CreatGenrePost(ctx *gin.Context) {
 
 }
 
-func UpdateGenrePost(ctx *gin.Context) {
+func UpdateGenre(ctx *gin.Context) {
 
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
@@ -76,7 +75,7 @@ func UpdateGenrePost(ctx *gin.Context) {
 	genreData := models.Genre{
 		Name: req.Name,
 	}
-	errr := services.GenreService.UpdateGenrePost(uint(i), genreData)
+	errr := services.GenreService.UpdateGenre(uint(i), genreData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)
@@ -90,13 +89,13 @@ func UpdateGenrePost(ctx *gin.Context) {
 
 }
 
-func GetAllGenrePost(ctx *gin.Context) {
+func GetAllGenres(ctx *gin.Context) {
 	cacheData, errr := services.CacheService.GetGenreList(context.Background(), "genres-list")
 	if errr == nil {
 		ctx.JSON(http.StatusOK, cacheData)
 		return
 	}
-	genre, count, err := services.GenreService.GetAllGenrePost()
+	genre, count, err := services.GenreService.GetAllGenres()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -112,7 +111,7 @@ func GetAllGenrePost(ctx *gin.Context) {
 
 }
 
-func DeleteGenrePost(ctx *gin.Context) {
+func DeleteGenre(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -129,7 +128,7 @@ func DeleteGenrePost(ctx *gin.Context) {
 		return
 
 	}
-	errr := services.GenreService.DeleteGenrePost(uint(i))
+	errr := services.GenreService.DeleteGenre(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -143,7 +142,7 @@ func DeleteGenrePost(ctx *gin.Context) {
 
 }
 
-func GetSingleGenrePost(ctx *gin.Context) {
+func GetSingleGenre(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -168,7 +167,7 @@ func GetSingleGenrePost(ctx *gin.Context) {
 		return
 	}
 
-	genre, errr := services.GenreService.GetSingleGenrePost(strconv.FormatUint(i, 10)) //nolint:govet
+	genre, errr := services.GenreService.GetSingleGenre(strconv.FormatUint(i, 10)) //nolint:govet
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

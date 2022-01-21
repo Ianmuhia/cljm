@@ -19,7 +19,7 @@ type booksService struct{}
 type booksServiceInterface interface {
 	CreateBooksPost(booksModel models.Books) (*models.Books, *errors.RestErr)
 	GetAllBooks() ([]*models.Books, int64, *errors.RestErr)
-	DeleteBooksPost(id uint) *errors.RestErr
+	DeleteBook(id uint) *errors.RestErr
 	GetSingleBooksPost(id uint) (*models.Books, *errors.RestErr)
 	UpdateBooksPost(id uint, newModel models.Books) *errors.RestErr
 }
@@ -53,7 +53,7 @@ func (b *booksService) GetAllBooks() ([]*models.Books, int64, *errors.RestErr) {
 	return data, count, nil
 }
 
-func (b *booksService) DeleteBooksPost(id uint) *errors.RestErr {
+func (b *booksService) DeleteBook(id uint) *errors.RestErr {
 	err := books.DeleteBook(id)
 	if err != nil {
 		log.Println(err)

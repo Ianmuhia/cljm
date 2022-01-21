@@ -2,21 +2,21 @@ package controllers
 
 import (
 	"context"
+	"log"
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
-	"log"
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors"
-	"net/http"
-	"strconv"
 )
 
 type CreateBookPostRequest struct {
-	Title     string `json:"title" binding:"required"`
-	Synopsis  string `json:"synopsis" binding:"required"`
-	CreatedBy string `json:"createdBy" binding:"required"`
-	Genre     string `json:"genre" binding:"required"`
+	Title    string `json:"title" binding:"required"`
+	Synopsis string `json:"synopsis" binding:"required"`
+	Genre    string `json:"genre" binding:"required"`
 }
 
 type GetAllBooksResponse struct {
@@ -33,24 +33,23 @@ func CreateBook(ctx *gin.Context) {
 	file, m, err := ctx.Request.FormFile("file")
 
 	if err != nil {
-		restErr := errors.NewBadRequestError("Please attach image to the request")
+		restErr := errors.NewBadRequestError("Please attach file to the request")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
 
 	postData := req{
-		Title:     ctx.PostForm("title"),
-		Synopsis:  ctx.PostForm("synopsis"),
-		CreatedBy: ctx.PostForm("createdBy"),
-		Genre:     ctx.PostForm("genre"),
+		Title:    ctx.PostForm("title"),
+		Synopsis: ctx.PostForm("synopsis"),
+		Genre:    ctx.PostForm("genre"),
 	}
 	reqData = CreateBookPostRequest(postData)
 
 	fileContentType := m.Header["Content-Type"][0]
 	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
 	if err != nil {
-		restErr := errors.NewBadRequestError("could not upload image to server")
+		restErr := errors.NewBadRequestError("could not upload file to server")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
@@ -76,20 +75,21 @@ func CreateBook(ctx *gin.Context) {
 	}
 	log.Println(user)
 
-	genre, errr := services.GenreService.GetSingleGenrePost(postData.Genre)
+	genre, errr := services.GenreService.GetSingleGenre(postData.Genre)
 	if errr != nil {
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
+		//data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(errr.Status, errr.Message)
 		ctx.Abort()
 		return
 	}
 
 	value := models.Books{
-		Title:     reqData.Title,
-		Synopsis:  reqData.Synopsis,
-		CreatedBy: user,
-		Genre:     genre,
-		File:      uploadedInfo.Key,
+		Title:       reqData.Title,
+		Synopsis:    reqData.Synopsis,
+		CreatedBy:   user,
+		CreatedByID: user.ID,
+		GenreID:     genre.ID,
+		File:        uploadedInfo.Key,
 	}
 	books, errr := services.BooksService.CreateBooksPost(value)
 	if errr != nil {
@@ -198,7 +198,7 @@ func GetAllBooksPost(ctx *gin.Context) {
 
 }
 
-func DeleteBooksPost(ctx *gin.Context) {
+func DeleteBook(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -215,7 +215,7 @@ func DeleteBooksPost(ctx *gin.Context) {
 		return
 
 	}
-	errr := services.BooksService.DeleteBooksPost(uint(i))
+	errr := services.BooksService.DeleteBook(uint(i))
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)

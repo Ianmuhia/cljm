@@ -38,11 +38,9 @@ type genre models.Genre
 //type prayer models.Prayer
 type churchEvent models.ChurchEvent
 type churchJob models.ChurchJob
-type volunteerEventTable models.VolunteerEventTable
+type volunteerChurchJob models.VolunteerChurchJob
 
 func init() {
-
-	// dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8", username, password, host, schema)
 
 	dsn := "host=localhost user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
 
@@ -56,13 +54,6 @@ func init() {
 	MigrateTables(database)
 
 	database.Logger.LogMode(logger.Silent)
-	// database.Logger.Trace()
-
-	//err := Client.AutoMigrate(&models.User{})
-	//
-	//if err != nil {
-	//	panic(err)
-	//}
 	Client = database
 
 	log.Println("database successfully configured")
@@ -82,12 +73,7 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 		genre{},
 		&churchJob{},
 		&churchEvent{},
-
-		//&events{},
-		&volunteerEventTable{},
-
-		//prayer{},
-		//events{},
+		&volunteerChurchJob{},
 	); err != nil {
 		fmt.Println(err)
 		panic(err)

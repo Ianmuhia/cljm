@@ -15,7 +15,7 @@ import (
 func CreateEvent(events *models.ChurchEvent) *errors.RestErr {
 	err := postgresql_db.Client.Debug().Create(&events).Error
 	if err != nil {
-		logger.Error("error when trying to save user", err)
+		logger.Error("error when trying to create church event.", err)
 		return errors.NewInternalServerError("database error")
 	}
 	return nil

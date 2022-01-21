@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"maranatha_web/domain/events"
+	"maranatha_web/logger"
 	"maranatha_web/models"
 	"maranatha_web/utils/errors"
 )
@@ -52,7 +53,8 @@ func (s *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.Re
 		return data, count, errors.NewBadRequestError("Could not get post")
 
 	}
-
+	logger.GetLogger().Info("Events endpoint hit.")
+	logger.GetLogger().Error("Events endpoint hit.")
 	return data, count, nil
 }
 
@@ -82,6 +84,7 @@ func (s *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) *
 	events.CoverImage = url
 	if err != nil {
 		log.Println(err)
+
 		return errors.NewBadRequestError("Could not get single post")
 	}
 	return nil

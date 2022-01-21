@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	"maranatha_web/models"
 	"maranatha_web/services"
+	"maranatha_web/utils/date_utils"
 	"maranatha_web/utils/errors" //nolint:goimports
 
 	"github.com/gin-gonic/gin" //nolint:goimports
@@ -28,19 +28,61 @@ type GetAllEventsResponse struct {
 }
 
 func CreatEventsPost(ctx *gin.Context) {
+	type req CreatEventsPostRequest
+	var reqData CreatEventsPostRequest
+	var uploadedInfo minio.UploadInfo
 
-	value := models.ChurchEvent{
+	data := GetPayloadFromContext(ctx)
+	file, m, err := ctx.Request.FormFile("cover_image")
 
-		Organizer:   nil,
-		OrganizerID: 0,
-		CoverImage:  "",
-		Title:       "",
-		SubTitle:    "",
-		Content:     "",
-		ScheduledOn: time.Now(),
+	if err != nil {
+		restErr := errors.NewBadRequestError("Please attach image to the request")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+
+	postData := req{
+		Title:       ctx.PostForm("title"),
+		SubTitle:    ctx.PostForm("sub_title"),
+		Content:     ctx.PostForm("content"),
+		ScheduledOn: ctx.PostForm("scheduled_on"),
+	}
+	reqData = CreatEventsPostRequest(postData)
+	fileContentType := m.Header["Content-Type"][0]
+
+	uploadFile, err := services.MinioService.UploadFile(m.Filename, file, m.Size, fileContentType)
+	if err != nil {
+		restErr := errors.NewBadRequestError("could not upload image to server")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+	log.Println(data)
+	user, err := services.UsersService.GetUserByEmail(data.Username)
+	if err != nil {
+
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+
+	uploadedInfo = uploadFile
+
+	dt := date_utils.StringToDate(reqData.ScheduledOn)
+	eventsData := models.ChurchEvent{
+		OrganizerID: user.ID,
+		CoverImage:  uploadedInfo.Key,
+		Title:       reqData.Title,
+		SubTitle:    reqData.SubTitle,
+		Content:     reqData.Content,
+		ScheduledOn: dt,
 		ChurchJobs:  nil,
 	}
-	events, errr := services.EventsService.CreateEvent(value)
+
+	events, errr := services.EventsService.CreateEvent(eventsData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create events post request")
 		ctx.JSON(data.Status, data)

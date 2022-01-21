@@ -79,3 +79,10 @@ GET http://localhost:8090/api/protected/get-events/
 Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
+
+
+###
+GET http://localhost:8090/api/protected/get-author-events/?id=3
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}

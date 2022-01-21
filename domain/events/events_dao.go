@@ -69,7 +69,7 @@ func GetAllEvents() ([]*models.ChurchEvent, int64, error) {
 func GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, error) {
 	var events []*models.ChurchEvent
 	var count int64
-	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&events).Count(&count).Error
+	val := postgresql_db.Client.Debug().Where("organizer_id = ?", id).Table("church_events").Order("created_at desc").Find(&events).Count(&count).Error
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

@@ -76,7 +76,7 @@ func SetupRouter() *gin.Engine {
 
 			//Events Routes
 			protected.POST("/create-events/", controllers.CreatEventsPost)
-			protected.POST("/get-author-events/", controllers.GetAllEventsByAuthor)
+			protected.GET("/get-author-events/", controllers.GetAllEventsByAuthor)
 			protected.GET("/get-events/", controllers.GetAllEvents)
 			protected.DELETE("/delete-events/", controllers.DeleteEvent)
 			protected.GET("/get-single-events/", controllers.GetSingleEvent)

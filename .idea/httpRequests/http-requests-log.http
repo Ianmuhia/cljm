@@ -1,0 +1,448 @@
+GET http://localhost:8090/api/protected/get-author-events/?id=3
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141607.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=3
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141603.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=3
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141444.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=5
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141425.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141405.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141158.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141131.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141111.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141051.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T141023.404.txt
+
+###
+
+GET http://localhost:8090/api/protected/get-author-events/?id=1
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T140456.404.txt
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T135804.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T135552.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjViYTQ4MzcyLTI2M2ItNDk1Ni1hYzVlLTQ2MTc0OTgxZWY4MCIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMTM6NTM6MDYuMDQwODcwNjQxKzAzOjAwIiwiZXhwaXJlZF9hdCI6IjIwMjItMDEtMjJUMDk6NTM6MDYuMDQwODcwNzUxKzAzOjAwIn0.mTukQlDAemBsupfuAHpU8luCRWky8UQu3MYJEtO0W0o
+
+<> 2022-01-21T135310.200.json
+
+###
+
+POST http://localhost:8090/api/auth/users/login/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "password": "*#*Johnte2536",
+  "email": "ianmuhia3@gmail.com"
+}
+
+<> 2022-01-21T135306.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+<> 2022-01-21T135258.401.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T050104.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045842.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045804.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045512.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045455.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045429.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045425.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045358.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045247.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T045243.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T044942.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T044758.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T044753.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T044543.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T044443.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T042756.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T042628.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T042622.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T042317.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T042311.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T042229.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T041949.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T041650.400.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T041212.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T040929.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T040829.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T040357.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T040351.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T040313.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T035838.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+<> 2022-01-21T035645.200.json
+
+###
+
+GET http://localhost:8090/api/protected/get-events/
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBmYjE0YzA5LTZhMjItNDJjYy1hOTg0LTJhY2RjYzg2NTZmYiIsInVzZXJuYW1lIjoiaWFubXVoaWEzQGdtYWlsLmNvbSIsImlzc3VlZF9hdCI6IjIwMjItMDEtMjFUMDI6MjQ6NTcuMTQxOTEzMzYrMDM6MDAiLCJleHBpcmVkX2F0IjoiMjAyMi0wMS0yMVQyMjoyNDo1Ny4xNDE5MTM0NzQrMDM6MDAifQ.HPF4YGILrfMkfF1BGf3yE_Oh5aSw6s0ETMD5Z2ToPCc
+
+###
+

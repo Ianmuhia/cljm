@@ -21,6 +21,7 @@ type jobsServiceInterface interface {
 	CreateEventJob(jobsModel models.ChurchJob) (*models.ChurchJob, *errors.RestErr)
 	DeleteJob(jobId uint) *errors.RestErr
 	UpdateJob(id uint, job models.ChurchJob) *errors.RestErr
+	GetSingleJob(id uint) (*models.ChurchJob, *errors.RestErr)
 }
 
 func (b *jobsService) CreateEventJob(jobsModel models.ChurchJob) (*models.ChurchJob, *errors.RestErr) {
@@ -63,4 +64,13 @@ func (b *jobsService) UpdateJob(id uint, job models.ChurchJob) *errors.RestErr {
 		return errors.NewBadRequestError("Could not update job")
 	}
 	return nil
+}
+
+func (b *jobsService) GetSingleJob(id uint) (*models.ChurchJob, *errors.RestErr) {
+	job, err := Jobs.GetSingleJob(id)
+	if err != nil {
+		log.Println(err)
+		return job, errors.NewBadRequestError("Could not get single job")
+	}
+	return job, nil
 }

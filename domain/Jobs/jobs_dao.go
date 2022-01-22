@@ -59,7 +59,16 @@ func GetAllEventsJobs(id uint) ([]*models.ChurchJob, int64, error) {
 func UpdateJob(id uint, job models.ChurchJob) (*models.ChurchJob, *errors.RestErr) {
 	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&job).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
-		logger.Error("error when trying to update  events post", err)
+		logger.Error("error when trying to update  job", err)
+		return &job, errors.NewInternalServerError("database error")
+	}
+	return &job, nil
+}
+func GetSingleJob(id uint) (*models.ChurchJob, *errors.RestErr) {
+	var job models.ChurchJob
+	err := postgresql_db.Client.Debug().Where("id = ?", id).First(&job).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		logger.Error("error when trying to get single job ", err)
 		return &job, errors.NewInternalServerError("database error")
 	}
 	return &job, nil

@@ -96,6 +96,13 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-job-by-event/", controllers.GetJobByEvent)
 			protected.DELETE("/delete-job/", controllers.DeleteJob)
 			protected.PUT("/update-event-job/", controllers.UpdateJob)
+
+			//Volunteer Job Routes
+			protected.POST("/sub-event-job/", controllers.SubscribeToEventJob)
+			//protected.GET("/get-event-jobs/", controllers.GetAllEventJobs)
+			//protected.GET("/get-job-by-event/", controllers.GetJobByEvent)
+			//protected.DELETE("/delete-job/", controllers.DeleteJob)
+			//protected.PUT("/update-event-job/", controllers.UpdateJob)
 		}
 	}
 

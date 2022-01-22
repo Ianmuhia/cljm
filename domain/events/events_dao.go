@@ -40,6 +40,7 @@ func GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr) {
 	}
 	return &events, nil
 }
+
 func UpdateEventsPost(id uint, eventsModel models.ChurchEvent) (*models.ChurchEvent, *errors.RestErr) {
 	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&eventsModel).Error
 	if err != nil || err == gorm.ErrRecordNotFound {

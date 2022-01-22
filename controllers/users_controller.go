@@ -53,7 +53,6 @@ func RegisterUser(c *gin.Context) {
 	var registerModel createUserRequest
 
 	if err := c.ShouldBindJSON(&registerModel); err != nil {
-
 		restErr := errors.NewBadRequestError("invalid json body")
 		c.JSON(restErr.Status, restErr)
 		c.Abort()

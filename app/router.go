@@ -69,11 +69,11 @@ func SetupRouter() *gin.Engine {
 
 			//Testimonies Routes
 			protected.POST("/create-testimonies/", controllers.CreateTestimony)
-			protected.POST("/get-author-testimonies/", controllers.GetAllTestimoniesByAuthor)
+			protected.GET("/get-author-testimonies/", controllers.GetAllTestimoniesByAuthor)
 			protected.GET("/get-testimonies/", controllers.GetAllTestimonies)
-			protected.DELETE("/delete-testimonies/", controllers.DeleteTestimony)
-			protected.GET("/get-single-testimonies/", controllers.GetSingleTestimony)
-			protected.PUT("/update-testimonies/", controllers.UpdateTestimony)
+			protected.DELETE("/delete-testimony/", controllers.DeleteTestimony)
+			protected.GET("/get-single-testimony/", controllers.GetSingleTestimony)
+			protected.PUT("/update-testimony/", controllers.UpdateTestimony)
 
 			//Events Routes
 			protected.POST("/create-event/", controllers.CreatEventsPost)

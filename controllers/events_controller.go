@@ -128,7 +128,6 @@ func UpdateEventsPost(ctx *gin.Context) {
 		return
 	}
 
-	//TODO:Create separate method to handle image upload
 	postData := req{
 		Title:    ctx.PostForm("title"),
 		SubTitle: ctx.PostForm("sub_title"),

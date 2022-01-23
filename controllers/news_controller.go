@@ -126,7 +126,6 @@ func UpdateNewsPost(ctx *gin.Context) {
 		return
 	}
 
-	//TODO:Create separate method to handle image upload
 	postData := req{
 		Title:    ctx.PostForm("title"),
 		SubTitle: ctx.PostForm("sub_title"),
@@ -258,7 +257,6 @@ func DeleteNewsPost(ctx *gin.Context) {
 }
 
 func GeSingleNewsPost(ctx *gin.Context) {
-	//TODO:Create method for getting and converting this id
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

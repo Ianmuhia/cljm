@@ -229,7 +229,6 @@ func DeleteBook(ctx *gin.Context) {
 }
 
 func GetSingleBookPost(ctx *gin.Context) {
-	//TODO:Create method for getting and converting this id
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

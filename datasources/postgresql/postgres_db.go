@@ -37,6 +37,7 @@ type genre models.Genre
 
 type prayer models.Prayer
 type churchEvent models.ChurchEvent
+type testimonies models.Testimonies
 type churchJob models.ChurchJob
 type volunteerChurchJob models.VolunteerChurchJob
 
@@ -75,6 +76,7 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 		&churchEvent{},
 		&volunteerChurchJob{},
 		&prayer{},
+		&testimonies{},
 	); err != nil {
 		fmt.Println(err)
 		panic(err)

@@ -24,6 +24,7 @@ type GetAllTestimoniesResponse struct {
 func CreateTestimony(ctx *gin.Context) {
 
 	var req CreateTestimonyRequest
+	data := GetPayloadFromContext(ctx)
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)
@@ -31,10 +32,14 @@ func CreateTestimony(ctx *gin.Context) {
 		return
 	}
 
-	postData := models.Testimonies{
-		Content: req.Content,
+	user, err := services.UsersService.GetUserByEmail(data.Username)
+	if err != nil {
+		return
 	}
-
+	postData := models.Testimonies{
+		Content:  req.Content,
+		AuthorID: user.ID,
+	}
 	testimony, errr := services.TestimoniesService.CreateTestimony(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create testimonies post request")

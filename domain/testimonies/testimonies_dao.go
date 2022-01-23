@@ -50,6 +50,7 @@ func GetAllTestimonies() ([]*models.Testimonies, int64, error) {
 	var testimonies []*models.Testimonies
 	var count int64
 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&testimonies).Error
+	count = int64(len(testimonies))
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

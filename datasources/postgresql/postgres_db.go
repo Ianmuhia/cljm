@@ -35,14 +35,14 @@ type sermon models.Sermon
 type books models.Books
 type genre models.Genre
 
-//type prayer models.Prayer
+type prayer models.Prayer
 type churchEvent models.ChurchEvent
 type churchJob models.ChurchJob
 type volunteerChurchJob models.VolunteerChurchJob
 
 func init() {
 
-	dsn := "host=localhost user=ianmuhia3 password=*#*Johnte2536 dbname=maranatha port=5432 sslmode=disable "
+	dsn := "host=localhost user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
 
 	database, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: false,
@@ -74,6 +74,7 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 		&churchJob{},
 		&churchEvent{},
 		&volunteerChurchJob{},
+		&prayer{},
 	); err != nil {
 		fmt.Println(err)
 		panic(err)

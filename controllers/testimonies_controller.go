@@ -22,27 +22,20 @@ type GetAllTestimoniesResponse struct {
 }
 
 func CreateTestimony(ctx *gin.Context) {
-	type req CreateTestimonyRequest
-	var reqData CreateTestimonyRequest
 
-	data := GetPayloadFromContext(ctx)
-	postData := req{
-		Content: ctx.PostForm("content"),
-	}
-	reqData = CreateTestimonyRequest(postData)
-
-	user, err := services.UsersService.GetUserByEmail(data.Username)
-	if err != nil {
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
+	var req CreateTestimonyRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
-	value := models.Testimonies{
-		AuthorID: user.ID,
-		Content:  reqData.Content,
+
+	postData := models.Testimonies{
+		Content: req.Content,
 	}
-	prayer, errr := services.TestimoniesService.CreateTestimony(value)
+
+	testimony, errr := services.TestimoniesService.CreateTestimony(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create testimonies post request")
 		ctx.JSON(data.Status, data)
@@ -50,15 +43,11 @@ func CreateTestimony(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, prayer)
+	ctx.JSON(http.StatusCreated, testimony)
 
 }
 
 func UpdateTestimony(ctx *gin.Context) {
-	type req CreateTestimonyRequest
-	var reqData CreateTestimonyRequest
-
-	data := GetPayloadFromContext(ctx)
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -75,22 +64,19 @@ func UpdateTestimony(ctx *gin.Context) {
 		return
 
 	}
-
-	//TODO:Create separate method to handle image upload
-	postData := req{
-
-		Content: ctx.PostForm("content"),
+	var req CreateTestimonyRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
 	}
-	reqData = CreateTestimonyRequest(postData)
-
-	log.Println(data)
 	testimoniesData := models.Testimonies{
-
-		Content: reqData.Content,
+		Content: req.Content,
 	}
 	errr := services.TestimoniesService.UpdateTestimony(uint(i), testimoniesData)
 	if errr != nil {
-		data := errors.NewBadRequestError("Error Processing create testimonies post request")
+		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return

@@ -30,14 +30,24 @@ func CreatPrayerRequest(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
+	data := GetPayloadFromContext(ctx)
+	user, err := services.UsersService.GetUserByEmail(data.Username)
 
+	if err != nil {
+		data := errors.NewBadRequestError("Error Processing create prayer request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
 	postData := models.Prayer{
-		Content: req.Content,
+
+		AuthorID: user.ID,
+		Content:  req.Content,
 	}
 
 	prayer, errr := services.PrayerService.CreatePrayerRequest(postData)
 	if errr != nil {
-		data := errors.NewBadRequestError("Error Processing create genre post request")
+		data := errors.NewBadRequestError("Error Processing create prayer request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
@@ -48,10 +58,7 @@ func CreatPrayerRequest(ctx *gin.Context) {
 }
 
 func UpdatePrayerRequest(ctx *gin.Context) {
-	type req CreatePrayerRequest
-	var reqData CreatePrayerRequest
 
-	data := GetPayloadFromContext(ctx)
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -69,16 +76,15 @@ func UpdatePrayerRequest(ctx *gin.Context) {
 
 	}
 
-	//TODO:Create separate method to handle image upload
-	postData := req{
-
-		Content: ctx.PostForm("content"),
+	var req CreatePrayerRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
 	}
-	reqData = CreatePrayerRequest(postData)
-
-	log.Println(data)
 	prayerData := models.Prayer{
-		Content: reqData.Content,
+		Content: req.Content,
 	}
 	errr := services.PrayerService.UpdatePrayerRequest(uint(i), prayerData)
 	if errr != nil {

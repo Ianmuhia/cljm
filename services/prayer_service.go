@@ -84,7 +84,7 @@ func (s *prayerService) GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer,
 	prayerData, count, err := prayer_request.GetAllPrayerRequestsByAuthor(id)
 	if err != nil {
 		log.Println(err)
-		return prayerData, count, errors.NewBadRequestError("Could not get post by author.")
+		return prayerData, count, errors.NewBadRequestError("Could not get prayer requests by author.")
 	}
 	return prayerData, count, nil
 }

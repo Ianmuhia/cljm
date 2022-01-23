@@ -55,6 +55,7 @@ func GetAllPrayerRequests() ([]*models.Prayer, int64, error) {
 		log.Println(val)
 		return nil, 0, val
 	}
+	count = int64(len(prayer))
 	return prayer, count, nil
 }
 func GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, error) {

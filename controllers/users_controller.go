@@ -25,6 +25,7 @@ type createUserRequest struct {
 }
 
 type userResponse struct {
+	ID                int    `json:"ID"`
 	Username          string `json:"username"`
 	FullName          string `json:"full_name"`
 	Email             string `json:"email"`
@@ -42,6 +43,7 @@ func newUserResponse(user *models.User) userResponse {
 		Username: user.UserName,
 		FullName: user.FullName,
 		Email:    user.Email,
+		ID:       int(user.ID),
 		//PasswordChangedAt: user.UpdatedAt,
 		//CreatedAt:         user.CreatedAt,
 	}

@@ -117,6 +117,43 @@ func GetAllTestimonies(ctx *gin.Context) {
 }
 
 func GetAllTestimoniesByAuthor(ctx *gin.Context) {
+	//id := ctx.Query("id")
+	//value, _ := strconv.ParseInt(id, 10, 32)
+	//if id == "" || value == 0 {
+	//	data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//}
+	//i, err := strconv.ParseUint(id, 10, 32)
+	//if err != nil {
+	//	data := errors.NewBadRequestError("Provide an id to the request.")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//
+	//}
+	user := GetPayloadFromContext(ctx)
+
+	testimonies, count, errr := services.TestimoniesService.GetAllTestimoniesByAuthor(user.ID)
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	type GetAllTestimoniesResponse2 struct {
+		Total       int64                 `json:"total"`
+		Testimonies []*models.Testimonies `json:"testimonies"`
+	}
+	data := GetAllTestimoniesResponse2{
+		Total:       count,
+		Testimonies: testimonies,
+	}
+	ctx.JSON(http.StatusOK, data)
+
+}
+func GetAllTestimoniesByAuthorAdmin(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

@@ -124,6 +124,42 @@ func GetAllPrayerRequests(ctx *gin.Context) {
 }
 
 func GetAllPrayerRequestsByAuthor(ctx *gin.Context) {
+	//id := ctx.Query("id")
+	//value, _ := strconv.ParseInt(id, 10, 32)
+	//if id == "" || value == 0 {
+	//	data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//}
+	//i, err := strconv.ParseUint(id, 10, 32)
+	//if err != nil {
+	//	data := errors.NewBadRequestError("Provide an id to the request.")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//
+	//}
+	user := GetPayloadFromContext(ctx)
+	prayer, count, errr := services.PrayerService.GetAllPrayerRequestsByAuthor(user.ID)
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	type GetAllPrayerResponse2 struct {
+		Total  int64            `json:"total"`
+		Prayer []*models.Prayer `json:"prayer"`
+	}
+	data := GetAllPrayerResponse2{
+		Total:  count,
+		Prayer: prayer,
+	}
+	ctx.JSON(http.StatusOK, data)
+
+}
+func GetAllPrayerRequestsByAuthorAdmin(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

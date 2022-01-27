@@ -192,6 +192,43 @@ func GetAllEvents(ctx *gin.Context) {
 }
 
 func GetAllEventsByAuthor(ctx *gin.Context) {
+	//id := ctx.Query("id")
+	//value, _ := strconv.ParseInt(id, 10, 32)
+	//if id == "" || value == 0 {
+	//	data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//}
+	//i, err := strconv.ParseUint(id, 10, 32)
+	//if err != nil {
+	//	data := errors.NewBadRequestError("Provide an id to the request.")
+	//	ctx.JSON(data.Status, data)
+	//	ctx.Abort()
+	//	return
+	//
+	//}
+	user := GetPayloadFromContext(ctx)
+
+	events, count, errr := services.EventsService.GetAllEventsByAuthor(user.ID)
+	if errr != nil {
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+	type GetAllEventsResponse2 struct {
+		Total  int64                 `json:"total"`
+		Events []*models.ChurchEvent `json:"events"`
+	}
+	data := GetAllEventsResponse2{
+		Total:  count,
+		Events: events,
+	}
+	ctx.JSON(http.StatusOK, data)
+
+}
+func GetAllEventsByAuthorAdmin(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {

@@ -14,8 +14,8 @@ var MinioClient *minio.Client
 func MinioConnection() (*minio.Client, error) {
 	ctx := context.Background()
 	endpoint := "localhost:9000"
-	accessKeyID := "admin"
-	secretAccessKey := "password"
+	accessKeyID := "minioadmin"
+	secretAccessKey := "minioadmin"
 	useSSL := false
 	// Initialize minio client object.
 	minioClient, errInit := minio.New(endpoint, &minio.Options{

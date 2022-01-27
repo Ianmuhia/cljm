@@ -36,7 +36,7 @@ func (s *eventsService) CreateEvent(eventsModel models.ChurchEvent) (*models.Chu
 func (s *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr) {
 	data, count, err := events.GetAllEvents()
 	for _, v := range data {
-		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
+		v.CoverImage = fmt.Sprintf("http://192.168.0.101:9000/mono/%s", v.CoverImage)
 
 		d := v.CreatedAt.Format(time.RFC822)
 
@@ -69,7 +69,7 @@ func (s *eventsService) DeleteEvent(id uint) *errors.RestErr {
 
 func (s *eventsService) GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr) {
 	events, err := events.GetSingleEvent(id)
-	url := fmt.Sprintf("http://localhost:9000/mono/%s", events.CoverImage)
+	url := fmt.Sprintf("http://192.168.0.101:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
 	if err != nil {
 		log.Println(err)
@@ -80,7 +80,7 @@ func (s *eventsService) GetSingleEvent(id uint) (*models.ChurchEvent, *errors.Re
 
 func (s *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr {
 	events, err := events.UpdateEventsPost(id, newModel)
-	url := fmt.Sprintf("http://localhost:9000/mono/%s", events.CoverImage)
+	url := fmt.Sprintf("http://192.168.0.101:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
 	if err != nil {
 		log.Println(err)
@@ -93,7 +93,7 @@ func (s *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) *
 func (s *eventsService) GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr) {
 	eventsData, count, err := events.GetAllEventsByAuthor(id)
 	for _, v := range eventsData {
-		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
+		v.CoverImage = fmt.Sprintf("http://192.168.0.101:9000/mono/%s", v.CoverImage)
 	}
 	if err != nil {
 		log.Println(err)

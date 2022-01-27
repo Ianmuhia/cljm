@@ -151,7 +151,7 @@ func Login(ctx *gin.Context) {
 	duration := 20 * time.Hour
 	fmt.Println(duration.Hours())
 
-	accessToken, erro := token.TokenService.CreateToken(req.Email, duration)
+	accessToken, erro := token.TokenService.CreateToken(user.Email, duration, user.ID)
 
 	if erro != nil {
 		ctx.JSON(http.StatusInternalServerError, erro)
@@ -159,7 +159,7 @@ func Login(ctx *gin.Context) {
 	}
 	duration = time.Duration(time.Now().Add(time.Hour * 20).Unix())
 
-	refreshToken, erro := token.TokenService.CreateRefreshToken(req.Email, duration)
+	refreshToken, erro := token.TokenService.CreateRefreshToken(user.Email, duration, user.ID)
 
 	if erro != nil {
 		ctx.JSON(http.StatusInternalServerError, erro)

@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/gob"
 	"log"
+	postgresql_db "maranatha_web/datasources/postgresql"
 
 	"maranatha_web/controllers/token"
 	mail_client "maranatha_web/datasources/mail"
@@ -21,7 +22,9 @@ func StartApplication() {
 		log.Println(err)
 		return
 	}
-	//postgresql_db.GetBunDB()
+
+	postgresql_db.GetDatabaseConnection()
+
 	connection, err := minio.MinioConnection()
 
 	if err != nil {

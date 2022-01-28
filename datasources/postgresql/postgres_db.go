@@ -2,7 +2,9 @@ package postgresql_db
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"log"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,20 +14,15 @@ import (
 )
 
 const (
-	DbUsername = "DbUsername"
-	DbSchema   = "DbSchema"
-	DbHost     = "DbHost"
-	DbPassword = "DbPassword"
+	DbUsername = "DB_USER"
+	DbSchema   = "DB_NAME"
+	DbHost     = "DB_HOST"
+	DbPort     = "DB_PORT"
+	DbPassword = "DB_PASSWORD"
 )
 
 var (
-	// Client *sql.DB
 	Client *gorm.DB
-
-	// username = os.Getenv(DbUsername)
-	// host     = os.Getenv(DbHost)
-	// schema   = os.Getenv(DbSchema)
-	// password = os.Getenv(DbPassword)
 )
 
 type users models.User
@@ -41,11 +38,26 @@ type testimonies models.Testimonies
 type churchJob models.ChurchJob
 type volunteerChurchJob models.VolunteerChurchJob
 
-func init() {
+func GetDatabaseConnection() {
 
-	dsn := "host=localhost user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
-	database, _ := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	//s3Bucket := os.Getenv("S3_BUCKET")
+	//secretKey := os.Getenv("SECRET_KEY")
+
+	username := os.Getenv(DbUsername)
+	host := os.Getenv(DbHost)
+	port := os.Getenv(DbPort)
+	schema := os.Getenv(DbSchema)
+	password := os.Getenv(DbPassword)
+
+	//dsn := "host=localhost user=wise password=*20406005 dbname=clj port=5432 sslmode=disable "
+	dc := fmt.Sprintf("host=%v user=%s password=%s dbname=%s port=%s sslmode=disable", host, username, password, schema, port)
+
+	database, _ := gorm.Open(postgres.Open(dc), &gorm.Config{
 		SkipDefaultTransaction: false,
 		NamingStrategy:         nil,
 		FullSaveAssociations:   false,

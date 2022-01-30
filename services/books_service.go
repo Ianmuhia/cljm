@@ -7,7 +7,7 @@ import (
 
 	"maranatha_web/domain/books"
 	"maranatha_web/models"
-	"maranatha_web/utils/errors"
+	// "maranatha_web/utils/errors"
 )
 
 var (
@@ -17,21 +17,21 @@ var (
 type booksService struct{}
 
 type booksServiceInterface interface {
-	CreateBooksPost(booksModel models.Books) (*models.Books, *errors.RestErr)
-	GetAllBooks() ([]*models.Books, int64, *errors.RestErr)
-	DeleteBook(id uint) *errors.RestErr
-	GetSingleBooksPost(id uint) (*models.Books, *errors.RestErr)
-	UpdateBooksPost(id uint, newModel models.Books) *errors.RestErr
+	CreateBooksPost(booksModel models.Books) (*models.Books, error)
+	GetAllBooks() ([]*models.Books, int64, error)
+	DeleteBook(id uint) error
+	GetSingleBooksPost(id uint) (*models.Books, error)
+	UpdateBooksPost(id uint, newModel models.Books) error
 }
 
-func (b *booksService) CreateBooksPost(booksModel models.Books) (*models.Books, *errors.RestErr) {
+func (b *booksService) CreateBooksPost(booksModel models.Books) (*models.Books, error) {
 	if err := books.CreateBook(&booksModel); err != nil {
 		return nil, err
 	}
 	return &booksModel, nil
 }
 
-func (b *booksService) GetAllBooks() ([]*models.Books, int64, *errors.RestErr) {
+func (b *booksService) GetAllBooks() ([]*models.Books, int64, error) {
 	data, count, err := books.GetAllBook()
 	for _, v := range data {
 		v.File = fmt.Sprintf("http://localhost:9000/mono/%s", v.File)
@@ -46,40 +46,44 @@ func (b *booksService) GetAllBooks() ([]*models.Books, int64, *errors.RestErr) {
 	}
 
 	if err != nil {
-		return data, count, errors.NewBadRequestError("Could not get post")
+		return data, count, err
+		// errors.NewBadRequestError("Could not get post")
 
 	}
 
 	return data, count, nil
 }
 
-func (b *booksService) DeleteBook(id uint) *errors.RestErr {
+func (b *booksService) DeleteBook(id uint) error {
 	err := books.DeleteBook(id)
 	if err != nil {
 		log.Println(err)
-		return errors.NewBadRequestError("Could not delete item")
+		return err
+		//  errors.NewBadRequestError("Could not delete item")
 	}
 	return nil
 }
 
-func (b *booksService) GetSingleBooksPost(id uint) (*models.Books, *errors.RestErr) {
+func (b *booksService) GetSingleBooksPost(id uint) (*models.Books, error) {
 	books, err := books.GetSingleBook(id)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", books.File)
 	books.File = url
 	if err != nil {
 		log.Println(err)
-		return books, errors.NewBadRequestError("Could not get single post")
+		return books, err
+		// errors.NewBadRequestError("Could not get single post")
 	}
 	return books, nil
 }
 
-func (b *booksService) UpdateBooksPost(id uint, booksModel models.Books) *errors.RestErr {
+func (b *booksService) UpdateBooksPost(id uint, booksModel models.Books) error {
 	books, err := books.UpdateBook(id, booksModel)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", books.File)
 	books.File = url
 	if err != nil {
 		log.Println(err)
-		return errors.NewBadRequestError("Could not get single book")
+		return err
+		//  errors.NewBadRequestError("Could not get single book")
 	}
 	return nil
 }

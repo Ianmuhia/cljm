@@ -44,8 +44,6 @@ func newUserResponse(user *models.User) userResponse {
 		FullName: user.FullName,
 		Email:    user.Email,
 		ID:       int(user.ID),
-		//PasswordChangedAt: user.UpdatedAt,
-		//CreatedAt:         user.CreatedAt,
 	}
 }
 
@@ -67,9 +65,6 @@ func RegisterUser(c *gin.Context) {
 		Email:        registerModel.Email,
 		PasswordHash: registerModel.Password,
 	}
-	//fmt.Println(registerModel)
-	//fmt.Println(user)
-
 	result, saveErr := services.UsersService.CreateUser(user)
 
 	if saveErr != nil {

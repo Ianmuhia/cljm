@@ -97,6 +97,9 @@ func SetupRouter() *gin.Engine {
 			protected.DELETE("/delete-job/", controllers.DeleteJob)
 			protected.PUT("/update-event-job/", controllers.UpdateJob)
 
+			//Daily Scriptures Routes
+			protected.GET("/get-daily-scriptures/", controllers.GetDailyScriptures)
+
 			//Volunteer Job Routes
 			protected.POST("/sub-event-job/", controllers.SubscribeToEventJob)
 			//protected.GET("/get-event-jobs/", controllers.GetAllEventJobs)

@@ -16,7 +16,6 @@ const (
 
 // Task payload for any email related tasks.
 type emailTaskPayload struct {
-	// ID for the email recipient.
 	UserID int
 }
 

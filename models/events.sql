@@ -17,7 +17,7 @@ create table church_events
 );
 
 alter table church_events
-    owner to wise;
+    owner to clj;
 
 create index idx_church_events_organizer_id
     on church_events (organizer_id);
@@ -41,7 +41,7 @@ create table church_jobs
 );
 
 alter table church_jobs
-    owner to wise;
+    owner to clj;
 
 create index idx_church_jobs_deleted_at
     on church_jobs (deleted_at);

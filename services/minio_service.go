@@ -25,7 +25,7 @@ type minioServiceInterface interface {
 func (s *minioService) UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error) {
 	ctx := context.Background()
 	// Upload the zip file with PutObject
-	info, err := minioClient.MinioClient.PutObject(ctx, s.bucketName, objectName, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
+	info, err := minioClient.Client.PutObject(ctx, s.bucketName, objectName, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {
 		return info, err
 	}

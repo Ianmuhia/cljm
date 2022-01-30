@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
+
 	"maranatha_web/models"
 	"maranatha_web/services"
 	"maranatha_web/utils/errors"
@@ -91,7 +92,7 @@ func CreateBook(ctx *gin.Context) {
 		GenreID:     genre.ID,
 		File:        uploadedInfo.Key,
 	}
-	books, errr := services.BooksService.CreateBooksPost(value)
+	books, err := services.BooksService.CreateBooksPost(value)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing creating book post request")
 		ctx.JSON(data.Status, data)
@@ -110,6 +111,7 @@ func UpdateBook(ctx *gin.Context) {
 	data := GetPayloadFromContext(ctx)
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
+
 	if id == "" || value == 0 {
 		data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
 		ctx.JSON(data.Status, data)
@@ -191,6 +193,7 @@ func GetAllBooksPost(ctx *gin.Context) {
 	}
 
 	data := GetAllBooksResponse{
+
 		Total: count,
 		Books: books,
 	}
@@ -249,7 +252,9 @@ func GetSingleBookPost(ctx *gin.Context) {
 	booksData, bg := services.CacheService.GetBooks(context.Background(), "single-books")
 	if bg == nil {
 		log.Println(booksData)
+
 		ctx.JSON(http.StatusOK, booksData)
+
 		return
 	}
 

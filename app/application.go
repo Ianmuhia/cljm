@@ -3,12 +3,12 @@ package app
 import (
 	"encoding/gob"
 	"log"
-	postgresql_db "maranatha_web/datasources/postgresql"
 
 	"maranatha_web/controllers/token"
-	mail_client "maranatha_web/datasources/mail"
+	mailClient "maranatha_web/datasources/mail"
 	"maranatha_web/datasources/minio"
-	redis_db "maranatha_web/datasources/redis"
+	postgresqlDb "maranatha_web/datasources/postgresql"
+	redisDb "maranatha_web/datasources/redis"
 	"maranatha_web/models"
 )
 
@@ -23,16 +23,16 @@ func StartApplication() {
 		return
 	}
 
-	postgresql_db.GetDatabaseConnection()
+	postgresqlDb.GetDatabaseConnection()
 
-	connection, err := minio.MinioConnection()
+	connection, minioErr := minio.GetMinioConnection()
 
-	if err != nil {
+	if minioErr != nil {
 		log.Panicln(err)
 	}
 	log.Printf("mino endpoint is %s", connection.EndpointURL())
-	redis_db.GetRedisClient()
-	mail_client.GetMailServer()
+	redisDb.GetRedisClient()
+	mailClient.GetMailServer()
 
 	r := SetupRouter()
 
@@ -41,7 +41,4 @@ func StartApplication() {
 		log.Println(err)
 		panic(err)
 	}
-	//worker.GetTasksWorker()
-	//task_client.GetTasksClient()
-	//
 }

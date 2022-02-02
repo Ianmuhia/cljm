@@ -1,29 +1,41 @@
 package app
 
 import (
-	"encoding/gob"
 	"log"
+	"maranatha_web/internal/controllers"
+	"maranatha_web/internal/logger"
+	"maranatha_web/internal/services"
 
-	"maranatha_web/controllers/token"
-	mailClient "maranatha_web/datasources/mail"
-	"maranatha_web/datasources/minio"
-	postgresqlDb "maranatha_web/datasources/postgresql"
-	redisDb "maranatha_web/datasources/redis"
-	"maranatha_web/models"
+	"maranatha_web/internal/config"
+	"maranatha_web/internal/controllers/token"
+	"maranatha_web/internal/datasources/minio"
+	"maranatha_web/internal/repository"
 )
+
+var app config.AppConfig
 
 const jwtKey = "*#*Johnte2536290248"
 
 func StartApplication() {
-	gob.Register(models.ChurchPartner{})
+	//configure logger
+	zl := logger.GetLogger()
+	log.Println(zl)
+	app.ErrorLog = zl
+	app.InfoLog = zl
 
 	_, err := token.NewJWTMaker(jwtKey)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	db := repository.GetDatabaseConnection()
+	dao := repository.NewPostgresRepo(db, &app)
+	services.NewBookService(dao)
+	cc := controllers.NewRepo(&app, dao)
+	controllers.NewHandlers(cc)
 
-	postgresqlDb.GetDatabaseConnection()
+	_ = config.NewAppConfig(zl, zl)
+	// postgresqlDb.GetDatabaseConnection()
 
 	connection, minioErr := minio.GetMinioConnection()
 
@@ -31,8 +43,8 @@ func StartApplication() {
 		log.Panicln(err)
 	}
 	log.Printf("mino endpoint is %s", connection.EndpointURL())
-	redisDb.GetRedisClient()
-	mailClient.GetMailServer()
+	//redisDb.GetRedisClient()
+	//mailClient.GetMailServer()
 
 	r := SetupRouter()
 

@@ -65,7 +65,6 @@ func (bq *bookQuery) GetAllBook() ([]*models.Books, int64, error) {
 	val := bq.dbRepo.DB.Debug().Preload(clause.Associations).Order("created_at desc").Find(&book).Error
 	count = int64(len(book))
 
-	bq.dbRepo.App.ErrorLog.Info("errr", zap.Any("e", val))
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val

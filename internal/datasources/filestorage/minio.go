@@ -5,6 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"maranatha_web/internal/config"
+	"mime/multipart"
 	"os"
 
 	"github.com/minio/minio-go/v7"
@@ -14,15 +15,16 @@ import (
 var Client *minio.Client
 
 type MinioDao interface {
+	UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error)
 }
 
-type minioRepo struct {
+type MinioRepo struct {
 	App          *config.AppConfig
 	MinioStorage *minio.Client
 }
 
 func NewMinoRepo(conn *minio.Client, a *config.AppConfig) MinioDao {
-	return &minioRepo{
+	return &MinioRepo{
 		App:          a,
 		MinioStorage: conn,
 	}
@@ -72,4 +74,19 @@ func GetMinioConnection() (*minio.Client, error) {
 	Client = minioClient
 
 	return minioClient, errInit
+}
+
+//
+//type fileStorageServiceInterface interface {
+//	UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error)
+//}
+
+func (s *MinioRepo) UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error) {
+	ctx := context.Background()
+	// Upload the zip file with PutObject
+	info, err := s.MinioStorage.PutObject(ctx, "clj", objectName, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
+	if err != nil {
+		return info, err
+	}
+	return info, nil
 }

@@ -9,7 +9,7 @@ import (
 	"maranatha_web/internal/models"
 )
 
-type BooksServiceInterface interface {
+type BooksService interface {
 	CreateBooksPost(booksModel models.Books) (*models.Books, error)
 	GetAllBooks() ([]*models.Books, int64, error)
 	DeleteBook(id uint) error
@@ -21,7 +21,7 @@ type booksService struct {
 	dao repository.DAO
 }
 
-func NewBookService(dao repository.DAO) BooksServiceInterface {
+func NewBookService(dao repository.DAO) BooksService {
 	return &booksService{dao: dao}
 }
 

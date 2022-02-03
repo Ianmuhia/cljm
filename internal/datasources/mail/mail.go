@@ -12,7 +12,7 @@ var (
 	MailClient *mail.SMTPClient
 )
 
-func GetMailServer() {
+func GetMailServer() *mail.SMTPClient {
 	server := mail.NewSMTPClient()
 	server.Host = "localhost"
 	server.Port = 1025
@@ -26,5 +26,6 @@ func GetMailServer() {
 	}
 	MailClient = client
 	MailServer = server
+	return client
 
 }

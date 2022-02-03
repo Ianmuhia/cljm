@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type EventsServiceInterface interface {
+type EventsService interface {
 	CreateEvent(eventsModel models.ChurchEvent) (*models.ChurchEvent, error)
 	GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr)
 	DeleteEvent(id uint) *errors.RestErr
@@ -23,7 +23,7 @@ type eventsService struct {
 	dao repository.DAO
 }
 
-func NewEventsService(dao repository.DAO) EventsServiceInterface {
+func NewEventsService(dao repository.DAO) EventsService {
 	return &eventsService{dao: dao}
 }
 

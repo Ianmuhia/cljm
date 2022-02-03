@@ -1,5 +1,12 @@
 package controllers
 
+import (
+	"github.com/gin-gonic/gin"
+	"log"
+	"maranatha_web/internal/controllers/token"
+	"maranatha_web/internal/utils/errors"
+)
+
 // import (
 // 	"context"
 // 	"log"
@@ -294,27 +301,27 @@ package controllers
 
 // }
 
-// func GetPayloadFromContext(ctx *gin.Context) *token.Payload {
-// 	payload, exists := ctx.Get("authorization_payload")
-// 	if !exists {
-// 		restErr := errors.NewBadRequestError("could not get auth_payload from context")
-// 		ctx.JSON(restErr.Status, restErr)
-// 		ctx.Abort()
+func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {
+	payload, exists := ctx.Get("authorization_payload")
+	if !exists {
+		restErr := errors.NewBadRequestError("could not get auth_payload from context")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
 
-// 	}
-// 	data := payload.(*token.Payload)
-// 	user, err := services.UsersService.GetUserByEmail(data.Username)
-// 	if err != nil {
-// 		//log.Println(user)
-// 		data := errors.NewBadRequestError("Error Processing request")
-// 		ctx.JSON(data.Status, data)
-// 		ctx.Abort()
+	}
+	data := payload.(*token.Payload)
+	user, err := r.userServices.GetUserByEmail(data.Username)
+	if err != nil {
+		//log.Println(user)
+		data := errors.NewBadRequestError("Error Processing request")
+		ctx.JSON(data.Status, data)
+		ctx.Abort()
 
-// 	}
-// 	log.Println(user)
-// 	//TODO:upload news images
-// 	//TODO:Work on user profile, reset password , forgot password
+	}
+	log.Println(user)
+	//TODO:upload news images
+	//TODO:Work on user profile, reset password , forgot password
 
-// 	return data
+	return data
 
-// }
+}

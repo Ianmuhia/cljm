@@ -7,7 +7,7 @@ import (
 	"maranatha_web/internal/repository"
 )
 
-type JobsServiceInterface interface {
+type JobsService interface {
 	GetAllEventJobs(id uint) ([]*models.ChurchJob, int64, error)
 	GetJobByEvent(eventId uint, jobId uint) (*models.ChurchJob, error)
 	CreateEventJob(jobsModel models.ChurchJob) (*models.ChurchJob, error)
@@ -20,7 +20,7 @@ type jobsService struct {
 	dao repository.DAO
 }
 
-func NewJobsService(dao repository.DAO) JobsServiceInterface {
+func NewJobsService(dao repository.DAO) JobsService {
 	return &jobsService{dao: dao}
 }
 

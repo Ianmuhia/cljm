@@ -13,13 +13,13 @@ func SetupRouter() *gin.Engine {
 
 	api := router.Group("/api")
 	{
-		//public := api.Group("/auth")
-		//{
-		//	//public.POST("/users/login/", controllers.Login)
-		//	//public.POST("/users/register/", controllers.RegisterUser)
-		//	//public.POST("/users/verifyemail/", controllers.VerifyEmailCode)
-		//
-		//}
+		public := api.Group("/auth")
+		{
+			//public.POST("/users/login/", controllers.Login)
+			public.POST("/users/register/", controllers.Repo.RegisterUser)
+			//public.POST("/users/verifyemail/", controllers.VerifyEmailCode)
+
+		}
 
 		// here
 		//protected := api.Group("/protected").Use(middleware.CORSMiddleware(), middleware.AuthMiddleware())

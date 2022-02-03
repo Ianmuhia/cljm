@@ -75,8 +75,8 @@ func HandleVerifyEmailTask(ctx context.Context, t *asynq.Task) error {
 	}
 	email := mail.NewMSG()
 	email.SetFrom(m.From).AddTo(m.To).SetSubject(m.Subject).SetBody(mail.TextPlain, m.Content)
-
-	err := email.Send(mail_client.MailClient)
+	mc := mail_client.GetMailServer()
+	err := email.Send(mc)
 
 	if err != nil {
 		log.Println("failing here.")

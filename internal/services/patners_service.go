@@ -7,7 +7,7 @@ import (
 	"maranatha_web/internal/repository"
 )
 
-type ChurchPartnersServiceInterface interface {
+type ChurchPartnersService interface {
 	CreateChurchPartner(partnersModel models.ChurchPartner) (*models.ChurchPartner, error)
 	GetAllChurchPartner() ([]models.ChurchPartner, int64, error)
 	DeleteChurchPartner(id uint) error
@@ -18,7 +18,7 @@ type churchPartnersService struct {
 	dao repository.DAO
 }
 
-func NewChurchPartnersService(dao repository.DAO) ChurchPartnersServiceInterface {
+func NewChurchPartnersService(dao repository.DAO) ChurchPartnersService {
 	return &churchPartnersService{dao: dao}
 }
 

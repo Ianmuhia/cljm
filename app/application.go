@@ -3,6 +3,8 @@ package app
 import (
 	"log"
 	"maranatha_web/internal/controllers"
+	mailClient "maranatha_web/internal/datasources/mail"
+	redisDb "maranatha_web/internal/datasources/redis"
 	"maranatha_web/internal/logger"
 	"maranatha_web/internal/services"
 
@@ -34,22 +36,20 @@ func StartApplication() {
 	db := repository.GetDatabaseConnection()
 	dao := repository.NewPostgresRepo(db, &app)
 	//initiate services
-	services.NewBookService(dao)
-	services.NewEventsService(dao)
-	services.NewGenreService(dao)
-	services.NewJobsService(dao)
-	services.NewNewsService(dao)
-	services.NewChurchPartnersService(dao)
-	services.NewPrayerRequestService(dao)
-	services.NewSermonService(dao)
-	services.NewTestimoniesService(dao)
-	services.NewUsersService(dao)
-	services.NewVolunteerChurchJobService(dao)
 	//
-
-	cc := controllers.NewRepo(&app, dao)
-	controllers.NewHandlers(cc)
-
+	booksService := services.NewBookService(dao)
+	eventsService := services.NewEventsService(dao)
+	genresService := services.NewGenreService(dao)
+	jobsService := services.NewJobsService(dao)
+	newsService := services.NewNewsService(dao)
+	partnersService := services.NewChurchPartnersService(dao)
+	prayerRequestService := services.NewPrayerRequestService(dao)
+	sermonServices := services.NewSermonService(dao)
+	testimonyService := services.NewTestimoniesService(dao)
+	usersService := services.NewUsersService(dao)
+	volunteerJobService := services.NewVolunteerChurchJobService(dao)
+	//
+	//
 	//Get file storage connection
 	connection, minioErr := filestorage.GetMinioConnection()
 	if minioErr != nil {
@@ -57,8 +57,31 @@ func StartApplication() {
 	}
 	filestorage.NewMinoRepo(connection, &app)
 	log.Printf("mino endpoint is %s", connection.EndpointURL())
-	//redisDb.GetRedisClient()
-	//mailClient.GetMailServer()
+
+	fs := filestorage.MinioRepo{
+		App:          &app,
+		MinioStorage: connection,
+	}
+
+	allServices := controllers.NewRepo(
+		&app,
+		booksService,
+		&fs,
+		eventsService,
+		genresService,
+		jobsService,
+		newsService,
+		partnersService,
+		prayerRequestService,
+		sermonServices,
+		testimonyService,
+		usersService,
+		volunteerJobService)
+
+	controllers.NewHandlers(allServices)
+
+	redisDb.GetRedisClient()
+	mailClient.GetMailServer()
 
 	r := SetupRouter()
 

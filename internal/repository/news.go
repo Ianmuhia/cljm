@@ -5,7 +5,6 @@ import (
 	"gorm.io/gorm"        //nolint:goimports
 	"gorm.io/gorm/clause" //nolint:goimports
 	"log"
-	postgresql_db "maranatha_web/internal/datasources/postgresql"
 	"maranatha_web/internal/models"
 )
 
@@ -23,7 +22,7 @@ type newsQuery struct {
 }
 
 func (nq *newsQuery) CreateNewsPost(news *models.News) error {
-	err := postgresql_db.Client.Debug().Create(&news).Error
+	err := nq.dbRepo.DB.Debug().Create(&news).Error
 	if err != nil {
 		nq.dbRepo.App.ErrorLog.Error("error when trying to save user", zap.Any("error", err))
 		return err
@@ -33,7 +32,7 @@ func (nq *newsQuery) CreateNewsPost(news *models.News) error {
 
 func (nq *newsQuery) DeleteNewsPost(id uint) error {
 	var news models.News
-	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&news).Error
+	err := nq.dbRepo.DB.Debug().Where("id = ?", id).Delete(&news).Error
 	if err != nil {
 		nq.dbRepo.App.ErrorLog.Error("error when trying to delete news post", zap.Any("error", err))
 		return err
@@ -42,7 +41,7 @@ func (nq *newsQuery) DeleteNewsPost(id uint) error {
 }
 func (nq *newsQuery) GetSingleNewsPost(id uint) (*models.News, error) {
 	var news models.News
-	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&news).Error
+	err := nq.dbRepo.DB.Debug().Preload(clause.Associations).Where("id = ?", id).First(&news).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
 		nq.dbRepo.App.ErrorLog.Error("error when trying to get  news post", zap.Any("error", err))
 		return &news, err
@@ -50,7 +49,7 @@ func (nq *newsQuery) GetSingleNewsPost(id uint) (*models.News, error) {
 	return &news, nil
 }
 func (nq *newsQuery) UpdateNewsPost(id uint, newsModel models.News) (*models.News, error) {
-	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&newsModel).Error
+	err := nq.dbRepo.DB.Debug().Where("id = ?", id).Updates(&newsModel).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
 		nq.dbRepo.App.ErrorLog.Error("error when trying to update  news post", zap.Any("error", err))
 		return &newsModel, err
@@ -61,7 +60,7 @@ func (nq *newsQuery) UpdateNewsPost(id uint, newsModel models.News) (*models.New
 func (nq *newsQuery) GetAllNewsPost() ([]*models.News, int64, error) {
 	var news []*models.News
 	var count int64
-	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
+	val := nq.dbRepo.DB.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
 	if val != nil {
 		log.Println(val)
 		return nil, 0, val
@@ -72,7 +71,7 @@ func (nq *newsQuery) GetAllNewsPost() ([]*models.News, int64, error) {
 func (nq *newsQuery) GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
 	var news []*models.News
 	var count int64
-	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Count(&count).Error
+	val := nq.dbRepo.DB.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Count(&count).Error
 	if val != nil {
 		return nil, 0, val
 	}

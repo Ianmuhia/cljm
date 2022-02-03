@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type GenreServiceInterface interface {
+type GenreService interface {
 	CreateGenrePost(genreModel models.Genre) (*models.Genre, error)
 	GetAllGenres() ([]*models.Genre, int64, error)
 	DeleteGenre(id uint) error
@@ -20,7 +20,7 @@ type genreService struct {
 	dao repository.DAO
 }
 
-func NewGenreService(dao repository.DAO) GenreServiceInterface {
+func NewGenreService(dao repository.DAO) GenreService {
 	return &genreService{dao: dao}
 }
 

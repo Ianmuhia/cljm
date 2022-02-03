@@ -13,7 +13,7 @@ type usersService struct {
 
 type UsersService interface {
 	GetUserByEmail(email string) (*models.User, error)
-	CreateUser(models.User) (*models.User, error)
+	CreateUser(models.User) error
 	UpdateUserStatus(email string) error
 	UpdateUserImage(email, imageName string) error
 	GetAllUsers() ([]models.User, error)
@@ -23,13 +23,13 @@ func NewUsersService(dao repository.DAO) UsersService {
 	return &usersService{dao: dao}
 }
 
-func (us *usersService) CreateUser(user models.User) (*models.User, error) {
+func (us *usersService) CreateUser(user models.User) error {
 	user.PasswordHash = crypto_utils.Hash(user.PasswordHash)
 	if err := us.dao.NewUserQuery().Create(&user); err != nil {
 		log.Println(user.PasswordHash)
-		return nil, err
+		return err
 	}
-	return &user, nil
+	return nil
 }
 
 func (us *usersService) GetUserByEmail(email string) (*models.User, error) {

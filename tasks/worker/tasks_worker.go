@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"maranatha_web/internal/services"
 
 	"github.com/hibiken/asynq" //nolint:goimports
 
@@ -17,7 +18,7 @@ func main() {
 	)
 
 	mux := asynq.NewServeMux()
-	// mux.HandleFunc(task.TypeWelcomeEmail, services.HandleVerifyEmailTask)
+	mux.HandleFunc(task.TypeWelcomeEmail, services.HandleVerifyEmailTask)
 	mux.HandleFunc(task.TypeReminderEmail, task.HandleReminderEmailTask)
 
 	if err := srv.Run(mux); err != nil {

@@ -1,4 +1,4 @@
-POST http://localhost:8090/api/public/users/register/
+POST http://localhost:8090/api/auth/users/register/
 Accept: application/json
 Content-Type: application/json
 

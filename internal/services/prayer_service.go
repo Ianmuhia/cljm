@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type PrayerRequestServiceInterface interface {
+type PrayerRequestService interface {
 	CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, error)
 	GetAllPrayerRequests() ([]*models.Prayer, int64, error)
 	DeletePrayerRequest(id uint) error
@@ -21,7 +21,7 @@ type prayerRequestService struct {
 	dao repository.DAO
 }
 
-func NewPrayerRequestService(dao repository.DAO) PrayerRequestServiceInterface {
+func NewPrayerRequestService(dao repository.DAO) PrayerRequestService {
 	return &prayerRequestService{dao: dao}
 }
 

@@ -1,4 +1,4 @@
-package redis_db
+package redisDb
 
 import (
 	"context"
@@ -9,9 +9,7 @@ import (
 
 var (
 	RedisClient *redis.Client
-)
-var (
-	Ctx = context.Background()
+	Ctx         = context.Background()
 )
 
 func GetRedisClient() *redis.Client {

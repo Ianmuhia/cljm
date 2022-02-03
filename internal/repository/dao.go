@@ -113,7 +113,7 @@ func GetDatabaseConnection() *gorm.DB {
 	err := godotenv.Load()
 	if err != nil {
 		log.Println(err)
-		log.Fatal("Error lc c c c oading .env file")
+		log.Fatal("Error loading .env file")
 	}
 
 	username := os.Getenv(DbUsername)
@@ -134,7 +134,7 @@ func GetDatabaseConnection() *gorm.DB {
 
 	// MigrateTables(database)
 
-	database.Logger.LogMode(logger.Silent)
+	database.Logger.LogMode(logger.Info)
 	Client = database
 
 	log.Println("database successfully configured")

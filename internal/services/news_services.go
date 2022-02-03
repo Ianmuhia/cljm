@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type NewsServiceInterface interface {
+type NewsService interface {
 	CreateNewsPost(newsModel models.News) (*models.News, error)
 	GetAllNewsPost() ([]*models.News, int64, error)
 	DeleteNewsPost(id uint) error
@@ -21,7 +21,7 @@ type newsService struct {
 	dao repository.DAO
 }
 
-func NewNewsService(dao repository.DAO) NewsServiceInterface {
+func NewNewsService(dao repository.DAO) NewsService {
 	return &newsService{dao: dao}
 }
 

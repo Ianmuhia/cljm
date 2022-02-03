@@ -1,70 +1,79 @@
 package repository
 
-// import (
-// 	"log"
+import (
+	"go.uber.org/zap"
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+	"log"
+	"maranatha_web/internal/models"
+)
 
-// 	"gorm.io/gorm"
-// 	"gorm.io/gorm/clause"
+type TestimonyQuery interface {
+	CreateTestimony(testimonies *models.Testimonies) error
+	DeleteTestimony(id uint) error
+	GetSingleTestimony(id uint) (*models.Testimonies, error)
+	UpdateTestimony(id uint, testimoniesModel models.Testimonies) (*models.Testimonies, error)
+	GetAllTestimonies() ([]*models.Testimonies, int64, error)
+	GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, error)
+}
 
-// 	postgresql_db "maranatha_web/datasources/postgresql"
-// 	"maranatha_web/logger"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type testimonyQuery struct {
+	repo postgresDBRepo
+}
 
-// func CreateTestimony(testimonies *models.Testimonies) *errors.RestErr {
-// 	err := postgresql_db.Client.Debug().Create(&testimonies).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to save testimony", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
+func (tq *testimonyQuery) CreateTestimony(testimonies *models.Testimonies) error {
+	err := tq.repo.DB.Debug().Create(&testimonies).Error
+	if err != nil {
+		tq.repo.App.ErrorLog.Error("error when trying to save testimony", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
 
-// func DeleteTestimony(id uint) *errors.RestErr {
-// 	var testimonies models.Testimonies
-// 	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&testimonies).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to delete testimony post", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
-// func GetSingleTestimony(id uint) (*models.Testimonies, *errors.RestErr) {
-// 	var testimonies models.Testimonies
-// 	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&testimonies).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to get testimonies post", err)
-// 		return &testimonies, errors.NewInternalServerError("database error")
-// 	}
-// 	return &testimonies, nil
-// }
-// func UpdateTestimony(id uint, testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr) {
-// 	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&testimoniesModel).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to update testimonies post", err)
-// 		return &testimoniesModel, errors.NewInternalServerError("database error")
-// 	}
-// 	return &testimoniesModel, nil
-// }
-// func GetAllTestimonies() ([]*models.Testimonies, int64, error) {
-// 	var testimonies []*models.Testimonies
-// 	var count int64
-// 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&testimonies).Error
-// 	count = int64(len(testimonies))
-// 	if val != nil {
-// 		log.Println(val)
-// 		return nil, 0, val
-// 	}
-// 	return testimonies, count, nil
-// }
-// func GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, error) {
-// 	var testimonies []*models.Testimonies
-// 	var count int64
-// 	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&testimonies).Count(&count).Error
-// 	if val != nil {
-// 		log.Println(val)
-// 		return nil, 0, val
-// 	}
-// 	return testimonies, count, nil
-// }
+func (tq *testimonyQuery) DeleteTestimony(id uint) error {
+	var testimonies models.Testimonies
+	err := tq.repo.DB.Debug().Where("id = ?", id).Delete(&testimonies).Error
+	if err != nil {
+		tq.repo.App.ErrorLog.Error("error when trying to delete testimony post", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
+func (tq *testimonyQuery) GetSingleTestimony(id uint) (*models.Testimonies, error) {
+	var testimonies models.Testimonies
+	err := tq.repo.DB.Debug().Preload(clause.Associations).Where("id = ?", id).First(&testimonies).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		tq.repo.App.ErrorLog.Error("error when trying to get testimonies post", zap.Any("error", err))
+		return &testimonies, err
+	}
+	return &testimonies, nil
+}
+func (tq *testimonyQuery) UpdateTestimony(id uint, testimoniesModel models.Testimonies) (*models.Testimonies, error) {
+	err := tq.repo.DB.Debug().Where("id = ?", id).Updates(&testimoniesModel).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		tq.repo.App.ErrorLog.Error("error when trying to update testimonies post", zap.Any("error", err))
+		return &testimoniesModel, err
+	}
+	return &testimoniesModel, nil
+}
+func (tq *testimonyQuery) GetAllTestimonies() ([]*models.Testimonies, int64, error) {
+	var testimonies []*models.Testimonies
+	var count int64
+	val := tq.repo.DB.Debug().Preload(clause.Associations).Order("created_at desc").Find(&testimonies).Error
+	count = int64(len(testimonies))
+	if val != nil {
+		log.Println(val)
+		return nil, 0, val
+	}
+	return testimonies, count, nil
+}
+func (tq *testimonyQuery) GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, error) {
+	var testimonies []*models.Testimonies
+	var count int64
+	val := tq.repo.DB.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&testimonies).Count(&count).Error
+	if val != nil {
+		log.Println(val)
+		return nil, 0, val
+	}
+	return testimonies, count, nil
+}

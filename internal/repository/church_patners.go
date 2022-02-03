@@ -1,61 +1,67 @@
 package repository
 
-// import (
-// 	"log"
-// 	//nolint:goimports
-//
+import (
+	"go.uber.org/zap"
+	"gorm.io/gorm"
+	"maranatha_web/internal/models"
+)
 
-// 	"gorm.io/gorm" //nolint:goimports
+type PartnersQuery interface {
+	CreateChurchPartner(partner *models.ChurchPartner) error
+	DeleteChurchPartner(id uint) error
+	GetSingleChurchPartner(id uint) (*models.ChurchPartner, error)
+	UpdateChurchPartner(id uint, partnerModel models.ChurchPartner) (*models.ChurchPartner, error)
+	GetAllChurchPartner() ([]models.ChurchPartner, int64, error)
+}
 
-// 	PostgreSQL "maranatha_web/datasources/postgresql"
-// 	"maranatha_web/logger"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors" //nolint:goimports
-// )
+type partnerQuery struct {
+	dbRepo postgresDBRepo
+}
 
-// func CreateChurchPartner(paetner *models.ChurchPartner) *errors.RestErr {
-// 	err := PostgreSQL.Client.Debug().Create(&paetner).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to save church partner", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
+func (pq *partnerQuery) CreateChurchPartner(partner *models.ChurchPartner) error {
+	err := pq.dbRepo.DB.Debug().Create(&partner).Error
+	if err != nil {
+		pq.dbRepo.App.ErrorLog.Error("error when trying to save church partner", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
 
-// func DeleteChurchPartner(id uint) *errors.RestErr {
-// 	var partner models.ChurchPartner
-// 	err := PostgreSQL.Client.Debug().Where("id = ?", id).Delete(&partner).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to delete church partner", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
-// func GetSingleChurchPartner(id uint) (*models.ChurchPartner, *errors.RestErr) {
-// 	var partner models.ChurchPartner
-// 	err := PostgreSQL.Client.Debug().Where("id = ?", id).First(&partner).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to get  partner post", err)
-// 		return &partner, errors.NewInternalServerError("database error")
-// 	}
-// 	return &partner, nil
-// }
-// func UpdateChurchPartner(id uint, partnerModel models.ChurchPartner) (*models.ChurchPartner, *errors.RestErr) {
-// 	err := PostgreSQL.Client.Debug().Where("id = ?", id).Updates(&partnerModel).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to update  partner", err)
-// 		return &partnerModel, errors.NewInternalServerError("database error")
-// 	}
-// 	return &partnerModel, nil
-// }
+func (pq *partnerQuery) DeleteChurchPartner(id uint) error {
+	var partner models.ChurchPartner
+	err := pq.dbRepo.DB.Debug().Where("id = ?", id).Delete(&partner).Error
+	if err != nil {
+		pq.dbRepo.App.ErrorLog.Error("error when trying to delete church partner", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
+func (pq *partnerQuery) GetSingleChurchPartner(id uint) (*models.ChurchPartner, error) {
+	var partner models.ChurchPartner
+	err := pq.dbRepo.DB.Debug().Where("id = ?", id).First(&partner).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		pq.dbRepo.App.ErrorLog.Error("error when trying to get  partner post", zap.Any("error", err))
+		return &partner, err
+	}
+	return &partner, nil
+}
+func (pq *partnerQuery) UpdateChurchPartner(id uint, partnerModel models.ChurchPartner) (*models.ChurchPartner, error) {
+	err := pq.dbRepo.DB.Debug().Where("id = ?", id).Updates(&partnerModel).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		pq.dbRepo.App.ErrorLog.Error("error when trying to update  partner", zap.Any("error", err))
+		return &partnerModel, err
+	}
+	return &partnerModel, nil
+}
 
-// func GetAllChurchPartner() ([]models.ChurchPartner, int64, error) {
-// 	var churchPartners []models.ChurchPartner
-// 	var count int64
-// 	val := PostgreSQL.Client.Debug().Order("created_at desc").Find(&churchPartners).Error
-// 	if val != nil {
-// 		log.Println(val)
-// 		return nil, 0, val
-// 	}
-// 	return churchPartners, count, nil
-// }
+func (pq *partnerQuery) GetAllChurchPartner() ([]models.ChurchPartner, int64, error) {
+	var churchPartners []models.ChurchPartner
+	var count int64
+	val := pq.dbRepo.DB.Debug().Order("created_at desc").Find(&churchPartners).Error
+	if val != nil {
+		pq.dbRepo.App.ErrorLog.Error("error when trying to get all  partner", zap.Any("error", val))
+		return nil, 0, val
+	}
+
+	return churchPartners, count, nil
+}

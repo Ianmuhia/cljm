@@ -35,7 +35,7 @@ func (bq *bookQuery) DeleteBook(id uint) error {
 	var book models.Books
 	err := bq.dbRepo.DB.Debug().Where("id = ?", id).Delete(&book).Error
 	if err != nil {
-		//bq.dbRepo.App.ErrorLog.Println("error when trying to delete book post", err)
+		bq.dbRepo.App.ErrorLog.Info("error when trying to delete book post", zap.Any("error", err))
 		return err
 	}
 	return nil
@@ -44,7 +44,7 @@ func (bq *bookQuery) GetSingleBook(id uint) (*models.Books, error) {
 	var book models.Books
 	err := bq.dbRepo.DB.Debug().Preload(clause.Associations).Where("id = ?", id).First(&book).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
-		//bq.dbRepo.App.ErrorLog.Println("error when trying to get  book post", err)
+		bq.dbRepo.App.ErrorLog.Info("error when trying to get  book post", zap.Any("error", err))
 		return &book, err
 	}
 	return &book, nil

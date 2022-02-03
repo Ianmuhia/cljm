@@ -1,74 +1,80 @@
 package repository
 
-// import (
-// 	"log"
-//
+import (
+	"go.uber.org/zap"
+	"gorm.io/gorm"        //nolint:goimports
+	"gorm.io/gorm/clause" //nolint:goimports
+	"log"
+	postgresql_db "maranatha_web/internal/datasources/postgresql"
+	"maranatha_web/internal/models"
+)
 
-// 	"gorm.io/gorm"        //nolint:goimports
-// 	"gorm.io/gorm/clause" //nolint:goimports
+type NewsQuery interface {
+	CreateNewsPost(news *models.News) error
+	DeleteNewsPost(id uint) error
+	GetSingleNewsPost(id uint) (*models.News, error)
+	UpdateNewsPost(id uint, newsModel models.News) (*models.News, error)
+	GetAllNewsPost() ([]*models.News, int64, error)
+	GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error)
+}
 
-// 	postgresql_db "maranatha_web/datasources/postgresql"
-// 	"maranatha_web/logger"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type newsQuery struct {
+	dbRepo postgresDBRepo
+}
 
-// func CreateNewsPost(news *models.News) *errors.RestErr {
-// 	err := postgresql_db.Client.Debug().Create(&news).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to save user", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
+func (nq *newsQuery) CreateNewsPost(news *models.News) error {
+	err := postgresql_db.Client.Debug().Create(&news).Error
+	if err != nil {
+		nq.dbRepo.App.ErrorLog.Error("error when trying to save user", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
 
-// func DeleteNewsPost(id uint) *errors.RestErr {
-// 	var news models.News
-// 	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&news).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to delete news post", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
-// func GetSingleNewsPost(id uint) (*models.News, *errors.RestErr) {
-// 	var news models.News
-// 	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&news).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to get  news post", err)
-// 		return &news, errors.NewInternalServerError("database error")
-// 	}
-// 	return &news, nil
-// }
-// func UpdateNewsPost(id uint, newsModel models.News) (*models.News, *errors.RestErr) {
-// 	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&newsModel).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to update  news post", err)
-// 		return &newsModel, errors.NewInternalServerError("database error")
-// 	}
-// 	return &newsModel, nil
-// }
+func (nq *newsQuery) DeleteNewsPost(id uint) error {
+	var news models.News
+	err := postgresql_db.Client.Debug().Where("id = ?", id).Delete(&news).Error
+	if err != nil {
+		nq.dbRepo.App.ErrorLog.Error("error when trying to delete news post", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
+func (nq *newsQuery) GetSingleNewsPost(id uint) (*models.News, error) {
+	var news models.News
+	err := postgresql_db.Client.Debug().Preload(clause.Associations).Where("id = ?", id).First(&news).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		nq.dbRepo.App.ErrorLog.Error("error when trying to get  news post", zap.Any("error", err))
+		return &news, err
+	}
+	return &news, nil
+}
+func (nq *newsQuery) UpdateNewsPost(id uint, newsModel models.News) (*models.News, error) {
+	err := postgresql_db.Client.Debug().Where("id = ?", id).Updates(&newsModel).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		nq.dbRepo.App.ErrorLog.Error("error when trying to update  news post", zap.Any("error", err))
+		return &newsModel, err
+	}
+	return &newsModel, nil
+}
 
-// func GetAllNewsPost() ([]*models.News, int64, error) {
-// 	var news []*models.News
-// 	var count int64
-// 	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
-// 	if val != nil {
-// 		log.Println(val)
-// 		return nil, 0, val
-// 	}
-// 	return news, count, nil
-// }
+func (nq *newsQuery) GetAllNewsPost() ([]*models.News, int64, error) {
+	var news []*models.News
+	var count int64
+	val := postgresql_db.Client.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
+	if val != nil {
+		log.Println(val)
+		return nil, 0, val
+	}
+	return news, count, nil
+}
 
-// func GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
-// 	var news []*models.News
-// 	var count int64
-// 	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Count(&count).Error
-// 	if val != nil {
-// 		log.Println(val)
-// 		return nil, 0, val
-// 	}
-// 	return news, count, nil
-// }
-
-// //Get all users
+func (nq *newsQuery) GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
+	var news []*models.News
+	var count int64
+	val := postgresql_db.Client.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Count(&count).Error
+	if val != nil {
+		return nil, 0, val
+	}
+	return news, count, nil
+}

@@ -1,20 +1,21 @@
 package repository
 
-// import (
-//
-//
-//
-//
+import (
+	"maranatha_web/internal/models"
+)
 
-// 	postgresql_db "maranatha_web/datasources/postgresql"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type VolunteerQuery interface {
+}
 
-// func CreateSubscribeToChurchJob(volunteerChurchJob *models.VolunteerChurchJob) *errors.RestErr {
-// 	err := postgresql_db.Client.Debug().Create(&volunteerChurchJob).Error
-// 	if err != nil {
-// 		return errors.NewInternalServerError("Error when trying to save volunteerChurchJob")
-// 	}
-// 	return nil
-// }
+type volunteerQuery struct {
+	repo postgresDBRepo
+}
+
+func (vq *volunteerQuery) CreateSubscribeToChurchJob(volunteerChurchJob *models.VolunteerChurchJob) error {
+	err := vq.repo.DB.Debug().Create(&volunteerChurchJob).Error
+	if err != nil {
+		vq.repo.App.ErrorLog.Error("Error when trying to save volunteerChurchJob")
+		return err
+	}
+	return nil
+}

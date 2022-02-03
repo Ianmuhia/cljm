@@ -3,6 +3,8 @@ package repository
 import (
 	"fmt"
 	"log"
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/errors"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -16,26 +18,16 @@ import (
 
 type DAO interface {
 	NewBookQuery() BookQuery
-	// NewUserQuery() UserQuery
-	// NewCourseQuery() CourseQuery
-	// NewAnswerQuery() AnswerQuery
-	// NewIndicatorQuery() IndicatorQuery
-	// NewQuestionQuery() QuestionQuery
-	// NewReviewQuery() ReviewQuery
-	// NewScoreQuery() ScoreQuery
-	// NewSectionQuery() SectionQuery
-	// NewTransactionQuery() TransactionQuery
+	NewPartnersQuery() PartnersQuery
+	NewEventsQuery() EventsQuery
+	NewGenresQuery() GenresQuery
+	NewJobsQuery() JobsQuery
+	NewNewsQuery() NewsQuery
+	NewSermonQuery() SermonQuery
+	NewPrayerRequestQuery() PrayerRequestQuery
+	NewUserQuery() UserQuery
+	NewTestimonyQuery() TestimonyQuery
 }
-
-// type dao struct {
-// 	App *config.AppConfig
-// 	DB  *gorm.DB
-// }
-
-// func NewDAO(db *sql.DB) DAO {
-// 	DB = db
-// 	return &dao{}
-// }
 
 type postgresDBRepo struct {
 	App *config.AppConfig
@@ -49,41 +41,46 @@ func NewPostgresRepo(conn *gorm.DB, a *config.AppConfig) DAO {
 	}
 }
 
-// func (d *dao) NewTransactionQuery() TransactionQuery {
-// 	return &transactionQuery{}
-// }
-
-// func (d *dao) NewSectionQuery() SectionQuery {
-// 	return &sectionQuery{}
-// }
-
 func (d *postgresDBRepo) NewBookQuery() BookQuery {
 	return &bookQuery{dbRepo: *d}
 }
 
-// func (d *dao) NewReviewQuery() ReviewQuery {
-// 	return &reviewQuery{}
-// }
+func (d *postgresDBRepo) NewPartnersQuery() PartnersQuery {
+	return &partnerQuery{dbRepo: *d}
+}
+func (d *postgresDBRepo) NewEventsQuery() EventsQuery {
+	return &eventsQuery{dbRepo: *d}
+}
 
-// func (d *dao) NewQuestionQuery() QuestionQuery {
-// 	return &questionQuery{}
-// }
+func (d *postgresDBRepo) NewGenresQuery() GenresQuery {
+	return &genresQuery{dbRepo: *d}
+}
 
-// func (d *dao) NewUserQuery() UserQuery {
-// 	return &userQuery{}
-// }
+func (d *postgresDBRepo) NewJobsQuery() JobsQuery {
+	return &jobsQuery{dbRepo: *d}
+}
+func (d *postgresDBRepo) NewNewsQuery() NewsQuery {
+	return &newsQuery{dbRepo: *d}
+}
 
-// func (d *dao) NewCourseQuery() CourseQuery {
-// 	return &courseQuery{}
-// }
+func (d *postgresDBRepo) NewPrayerRequestQuery() PrayerRequestQuery {
+	return &prayerRequestQuery{repo: *d}
+}
 
-// func (d *dao) NewAnswerQuery() AnswerQuery {
-// 	return &answerQuery{}
-// }
+func (d *postgresDBRepo) NewSermonQuery() SermonQuery {
+	return &sermonQuery{repo: *d}
+}
 
-// func (d *dao) NewIndicatorQuery() IndicatorQuery {
-// 	return &indicatorQuery{}
-// }
+func (d *postgresDBRepo) NewTestimonyQuery() TestimonyQuery {
+	return &testimonyQuery{repo: *d}
+}
+
+func (d *postgresDBRepo) NewUserQuery() UserQuery {
+	return &userQuery{repo: *d}
+}
+func (d *postgresDBRepo) NewVolunteerQuery() VolunteerQuery {
+	return &volunteerQuery{repo: *d}
+}
 
 const (
 	DbUsername = "DB_USER"
@@ -97,18 +94,18 @@ var (
 	Client *gorm.DB
 )
 
-//type users models.User
-//type news models.News
-//type churchPartner models.ChurchPartner
-//type sermon models.Sermon
-//type books models.Books
-//type genre models.Genre
-//
-//type prayer models.Prayer
-//type churchEvent models.ChurchEvent
-//type testimonies models.Testimonies
-//type churchJob models.ChurchJob
-//type volunteerChurchJob models.VolunteerChurchJob
+type users models.User
+type news models.News
+type churchPartner models.ChurchPartner
+type sermon models.Sermon
+type books models.Books
+type genre models.Genre
+
+type prayer models.Prayer
+type churchEvent models.ChurchEvent
+type testimonies models.Testimonies
+type churchJob models.ChurchJob
+type volunteerChurchJob models.VolunteerChurchJob
 
 func GetDatabaseConnection() *gorm.DB {
 
@@ -145,38 +142,38 @@ func GetDatabaseConnection() *gorm.DB {
 
 }
 
-// func MigrateTables(db *gorm.DB) *errors.RestErr {
+func MigrateTables(db *gorm.DB) *errors.RestErr {
 
-// 	db.Logger.LogMode(logger.Info)
+	db.Logger.LogMode(logger.Info)
 
-// 	if err := db.AutoMigrate(
-// 		&users{},
-// 		&news{},
-// 		&churchPartner{},
-// 		&sermon{},
-// 		&books{},
-// 		genre{},
-// 		&churchJob{},
-// 		&churchEvent{},
-// 		&volunteerChurchJob{},
-// 		&prayer{},
-// 		&testimonies{},
-// 	); err != nil {
-// 		fmt.Println(err)
-// 		panic(err)
-// 	} else {
-// 		fmt.Println("New tables are  migrated successfully!")
-// 	}
-// 	// create database foreign key for user & credit_cards
-// 	err := db.Migrator().CreateConstraint(&news{}, "News")
-// 	if err != nil {
-// 		panic(err)
+	if err := db.AutoMigrate(
+		&users{},
+		&news{},
+		&churchPartner{},
+		&sermon{},
+		&books{},
+		genre{},
+		&churchJob{},
+		&churchEvent{},
+		&volunteerChurchJob{},
+		&prayer{},
+		&testimonies{},
+	); err != nil {
+		fmt.Println(err)
+		panic(err)
+	} else {
+		fmt.Println("New tables are  migrated successfully!")
+	}
+	// create database foreign key for user & credit_cards
+	err := db.Migrator().CreateConstraint(&news{}, "News")
+	if err != nil {
+		panic(err)
 
-// 	}
-// 	err = db.Migrator().CreateConstraint(&news{}, "fk_users_credit_cards")
-// 	if err != nil {
-// 		panic(err)
+	}
+	err = db.Migrator().CreateConstraint(&news{}, "fk_users_credit_cards")
+	if err != nil {
+		panic(err)
 
-// 	}
-// 	return nil
-// }
+	}
+	return nil
+}

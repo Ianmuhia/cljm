@@ -1,61 +1,65 @@
 package repository
 
-// import (
-// 	"log"
-// 	//nolint:goimports
-//
+import (
+	"go.uber.org/zap"
+	"gorm.io/gorm"
+	"log"
+	"maranatha_web/internal/models"
+)
 
-// 	"gorm.io/gorm" //nolint:goimports
+type SermonQuery interface {
+	CreateSermon(sermon *models.Sermon) error
+	DeleteSermon(id uint) error
+	GetSingleSermon(id uint) (*models.Sermon, error)
+	UpdateSermon(id uint, sermonModel models.Sermon) (*models.Sermon, error)
+	GetAllSermon() ([]models.Sermon, int64, error)
+}
 
-// 	PostgreSQL "maranatha_web/datasources/postgresql"
-// 	"maranatha_web/logger"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors" //nolint:goimports
-// )
+type sermonQuery struct {
+	repo postgresDBRepo
+}
 
-// func CreateSermon(sermon *models.Sermon) *errors.RestErr {
-// 	err := PostgreSQL.Client.Debug().Create(&sermon).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to save sermon", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
-
-// func DeleteSermon(id uint) *errors.RestErr {
-// 	var sermon models.Sermon
-// 	err := PostgreSQL.Client.Debug().Where("id = ?", id).Delete(&sermon).Error
-// 	if err != nil {
-// 		logger.Error("error when trying to delete sermon", err)
-// 		return errors.NewInternalServerError("database error")
-// 	}
-// 	return nil
-// }
-// func GetSingleSermon(id uint) (*models.Sermon, *errors.RestErr) {
-// 	var sermon models.Sermon
-// 	err := PostgreSQL.Client.Debug().Where("id = ?", id).First(&sermon).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to get  sermon ", err)
-// 		return &sermon, errors.NewInternalServerError("database error")
-// 	}
-// 	return &sermon, nil
-// }
-// func UpdateSermon(id uint, sermonModel models.Sermon) (*models.Sermon, *errors.RestErr) {
-// 	err := PostgreSQL.Client.Debug().Where("id = ?", id).Updates(&sermonModel).Error
-// 	if err != nil || err == gorm.ErrRecordNotFound {
-// 		logger.Error("error when trying to update  partner", err)
-// 		return &sermonModel, errors.NewInternalServerError("database error")
-// 	}
-// 	return &sermonModel, nil
-// }
-
-// func GetAllSermon() ([]models.Sermon, int64, error) {
-// 	var sermons []models.Sermon
-// 	var count int64
-// 	val := PostgreSQL.Client.Debug().Order("created_at desc").Find(&sermons).Error
-// 	if val != nil {
-// 		log.Println(val)
-// 		return nil, 0, val
-// 	}
-// 	return sermons, count, nil
-// }
+func (sq *sermonQuery) CreateSermon(sermon *models.Sermon) error {
+	err := sq.repo.DB.Debug().Create(&sermon).Error
+	if err != nil {
+		sq.repo.App.ErrorLog.Error("error when trying to save sermon", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
+func (sq *sermonQuery) DeleteSermon(id uint) error {
+	var sermon models.Sermon
+	err := sq.repo.DB.Debug().Where("id = ?", id).Delete(&sermon).Error
+	if err != nil {
+		sq.repo.App.ErrorLog.Error("error when trying to delete sermon", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
+func (sq *sermonQuery) GetSingleSermon(id uint) (*models.Sermon, error) {
+	var sermon models.Sermon
+	err := sq.repo.DB.Debug().Where("id = ?", id).First(&sermon).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		sq.repo.App.ErrorLog.Error("error when trying to get  sermon ", zap.Any("error", err))
+		return &sermon, err
+	}
+	return &sermon, nil
+}
+func (sq *sermonQuery) UpdateSermon(id uint, sermonModel models.Sermon) (*models.Sermon, error) {
+	err := sq.repo.DB.Debug().Where("id = ?", id).Updates(&sermonModel).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		sq.repo.App.ErrorLog.Error("error when trying to update  partner", zap.Any("error", err))
+		return &sermonModel, err
+	}
+	return &sermonModel, nil
+}
+func (sq *sermonQuery) GetAllSermon() ([]models.Sermon, int64, error) {
+	var sermons []models.Sermon
+	var count int64
+	val := sq.repo.DB.Debug().Order("created_at desc").Find(&sermons).Error
+	if val != nil {
+		log.Println(val)
+		return nil, 0, val
+	}
+	return sermons, count, nil
+}

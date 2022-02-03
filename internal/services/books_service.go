@@ -9,10 +9,6 @@ import (
 	"maranatha_web/internal/models"
 )
 
-type booksService struct {
-	dao repository.DAO
-}
-
 type BooksServiceInterface interface {
 	CreateBooksPost(booksModel models.Books) (*models.Books, error)
 	GetAllBooks() ([]*models.Books, int64, error)
@@ -21,12 +17,16 @@ type BooksServiceInterface interface {
 	UpdateBooksPost(id uint, newModel models.Books) error
 }
 
+type booksService struct {
+	dao repository.DAO
+}
+
 func NewBookService(dao repository.DAO) BooksServiceInterface {
 	return &booksService{dao: dao}
 }
 
 func (bs *booksService) CreateBooksPost(booksModel models.Books) (*models.Books, error) {
-	if err := books.CreateBook(&booksModel); err != nil {
+	if err := bs.dao.NewBookQuery().CreateBook(&booksModel); err != nil {
 		return nil, err
 	}
 	return &booksModel, nil
@@ -53,7 +53,7 @@ func (bs *booksService) GetAllBooks() ([]*models.Books, int64, error) {
 }
 
 func (bs *booksService) DeleteBook(id uint) error {
-	err := books.DeleteBook(id)
+	err := bs.dao.NewBookQuery().DeleteBook(id)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -63,7 +63,7 @@ func (bs *booksService) DeleteBook(id uint) error {
 }
 
 func (bs *booksService) GetSingleBooksPost(id uint) (*models.Books, error) {
-	books, err := books.GetSingleBook(id)
+	books, err := bs.dao.NewBookQuery().GetSingleBook(id)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", books.File)
 	books.File = url
 	if err != nil {
@@ -75,7 +75,7 @@ func (bs *booksService) GetSingleBooksPost(id uint) (*models.Books, error) {
 }
 
 func (bs *booksService) UpdateBooksPost(id uint, booksModel models.Books) error {
-	books, err := books.UpdateBook(id, booksModel)
+	books, err := bs.dao.NewBookQuery().UpdateBook(id, booksModel)
 	url := fmt.Sprintf("http://localhost:9000/mono/%s", books.File)
 	books.File = url
 	if err != nil {

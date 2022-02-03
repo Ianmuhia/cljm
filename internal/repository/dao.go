@@ -27,6 +27,7 @@ type DAO interface {
 	NewPrayerRequestQuery() PrayerRequestQuery
 	NewUserQuery() UserQuery
 	NewTestimonyQuery() TestimonyQuery
+	NewVolunteerQuery() VolunteerQuery
 }
 
 type postgresDBRepo struct {

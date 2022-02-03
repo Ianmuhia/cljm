@@ -12,7 +12,7 @@ package controllers
 //
 
 // 	"github.com/gin-gonic/gin" //nolint:goimports
-// 	"github.com/minio/minio-go/v7"
+// 	"github.com/filestorage/filestorage-go/v7"
 
 // 	"maranatha_web/models"
 // 	"maranatha_web/services"
@@ -35,7 +35,7 @@ package controllers
 // func CreatEventsPost(ctx *gin.Context) {
 // 	type req CreatEventsPostRequest
 // 	var reqData CreatEventsPostRequest
-// 	var uploadedInfo minio.UploadInfo
+// 	var uploadedInfo filestorage.UploadInfo
 
 // 	data := GetPayloadFromContext(ctx)
 // 	file, m, err := ctx.Request.FormFile("cover_image")
@@ -104,7 +104,7 @@ package controllers
 // func UpdateEventsPost(ctx *gin.Context) {
 // 	type req CreatEventsPostRequest
 // 	var reqData CreatEventsPostRequest
-// 	var uploadedInfo minio.UploadInfo
+// 	var uploadedInfo filestorage.UploadInfo
 
 // 	data := GetPayloadFromContext(ctx)
 // 	id := ctx.Query("id")

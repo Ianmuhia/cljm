@@ -1,91 +1,90 @@
 package services
 
-// import (
-// 	"fmt"
-// 	"log"
-// 	"time"
-//
+import (
+	"fmt"
+	"log"
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/repository"
+	"time"
+)
 
-// 	"maranatha_web/domain/prayer_request"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type PrayerRequestServiceInterface interface {
+	CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, error)
+	GetAllPrayerRequests() ([]*models.Prayer, int64, error)
+	DeletePrayerRequest(id uint) error
+	GetSinglePrayerRequest(id uint) (*models.Prayer, error)
+	UpdatePrayerRequest(id uint, prayerModel models.Prayer) error
+	GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, error)
+}
 
-// var (
-// 	PrayerService prayerServiceInterface = &prayerService{}
-// )
+type prayerRequestService struct {
+	dao repository.DAO
+}
 
-// type prayerService struct{}
+func NewPrayerRequestService(dao repository.DAO) PrayerRequestServiceInterface {
+	return &prayerRequestService{dao: dao}
+}
 
-// type prayerServiceInterface interface {
-// 	CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, *errors.RestErr)
-// 	GetAllPrayerRequests() ([]*models.Prayer, int64, *errors.RestErr)
-// 	DeletePrayerRequest(id uint) *errors.RestErr
-// 	GetSinglePrayerRequest(id uint) (*models.Prayer, *errors.RestErr)
-// 	UpdatePrayerRequest(id uint, prayerModel models.Prayer) *errors.RestErr
-// 	GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, *errors.RestErr)
-// }
+func (prs *prayerRequestService) CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, error) {
+	if err := prs.dao.NewPrayerRequestQuery().CreatePrayerRequest(&prayerModel); err != nil {
+		return nil, err
+	}
+	return &prayerModel, nil
+}
 
-// func (s *prayerService) CreatePrayerRequest(prayerModel models.Prayer) (*models.Prayer, *errors.RestErr) {
-// 	if err := prayer_request.CreatePrayerRequest(&prayerModel); err != nil {
-// 		return nil, err
-// 	}
-// 	return &prayerModel, nil
-// }
+func (prs *prayerRequestService) GetAllPrayerRequests() ([]*models.Prayer, int64, error) {
+	data, count, err := prs.dao.NewPrayerRequestQuery().GetAllPrayerRequests()
+	for _, v := range data {
+		d := v.CreatedAt.Format(time.RFC822)
 
-// func (s *prayerService) GetAllPrayerRequests() ([]*models.Prayer, int64, *errors.RestErr) {
-// 	data, count, err := prayer_request.GetAllPrayerRequests()
-// 	for _, v := range data {
-// 		d := v.CreatedAt.Format(time.RFC822)
+		myDate, err := time.Parse(time.RFC822, d)
+		if err != nil {
+			panic(err)
+		}
 
-// 		myDate, err := time.Parse(time.RFC822, d)
-// 		if err != nil {
-// 			panic(err)
-// 		}
+		v.CreatedAt = myDate
+		fmt.Println(v.CreatedAt.Format(time.RFC1123))
+	}
+	if err != nil {
+		return data, count, err
 
-// 		v.CreatedAt = myDate
-// 		fmt.Println(v.CreatedAt.Format(time.RFC1123))
-// 	}
-// 	if err != nil {
-// 		return data, count, errors.NewBadRequestError("Could not get prayers")
+	}
 
-// 	}
+	return data, count, nil
+}
 
-// 	return data, count, nil
-// }
+func (prs *prayerRequestService) DeletePrayerRequest(id uint) error {
+	err := prs.dao.NewPrayerRequestQuery().DeletePrayerRequest(id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
 
-// func (s *prayerService) DeletePrayerRequest(id uint) *errors.RestErr {
-// 	err := prayer_request.DeletePrayerRequest(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return errors.NewBadRequestError("Could not delete prayer")
-// 	}
-// 	return nil
-// }
+func (prs *prayerRequestService) GetSinglePrayerRequest(id uint) (*models.Prayer, error) {
+	prayer, err := prs.dao.NewPrayerRequestQuery().GetSinglePrayerRequest(id)
+	if err != nil {
+		log.Println(err)
+		return prayer, err
+	}
+	return prayer, nil
+}
 
-// func (s *prayerService) GetSinglePrayerRequest(id uint) (*models.Prayer, *errors.RestErr) {
-// 	prayer, err := prayer_request.GetSinglePrayerRequest(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return prayer, errors.NewBadRequestError("Could not get single prayer")
-// 	}
-// 	return prayer, nil
-// }
+func (prs *prayerRequestService) UpdatePrayerRequest(id uint, prayerModel models.Prayer) error {
+	_, err := prs.dao.NewPrayerRequestQuery().UpdatePrayerRequest(id, prayerModel)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
 
-// func (s *prayerService) UpdatePrayerRequest(id uint, prayerModel models.Prayer) *errors.RestErr {
-// 	_, err := prayer_request.UpdatePrayerRequest(id, prayerModel)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return errors.NewBadRequestError("Could not get single prayer")
-// 	}
-// 	return nil
-// }
-
-// func (s *prayerService) GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, *errors.RestErr) {
-// 	prayerData, count, err := prayer_request.GetAllPrayerRequestsByAuthor(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return prayerData, count, errors.NewBadRequestError("Could not get prayer requests by author.")
-// 	}
-// 	return prayerData, count, nil
-// }
+func (prs *prayerRequestService) GetAllPrayerRequestsByAuthor(id uint) ([]*models.Prayer, int64, error) {
+	prayerData, count, err := prs.dao.NewPrayerRequestQuery().GetAllPrayerRequestsByAuthor(id)
+	if err != nil {
+		log.Println(err)
+		return prayerData, count, err
+	}
+	return prayerData, count, nil
+}

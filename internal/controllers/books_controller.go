@@ -22,7 +22,7 @@ type GetAllBooksResponse struct {
 //func CreateBook(ctx *gin.Context) {
 //	type req CreateBookPostRequest
 //	var reqData CreateBookPostRequest
-//	var uploadedInfo minio.UploadInfo
+//	var uploadedInfo filestorage.UploadInfo
 //
 //	file, m, err := ctx.Request.FormFile("file")
 //
@@ -99,7 +99,7 @@ type GetAllBooksResponse struct {
 //func UpdateBook(ctx *gin.Context) {
 //	type req CreateBookPostRequest
 //	var reqData CreateBookPostRequest
-//	var uploadedInfo minio.UploadInfo
+//	var uploadedInfo filestorage.UploadInfo
 //
 //	data := GetPayloadFromContext(ctx)
 //	id := ctx.Query("id")

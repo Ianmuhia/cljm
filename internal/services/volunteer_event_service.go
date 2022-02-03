@@ -1,26 +1,25 @@
 package services
 
-// import (
-//
+import (
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/repository"
+)
 
-// 	"maranatha_web/domain/volunteer_events"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type volunteerChurchJobService struct {
+	dao repository.DAO
+}
 
-// var (
-// 	VolunteerChurchJobService volunteerChurchJobServiceInterface = &volunteerChurchJobService{}
-// )
+type VolunteerChurchJobService interface {
+	CreateSubscribeToChurchJob(churchPartnersModel models.VolunteerChurchJob) (*models.VolunteerChurchJob, error)
+}
 
-// type volunteerChurchJobService struct{}
+func NewVolunteerChurchJobService(dao repository.DAO) VolunteerChurchJobService {
+	return &volunteerChurchJobService{dao: dao}
+}
 
-// type volunteerChurchJobServiceInterface interface {
-// 	CreateSubscribeToChurchJob(churchPartnersModel models.VolunteerChurchJob) (*models.VolunteerChurchJob, *errors.RestErr)
-// }
-
-// func (s *volunteerChurchJobService) CreateSubscribeToChurchJob(churchPartnersModel models.VolunteerChurchJob) (*models.VolunteerChurchJob, *errors.RestErr) {
-// 	if err := volunteer_events.CreateSubscribeToChurchJob(&churchPartnersModel); err != nil {
-// 		return nil, err
-// 	}
-// 	return &churchPartnersModel, nil
-// }
+func (vs *volunteerChurchJobService) CreateSubscribeToChurchJob(churchPartnersModel models.VolunteerChurchJob) (*models.VolunteerChurchJob, error) {
+	if err := vs.dao.NewVolunteerQuery().CreateSubscribeToChurchJob(&churchPartnersModel); err != nil {
+		return nil, err
+	}
+	return &churchPartnersModel, nil
+}

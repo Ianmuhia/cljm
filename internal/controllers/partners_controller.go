@@ -8,7 +8,7 @@ package controllers
 //
 
 // 	"github.com/gin-gonic/gin" //nolint:goimports
-// 	"github.com/minio/minio-go/v7"
+// 	"github.com/filestorage/filestorage-go/v7"
 
 // 	"maranatha_web/models"
 // 	"maranatha_web/services"
@@ -29,7 +29,7 @@ package controllers
 
 // 	type req CreatChurchPartnerRequest
 // 	var reqData CreatChurchPartnerRequest
-// 	var uploadedInfo minio.UploadInfo
+// 	var uploadedInfo filestorage.UploadInfo
 
 // 	file, m, err := ctx.Request.FormFile("image")
 
@@ -76,7 +76,7 @@ package controllers
 // func UpdateChurchPartner(ctx *gin.Context) {
 // 	type req CreatChurchPartnerRequest
 // 	var reqData CreatChurchPartnerRequest
-// 	var uploadedInfo minio.UploadInfo
+// 	var uploadedInfo filestorage.UploadInfo
 
 // 	data := GetPayloadFromContext(ctx)
 // 	id := ctx.Query("id")

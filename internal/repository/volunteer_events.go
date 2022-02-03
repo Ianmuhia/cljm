@@ -5,6 +5,7 @@ import (
 )
 
 type VolunteerQuery interface {
+	CreateSubscribeToChurchJob(volunteerChurchJob *models.VolunteerChurchJob) error
 }
 
 type volunteerQuery struct {

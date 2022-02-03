@@ -5,8 +5,6 @@ import (
 	"log"
 
 	"github.com/go-redis/redis/v8" //nolint:goimports
-
-	"maranatha_web/internal/logger"
 )
 
 var (
@@ -26,7 +24,7 @@ func GetRedisClient() *redis.Client {
 
 	_, err := RedisClient.Ping(Ctx).Result()
 	if err != nil {
-		logger.Error("error connecting to redis", err)
+		//logger.Error("error connecting to redis", err)
 		panic(err)
 
 	}

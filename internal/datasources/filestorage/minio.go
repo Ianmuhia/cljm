@@ -1,9 +1,10 @@
-package minio
+package filestorage
 
 import (
 	"context"
 	"github.com/joho/godotenv"
 	"log"
+	"maranatha_web/internal/config"
 	"os"
 
 	"github.com/minio/minio-go/v7"
@@ -12,14 +13,29 @@ import (
 
 var Client *minio.Client
 
-// GetMinioConnection MinioConnection func for opening minio connection.
+type MinioDao interface {
+}
+
+type minioRepo struct {
+	App          *config.AppConfig
+	MinioStorage *minio.Client
+}
+
+func NewMinoRepo(conn *minio.Client, a *config.AppConfig) MinioDao {
+	return &minioRepo{
+		App:          a,
+		MinioStorage: conn,
+	}
+}
+
+// GetMinioConnection MinioConnection func for opening filestorage connection.
 func GetMinioConnection() (*minio.Client, error) {
 
 	err := godotenv.Load()
 	if err != nil {
 
 		log.Println(err)
-		log.Fatal("Error lodcdcdcading .env file")
+		log.Fatal("Error  .env file")
 	}
 	minioAccessKeyID := os.Getenv("MinioAccessKeyID")
 	minioEndPoint := os.Getenv("MinioEndPoint")
@@ -29,7 +45,7 @@ func GetMinioConnection() (*minio.Client, error) {
 	log.Println(minioEndPoint)
 	ctx := context.Background()
 
-	// Initialize minio client object.
+	// Initialize filestorage client object.
 	minioClient, errInit := minio.New(minioEndPoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(minioAccessKeyID, minioAccessKey, ""),
 		Secure: false,
@@ -37,7 +53,7 @@ func GetMinioConnection() (*minio.Client, error) {
 	if errInit != nil {
 		log.Fatalln(errInit)
 	}
-	// Make a new bucket called dev-minio.
+	// Make a new bucket called dev-filestorage.
 	bucketName := minioBucketName
 	location := "us-east-1"
 

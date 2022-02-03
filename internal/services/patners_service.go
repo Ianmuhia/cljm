@@ -1,73 +1,71 @@
 package services
 
-// import (
-// 	"fmt"
-// 	"log"
-//
+import (
+	"fmt"
+	"log"
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/repository"
+)
 
-// 	church_patners "maranatha_web/domain/church_patner"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type ChurchPartnersServiceInterface interface {
+	CreateChurchPartner(partnersModel models.ChurchPartner) (*models.ChurchPartner, error)
+	GetAllChurchPartner() ([]models.ChurchPartner, int64, error)
+	DeleteChurchPartner(id uint) error
+	GetSingleChurchPartner(id uint) (*models.ChurchPartner, error)
+	UpdateChurchPartner(id uint, newModel models.ChurchPartner) error
+}
+type churchPartnersService struct {
+	dao repository.DAO
+}
 
-// var (
-// 	ChurchPartnersService churchPartnersServiceInterface = &churchPartnersService{}
-// )
+func NewChurchPartnersService(dao repository.DAO) ChurchPartnersServiceInterface {
+	return &churchPartnersService{dao: dao}
+}
 
-// type churchPartnersService struct{}
+func (cps *churchPartnersService) CreateChurchPartner(churchPartnersModel models.ChurchPartner) (*models.ChurchPartner, error) {
+	if err := cps.dao.NewPartnersQuery().CreateChurchPartner(&churchPartnersModel); err != nil {
+		return nil, err
+	}
+	return &churchPartnersModel, nil
+}
 
-// type churchPartnersServiceInterface interface {
-// 	CreateChurchPartner(partnersModel models.ChurchPartner) (*models.ChurchPartner, *errors.RestErr)
-// 	GetAllChurchPartner() ([]models.ChurchPartner, int64, *errors.RestErr)
-// 	DeleteChurchPartner(id uint) *errors.RestErr
-// 	GetSingleChurchPartner(id uint) (*models.ChurchPartner, *errors.RestErr)
-// 	UpdateChurchPartner(id uint, newModel models.ChurchPartner) *errors.RestErr
-// }
+func (cps *churchPartnersService) GetAllChurchPartner() ([]models.ChurchPartner, int64, error) {
+	data, count, err := cps.dao.NewPartnersQuery().GetAllChurchPartner()
+	if err != nil {
+		return data, count, err
 
-// func (s *churchPartnersService) CreateChurchPartner(churchPartnersModel models.ChurchPartner) (*models.ChurchPartner, *errors.RestErr) {
-// 	if err := church_patners.CreateChurchPartner(&churchPartnersModel); err != nil {
-// 		return nil, err
-// 	}
-// 	return &churchPartnersModel, nil
-// }
+	}
 
-// func (s *churchPartnersService) GetAllChurchPartner() ([]models.ChurchPartner, int64, *errors.RestErr) {
-// 	data, count, err := church_patners.GetAllChurchPartner()
-// 	if err != nil {
-// 		return data, count, errors.NewBadRequestError("Could not get partners")
+	return data, count, nil
+}
 
-// 	}
+func (cps *churchPartnersService) DeleteChurchPartner(id uint) error {
+	err := cps.dao.NewPartnersQuery().DeleteChurchPartner(id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
 
-// 	return data, count, nil
-// }
+func (cps *churchPartnersService) GetSingleChurchPartner(id uint) (*models.ChurchPartner, error) {
+	data, err := cps.dao.NewPartnersQuery().GetSingleChurchPartner(id)
+	url := fmt.Sprintf("http://localhost:9000/mono/%s", data.Image)
+	data.Image = url
+	if err != nil {
+		log.Println(err)
+		return data, err
+	}
+	return data, nil
+}
 
-// func (s *churchPartnersService) DeleteChurchPartner(id uint) *errors.RestErr {
-// 	err := church_patners.DeleteChurchPartner(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return errors.NewBadRequestError("Could not delete partner")
-// 	}
-// 	return nil
-// }
-
-// func (s *churchPartnersService) GetSingleChurchPartner(id uint) (*models.ChurchPartner, *errors.RestErr) {
-// 	data, err := church_patners.GetSingleChurchPartner(id)
-// 	url := fmt.Sprintf("http://localhost:9000/mono/%s", data.Image)
-// 	data.Image = url
-// 	if err != nil {
-// 		log.Println(err)
-// 		return data, errors.NewBadRequestError("Could not get single partner")
-// 	}
-// 	return data, nil
-// }
-
-// func (s *churchPartnersService) UpdateChurchPartner(id uint, newModel models.ChurchPartner) *errors.RestErr {
-// 	data, err := church_patners.UpdateChurchPartner(id, newModel)
-// 	url := fmt.Sprintf("http://localhost:9000/mono/%s", data.Image)
-// 	data.Image = url
-// 	if err != nil {
-// 		log.Println(err)
-// 		return errors.NewBadRequestError("Could not update partner")
-// 	}
-// 	return nil
-// }
+func (cps *churchPartnersService) UpdateChurchPartner(id uint, newModel models.ChurchPartner) error {
+	data, err := cps.dao.NewPartnersQuery().UpdateChurchPartner(id, newModel)
+	url := fmt.Sprintf("http://localhost:9000/mono/%s", data.Image)
+	data.Image = url
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}

@@ -1,91 +1,90 @@
 package services
 
-// import (
-// 	"fmt"
-// 	"log"
-// 	"time"
-//
+import (
+	"fmt"
+	"log"
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/repository"
+	"time"
+)
 
-// 	"maranatha_web/domain/testimonies"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/errors"
-// )
+type TestimoniesService interface {
+	CreateTestimony(testimoniesModel models.Testimonies) (*models.Testimonies, error)
+	GetAllTestimonies() ([]*models.Testimonies, int64, error)
+	DeleteTestimony(id uint) error
+	GetSingleTestimony(id uint) (*models.Testimonies, error)
+	UpdateTestimony(id uint, testimoniesModel models.Testimonies) error
+	GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, error)
+}
 
-// var (
-// 	TestimoniesService testimoniesServiceInterface = &testimoniesService{}
-// )
+type testimoniesService struct {
+	dao repository.DAO
+}
 
-// type testimoniesService struct{}
+func NewTestimoniesService(dao repository.DAO) TestimoniesService {
+	return &testimoniesService{dao: dao}
+}
 
-// type testimoniesServiceInterface interface {
-// 	CreateTestimony(testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr)
-// 	GetAllTestimonies() ([]*models.Testimonies, int64, *errors.RestErr)
-// 	DeleteTestimony(id uint) *errors.RestErr
-// 	GetSingleTestimony(id uint) (*models.Testimonies, *errors.RestErr)
-// 	UpdateTestimony(id uint, testimoniesModel models.Testimonies) *errors.RestErr
-// 	GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, *errors.RestErr)
-// }
+func (ts *testimoniesService) CreateTestimony(testimoniesModel models.Testimonies) (*models.Testimonies, error) {
+	if err := ts.dao.NewTestimonyQuery().CreateTestimony(&testimoniesModel); err != nil {
+		return nil, err
+	}
+	return &testimoniesModel, nil
+}
 
-// func (s *testimoniesService) CreateTestimony(testimoniesModel models.Testimonies) (*models.Testimonies, *errors.RestErr) {
-// 	if err := testimonies.CreateTestimony(&testimoniesModel); err != nil {
-// 		return nil, err
-// 	}
-// 	return &testimoniesModel, nil
-// }
+func (ts *testimoniesService) GetAllTestimonies() ([]*models.Testimonies, int64, error) {
+	data, count, err := ts.dao.NewTestimonyQuery().GetAllTestimonies()
+	for _, v := range data {
+		d := v.CreatedAt.Format(time.RFC822)
 
-// func (s *testimoniesService) GetAllTestimonies() ([]*models.Testimonies, int64, *errors.RestErr) {
-// 	data, count, err := testimonies.GetAllTestimonies()
-// 	for _, v := range data {
-// 		d := v.CreatedAt.Format(time.RFC822)
+		myDate, err := time.Parse(time.RFC822, d)
+		if err != nil {
+			panic(err)
+		}
 
-// 		myDate, err := time.Parse(time.RFC822, d)
-// 		if err != nil {
-// 			panic(err)
-// 		}
+		v.CreatedAt = myDate
+		fmt.Println(v.CreatedAt.Format(time.RFC1123))
+	}
+	if err != nil {
+		return data, count, err
 
-// 		v.CreatedAt = myDate
-// 		fmt.Println(v.CreatedAt.Format(time.RFC1123))
-// 	}
-// 	if err != nil {
-// 		return data, count, errors.NewBadRequestError("Could not get testimonies")
+	}
 
-// 	}
+	return data, count, nil
+}
 
-// 	return data, count, nil
-// }
+func (ts *testimoniesService) DeleteTestimony(id uint) error {
+	err := ts.dao.NewTestimonyQuery().DeleteTestimony(id)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
 
-// func (s *testimoniesService) DeleteTestimony(id uint) *errors.RestErr {
-// 	err := testimonies.DeleteTestimony(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return errors.NewBadRequestError("Could not delete testimonies")
-// 	}
-// 	return nil
-// }
+func (ts *testimoniesService) GetSingleTestimony(id uint) (*models.Testimonies, error) {
+	testimonies, err := ts.dao.NewTestimonyQuery().GetSingleTestimony(id)
+	if err != nil {
+		log.Println(err)
+		return testimonies, err
+	}
+	return testimonies, nil
+}
 
-// func (s *testimoniesService) GetSingleTestimony(id uint) (*models.Testimonies, *errors.RestErr) {
-// 	testimonies, err := testimonies.GetSingleTestimony(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return testimonies, errors.NewBadRequestError("Could not get single testimonies")
-// 	}
-// 	return testimonies, nil
-// }
+func (ts *testimoniesService) UpdateTestimony(id uint, testimoniesModel models.Testimonies) error {
+	_, err := ts.dao.NewTestimonyQuery().UpdateTestimony(id, testimoniesModel)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
 
-// func (s *testimoniesService) UpdateTestimony(id uint, testimoniesModel models.Testimonies) *errors.RestErr {
-// 	_, err := testimonies.UpdateTestimony(id, testimoniesModel)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return errors.NewBadRequestError("Could not get single testimonies")
-// 	}
-// 	return nil
-// }
-
-// func (s *testimoniesService) GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, *errors.RestErr) {
-// 	testimoniesData, count, err := testimonies.GetAllTestimoniesByAuthor(id)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return testimoniesData, count, errors.NewBadRequestError("Could not get post by author.")
-// 	}
-// 	return testimoniesData, count, nil
-// }
+func (ts *testimoniesService) GetAllTestimoniesByAuthor(id uint) ([]*models.Testimonies, int64, error) {
+	testimoniesData, count, err := ts.dao.NewTestimonyQuery().GetAllTestimoniesByAuthor(id)
+	if err != nil {
+		log.Println(err)
+		return testimoniesData, count, err
+	}
+	return testimoniesData, count, nil
+}

@@ -40,7 +40,7 @@ services:
     ports:
       - "5050:80"
     env_file:
-      - cmd/.env
+      - .env
     networks:
       - fullstack
     restart: unless-stopped

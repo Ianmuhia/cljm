@@ -1,68 +1,67 @@
 package services
 
-// import (
-// 	"log"
-//
+import (
+	"log"
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/repository"
+	"maranatha_web/internal/utils/crypto_utils"
+)
 
-// 	"maranatha_web/domain/users"
-// 	"maranatha_web/models"
-// 	"maranatha_web/utils/crypto_utils"
-// 	"maranatha_web/utils/errors"
-// )
+type usersService struct {
+	dao repository.DAO
+}
 
-// var (
-// 	UsersService usersServiceInterface = &usersService{}
-// )
+type UsersService interface {
+	GetUserByEmail(email string) (*models.User, error)
+	CreateUser(models.User) (*models.User, error)
+	UpdateUserStatus(email string) error
+	UpdateUserImage(email, imageName string) error
+	GetAllUsers() ([]models.User, error)
+}
 
-// type usersService struct{}
+func NewUsersService(dao repository.DAO) UsersService {
+	return &usersService{dao: dao}
+}
 
-// type usersServiceInterface interface {
-// 	GetUserByEmail(email string) (*models.User, error)
-// 	CreateUser(models.User) (*models.User, *errors.RestErr)
-// 	UpdateUserStatus(email string) *errors.RestErr
-// 	UpdateUserImage(email, imageName string) error
-// 	GetAllUsers() ([]models.User, error)
-// }
+func (us *usersService) CreateUser(user models.User) (*models.User, error) {
+	user.PasswordHash = crypto_utils.Hash(user.PasswordHash)
+	if err := us.dao.NewUserQuery().Create(&user); err != nil {
+		log.Println(user.PasswordHash)
+		return nil, err
+	}
+	return &user, nil
+}
 
-// func (s *usersService) CreateUser(user models.User) (*models.User, *errors.RestErr) {
-// 	user.PasswordHash = crypto_utils.Hash(user.PasswordHash)
-// 	if err := users.Create(&user); err != nil {
-// 		log.Println(user.PasswordHash)
-// 		return nil, err
-// 	}
-// 	return &user, nil
-// }
+func (us *usersService) GetUserByEmail(email string) (*models.User, error) {
+	user, err := us.dao.NewUserQuery().GetUserByEmail(email)
+	if err != nil {
+		return user, err
+	}
+	return user, err
+}
 
-// func (s *usersService) GetUserByEmail(email string) (*models.User, error) {
-// 	user, err := users.GetUserByEmail(email)
-// 	if err != nil {
-// 		return user, err
-// 	}
-// 	return user, err
-// }
+func (us *usersService) GetAllUsers() ([]models.User, error) {
+	users, err := us.dao.NewUserQuery().GetAllUsers()
+	if err != nil {
+		return users, err
+	}
+	return users, nil
+}
 
-// func (s *usersService) GetAllUsers() ([]models.User, error) {
-// 	users, err := users.GetAllUsers()
-// 	if err != nil {
-// 		return users, err
-// 	}
-// 	return users, nil
-// }
+func (us *usersService) UpdateUserImage(email, imageName string) error {
+	err := us.dao.NewUserQuery().UpdateUserImage(email, imageName)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return err
+}
 
-// func (s *usersService) UpdateUserImage(email, imageName string) error {
-// 	err := users.UpdateUserImage(email, imageName)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return err
-// 	}
-// 	return err
-// }
-
-// func (s *usersService) UpdateUserStatus(email string) *errors.RestErr {
-// 	err := users.UpdateVerifiedUserStatus(email)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return err
-// 	}
-// 	return nil
-// }
+func (us *usersService) UpdateUserStatus(email string) error {
+	err := us.dao.NewUserQuery().UpdateVerifiedUserStatus(email)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}

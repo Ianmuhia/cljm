@@ -8,7 +8,7 @@ import (
 
 	"maranatha_web/internal/config"
 	"maranatha_web/internal/controllers/token"
-	"maranatha_web/internal/datasources/minio"
+	"maranatha_web/internal/datasources/filestorage"
 	"maranatha_web/internal/repository"
 )
 
@@ -22,26 +22,40 @@ func StartApplication() {
 	log.Println(zl)
 	app.ErrorLog = zl
 	app.InfoLog = zl
+	_ = config.NewAppConfig(zl, zl)
 
+	//Create the new token maker
 	_, err := token.NewJWTMaker(jwtKey)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	//Get database connection
 	db := repository.GetDatabaseConnection()
 	dao := repository.NewPostgresRepo(db, &app)
+	//initiate services
 	services.NewBookService(dao)
+	services.NewEventsService(dao)
+	services.NewGenreService(dao)
+	services.NewJobsService(dao)
+	services.NewNewsService(dao)
+	services.NewChurchPartnersService(dao)
+	services.NewPrayerRequestService(dao)
+	services.NewSermonService(dao)
+	services.NewTestimoniesService(dao)
+	services.NewUsersService(dao)
+	services.NewVolunteerChurchJobService(dao)
+	//
+
 	cc := controllers.NewRepo(&app, dao)
 	controllers.NewHandlers(cc)
 
-	_ = config.NewAppConfig(zl, zl)
-	// postgresqlDb.GetDatabaseConnection()
-
-	connection, minioErr := minio.GetMinioConnection()
-
+	//Get file storage connection
+	connection, minioErr := filestorage.GetMinioConnection()
 	if minioErr != nil {
 		log.Panicln(err)
 	}
+	filestorage.NewMinoRepo(connection, &app)
 	log.Printf("mino endpoint is %s", connection.EndpointURL())
 	//redisDb.GetRedisClient()
 	//mailClient.GetMailServer()

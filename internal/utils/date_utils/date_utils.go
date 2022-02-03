@@ -30,7 +30,7 @@ func StringToDate(str string) time.Time {
 	t, err := time.Parse(layout, str)
 
 	if err != nil {
-		logger.Error("Please provide a valid date format.", err)
+		//logger.Error("Please provide a valid date format.", err)
 		logger.GetLogger().Fatal("Please provide a valid date format.")
 	}
 	return t

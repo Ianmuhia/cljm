@@ -13,6 +13,7 @@ var Repo *Repository
 type Repository struct {
 	App                  *config.AppConfig
 	MinoStorage          *filestorage.MinioRepo
+	dailyVerse           services.DailVerseService
 	bookService          services.BooksService
 	eventsService        services.EventsService
 	genreService         services.GenreService
@@ -31,6 +32,7 @@ func NewRepo(
 	a *config.AppConfig,
 	booksService services.BooksService,
 	m *filestorage.MinioRepo,
+	dailyVerse services.DailVerseService,
 	eventsService services.EventsService,
 	genreService services.GenreService,
 	jobService services.JobsService,
@@ -46,6 +48,7 @@ func NewRepo(
 
 		App:                  a,
 		MinoStorage:          m,
+		dailyVerse:           dailyVerse,
 		bookService:          booksService,
 		eventsService:        eventsService,
 		genreService:         genreService,

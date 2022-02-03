@@ -20,8 +20,8 @@ var (
 
 // A list of task types.
 const (
-	TypeWelcomeEmail  = "email:welcome"
-	TypeReminderEmail = "email:reminder"
+	TypeWelcomeEmail = "email:welcome"
+	TypeDailyVerse   = "dailyVerse"
 )
 
 type mailService struct{}

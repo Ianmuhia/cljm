@@ -9,24 +9,6 @@ import (
 	"strconv"
 )
 
-// import (
-// 	"log"
-// 	"net/http"
-// 	"strconv"
-//
-//
-//
-//
-//
-//
-
-// 	"github.com/gin-gonic/gin" //nolint:goimports
-
-// 	"maranatha_web/models"
-// 	"maranatha_web/services"
-// 	"maranatha_web/utils/errors" //nolint:goimports
-// )
-
 type GetAllJobsResponse struct {
 	Total int64               `json:"total"`
 	Jobs  []*models.ChurchJob `json:"jobs"`

@@ -48,6 +48,7 @@ func StartApplication() {
 	testimonyService := services.NewTestimoniesService(dao)
 	usersService := services.NewUsersService(dao)
 	volunteerJobService := services.NewVolunteerChurchJobService(dao)
+	dailyVerseService := services.NewDailyVerseService()
 	//
 	//
 	//Get file storage connection
@@ -67,6 +68,7 @@ func StartApplication() {
 		&app,
 		booksService,
 		&fs,
+		dailyVerseService,
 		eventsService,
 		genresService,
 		jobsService,

@@ -5,9 +5,11 @@ import (
 	"maranatha_web/internal/services"
 
 	"github.com/hibiken/asynq" //nolint:goimports
+)
 
-	// "maranatha_web/internal/services"
-	task "maranatha_web/tasks"
+const (
+	TypeWelcomeEmail = "email:welcome"
+	TypeDailyVerse   = "dailyVerse"
 )
 
 // workers.go
@@ -18,8 +20,9 @@ func main() {
 	)
 
 	mux := asynq.NewServeMux()
-	mux.HandleFunc(task.TypeWelcomeEmail, services.HandleVerifyEmailTask)
-	mux.HandleFunc(task.TypeReminderEmail, task.HandleReminderEmailTask)
+	mux.HandleFunc(TypeWelcomeEmail, services.HandleVerifyEmailTask)
+	mux.HandleFunc(TypeDailyVerse, services.HandleDailyVerseTask)
+	//mux.HandleFunc(TypeReminderEmail, task.HandleReminderEmailTask)
 
 	if err := srv.Run(mux); err != nil {
 		log.Fatal(err)

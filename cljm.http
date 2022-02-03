@@ -80,6 +80,8 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
+###
+GET https://bible-api.com/john%2011:1
 
 ###
 GET http://localhost:8090/api/protected/get-author-events/?id=3

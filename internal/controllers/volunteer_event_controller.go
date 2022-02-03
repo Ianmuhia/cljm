@@ -4,38 +4,6 @@ package controllers
 // 	"log"
 // 	"net/http"
 // 	"strconv"
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 // 	"github.com/gin-gonic/gin" //nolint:goimports
 

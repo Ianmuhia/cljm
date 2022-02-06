@@ -3,20 +3,20 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
+
 	"maranatha_web/internal/logger"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
-	"maranatha_web/internal/utils/errors"
-	"time"
 )
 
 type EventsService interface {
 	CreateEvent(eventsModel models.ChurchEvent) (*models.ChurchEvent, error)
-	GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr)
-	DeleteEvent(id uint) *errors.RestErr
-	GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr)
-	UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr
-	GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr)
+	GetAllEvents() ([]*models.ChurchEvent, int64, error)
+	DeleteEvent(id uint) error
+	GetSingleEvent(id uint) (*models.ChurchEvent, error)
+	UpdateEventsPost(id uint, newModel models.ChurchEvent) error
+	GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, error)
 }
 
 type eventsService struct {
@@ -34,7 +34,7 @@ func (es *eventsService) CreateEvent(eventsModel models.ChurchEvent) (*models.Ch
 	return &eventsModel, nil
 }
 
-func (es *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.RestErr) {
+func (es *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, error) {
 	data, count, err := es.dao.NewEventsQuery().GetAllEvents()
 	for _, v := range data {
 		v.CoverImage = fmt.Sprintf("http://192.168.0.101:9000/mono/%s", v.CoverImage)
@@ -51,7 +51,7 @@ func (es *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.R
 
 	}
 	if err != nil {
-		return data, count, errors.NewBadRequestError("Could not get post")
+		return data, count, err
 
 	}
 	logger.GetLogger().Info("Events endpoint hit.")
@@ -59,46 +59,46 @@ func (es *eventsService) GetAllEvents() ([]*models.ChurchEvent, int64, *errors.R
 	return data, count, nil
 }
 
-func (es *eventsService) DeleteEvent(id uint) *errors.RestErr {
+func (es *eventsService) DeleteEvent(id uint) error {
 	err := es.dao.NewEventsQuery().DeleteEvent(id)
 	if err != nil {
 		log.Println(err)
-		return errors.NewBadRequestError("Could not delete post")
+		return err
 	}
 	return nil
 }
 
-func (es *eventsService) GetSingleEvent(id uint) (*models.ChurchEvent, *errors.RestErr) {
+func (es *eventsService) GetSingleEvent(id uint) (*models.ChurchEvent, error) {
 	events, err := es.dao.NewEventsQuery().GetSingleEvent(id)
 	url := fmt.Sprintf("http://192.168.0.101:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
 	if err != nil {
 		log.Println(err)
-		return events, errors.NewBadRequestError("Could not get single post")
+		return events, err
 	}
 	return events, nil
 }
 
-func (es *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) *errors.RestErr {
+func (es *eventsService) UpdateEventsPost(id uint, newModel models.ChurchEvent) error {
 	events, err := es.dao.NewEventsQuery().UpdateEventsPost(id, newModel)
 	url := fmt.Sprintf("http://192.168.0.101:9000/mono/%s", events.CoverImage)
 	events.CoverImage = url
 	if err != nil {
 		log.Println(err)
 
-		return errors.NewBadRequestError("Could not get single post")
+		return err
 	}
 	return nil
 }
 
-func (es *eventsService) GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, *errors.RestErr) {
+func (es *eventsService) GetAllEventsByAuthor(id uint) ([]*models.ChurchEvent, int64, error) {
 	eventsData, count, err := es.dao.NewEventsQuery().GetAllEventsByAuthor(id)
 	for _, v := range eventsData {
 		v.CoverImage = fmt.Sprintf("http://192.168.0.101:9000/mono/%s", v.CoverImage)
 	}
 	if err != nil {
 		log.Println(err)
-		return eventsData, count, errors.NewBadRequestError("Could not get post by author.")
+		return eventsData, count, err
 	}
 	return eventsData, count, nil
 }

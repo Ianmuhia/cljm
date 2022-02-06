@@ -1,13 +1,15 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/minio/minio-go/v7"
 	"log"
-	"maranatha_web/internal/models"
-	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
+
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/errors"
 )
 
 type CreatChurchPartnerRequest struct {
@@ -16,8 +18,8 @@ type CreatChurchPartnerRequest struct {
 }
 
 type GetAllChurchPartnersResponse struct {
-	Total    int64                  `json:"total"`
-	Partners []models.ChurchPartner `json:"news"`
+	Total    int64                   `json:"total"`
+	Partners []*models.ChurchPartner `json:"partners"`
 }
 
 func (r *Repository) CreateChurchPartner(ctx *gin.Context) {

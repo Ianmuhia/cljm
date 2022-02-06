@@ -17,6 +17,7 @@ type CreatEventsPostRequest struct {
 	Title       string `json:"title" binding:"required"`
 	SubTitle    string `json:"sub_title" binding:"required"`
 	Content     string `json:"content" binding:"required"`
+	Age         string `json:"age" binding:"required"`
 	ScheduledOn string `json:"scheduledOn" binding:"required"`
 }
 
@@ -44,6 +45,7 @@ func (r *Repository) CreatEventsPost(ctx *gin.Context) {
 		Title:       ctx.PostForm("title"),
 		SubTitle:    ctx.PostForm("sub_title"),
 		Content:     ctx.PostForm("content"),
+		Age:         ctx.PostForm("age"),
 		ScheduledOn: ctx.PostForm("scheduled_on"),
 	}
 	reqData = CreatEventsPostRequest(postData)
@@ -68,7 +70,7 @@ func (r *Repository) CreatEventsPost(ctx *gin.Context) {
 	}
 
 	uploadedInfo = uploadFile
-
+	intVar, err := strconv.Atoi(reqData.Age)
 	dt := date_utils.StringToDate(reqData.ScheduledOn)
 	log.Println(time.Now().UTC())
 	log.Println(dt)
@@ -80,6 +82,7 @@ func (r *Repository) CreatEventsPost(ctx *gin.Context) {
 		Content:     reqData.Content,
 		ScheduledOn: dt,
 		ChurchJobs:  nil,
+		Age:         intVar,
 	}
 
 	events, errr := r.eventsService.CreateEvent(eventsData)

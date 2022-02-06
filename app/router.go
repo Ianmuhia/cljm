@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"maranatha_web/internal/controllers"
+	"maranatha_web/internal/middleware"
 )
 
 func SetupRouter() *gin.Engine {
@@ -22,8 +23,8 @@ func SetupRouter() *gin.Engine {
 		}
 
 		// here
-		//protected := api.Group("/protected").Use(middleware.CORSMiddleware(), middleware.AuthMiddleware())
-		protected := api.Group("/protected")
+		protected := api.Group("/protected").Use(middleware.AuthMiddleware())
+		// protected := api.Group("/protected")
 		{
 			///Users Routes
 			//protected.GET("/profile/", controllers.Repo.TryAuthMiddlewareMiddleware)

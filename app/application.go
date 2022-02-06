@@ -2,16 +2,17 @@ package app
 
 import (
 	"log"
+
+	"maranatha_web/internal/config"
 	"maranatha_web/internal/controllers"
+	"maranatha_web/internal/controllers/token"
+	"maranatha_web/internal/datasources/fcm_client"
+	"maranatha_web/internal/datasources/filestorage"
 	mailClient "maranatha_web/internal/datasources/mail"
 	redisDb "maranatha_web/internal/datasources/redis"
 	"maranatha_web/internal/logger"
-	"maranatha_web/internal/services"
-
-	"maranatha_web/internal/config"
-	"maranatha_web/internal/controllers/token"
-	"maranatha_web/internal/datasources/filestorage"
 	"maranatha_web/internal/repository"
+	"maranatha_web/internal/services"
 )
 
 var app config.AppConfig
@@ -35,24 +36,15 @@ func StartApplication() {
 	//Get database connection
 	db := repository.GetDatabaseConnection()
 	dao := repository.NewPostgresRepo(db, &app)
-	//initiate services
+
 	//
-	booksService := services.NewBookService(dao)
-	eventsService := services.NewEventsService(dao)
-	genresService := services.NewGenreService(dao)
-	jobsService := services.NewJobsService(dao)
-	newsService := services.NewNewsService(dao)
-	partnersService := services.NewChurchPartnersService(dao)
-	prayerRequestService := services.NewPrayerRequestService(dao)
-	sermonServices := services.NewSermonService(dao)
-	testimonyService := services.NewTestimoniesService(dao)
-	usersService := services.NewUsersService(dao)
-	volunteerJobService := services.NewVolunteerChurchJobService(dao)
-	dailyVerseService := services.NewDailyVerseService()
+	//Get fcm connection
+	messagingService := fcm_client.GetFcmConnection()
+
 	//
 	//
 	//Get file storage connection
-	connection, minioErr := filestorage.GetMinioConnection()
+	connection, bucketname, minioErr := filestorage.GetMinioConnection()
 	if minioErr != nil {
 		log.Panicln(err)
 	}
@@ -63,8 +55,30 @@ func StartApplication() {
 		App:          &app,
 		MinioStorage: connection,
 	}
+	app.StorageURL = connection.EndpointURL()
+	app.StorageBucket = bucketname
+
+	//initiate services
+	//
+	booksService := services.NewBookService(dao)
+	eventsService := services.NewEventsService(dao)
+	genresService := services.NewGenreService(dao)
+	jobsService := services.NewJobsService(dao)
+	newsService := services.NewNewsService(dao)
+	partnersService := services.NewChurchPartnersService(dao, &app)
+	prayerRequestService := services.NewPrayerRequestService(dao)
+	sermonServices := services.NewSermonService(dao)
+	testimonyService := services.NewTestimoniesService(dao)
+	usersService := services.NewUsersService(dao)
+	volunteerJobService := services.NewVolunteerChurchJobService(dao)
+	dailyVerseService := services.NewDailyVerseService()
+	fcmService := services.NewFcmService(messagingService)
+
+	redisDb.GetRedisClient()
+	mailClient.GetMailServer()
 
 	allServices := controllers.NewRepo(
+		fcmService,
 		&app,
 		booksService,
 		&fs,
@@ -82,12 +96,9 @@ func StartApplication() {
 
 	controllers.NewHandlers(allServices)
 
-	redisDb.GetRedisClient()
-	mailClient.GetMailServer()
-
 	r := SetupRouter()
 
-	err = r.Run("127.0.0.1:8090")
+	err = r.Run("192.168.100.17:8090")
 	if err != nil {
 		log.Println(err)
 		panic(err)

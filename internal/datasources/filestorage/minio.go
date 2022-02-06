@@ -2,14 +2,15 @@ package filestorage
 
 import (
 	"context"
-	"github.com/joho/godotenv"
 	"log"
-	"maranatha_web/internal/config"
 	"mime/multipart"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+
+	"maranatha_web/internal/config"
 )
 
 var Client *minio.Client
@@ -31,7 +32,7 @@ func NewMinoRepo(conn *minio.Client, a *config.AppConfig) MinioDao {
 }
 
 // GetMinioConnection MinioConnection func for opening filestorage connection.
-func GetMinioConnection() (*minio.Client, error) {
+func GetMinioConnection() (*minio.Client, string, error) {
 
 	err := godotenv.Load()
 	if err != nil {
@@ -73,7 +74,7 @@ func GetMinioConnection() (*minio.Client, error) {
 	}
 	Client = minioClient
 
-	return minioClient, errInit
+	return minioClient, bucketName, errInit
 }
 
 //
@@ -81,6 +82,7 @@ func GetMinioConnection() (*minio.Client, error) {
 //	UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error)
 //}
 
+//TODO:Add this upload file to services
 func (s *MinioRepo) UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error) {
 	ctx := context.Background()
 	// Upload the zip file with PutObject

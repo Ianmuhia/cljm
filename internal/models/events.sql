@@ -12,6 +12,7 @@ create table church_events
     cover_image  text,
     title        text,
     sub_title    text,
+    age    int,
     content      text,
     scheduled_on timestamp with time zone
 );

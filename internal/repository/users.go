@@ -24,7 +24,6 @@ func (uq *userQuery) GetUserByEmail(email string) (*models.User, error) {
 	if err != nil {
 		return &user, err
 	}
-	log.Println(&user)
 	return &user, nil
 }
 func (uq *userQuery) UpdateVerifiedUserStatus(param string) error {

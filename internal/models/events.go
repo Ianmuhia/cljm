@@ -14,6 +14,7 @@ type ChurchEvent struct {
 	Title       string
 	SubTitle    string
 	Content     string
+	Age         int
 	ScheduledOn time.Time
 	ChurchJobs  []*ChurchJob
 }

@@ -2,16 +2,18 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"log"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
 	"maranatha_web/internal/controllers/token"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/services"
 	"maranatha_web/internal/utils"
 	"maranatha_web/internal/utils/crypto_utils"
 	"maranatha_web/internal/utils/errors"
-	"net/http"
-	"time"
 )
 
 type createUserRequest struct {
@@ -81,11 +83,9 @@ func (r *Repository) RegisterUser(c *gin.Context) {
 		Content: code,
 	}
 	err := services.MailService.SendMsg(services.Mail(m))
-	//log.Println(&dc)
 
 	if err != nil {
 		log.Println(err)
-		//logger.Info("could not send email ")
 		return
 	}
 	message := fmt.Sprintf("Thank %s you for creating and account.Please verify your email %s code is %s", user.UserName, user.Email, code)
@@ -121,7 +121,6 @@ func (r *Repository) Login(ctx *gin.Context) {
 
 	user, err := r.userServices.GetUserByEmail(req.Email)
 	if user == nil {
-		//log.Println(user)
 		data := errors.NewBadRequestError("The user does not exist.Please create an account to continue")
 		ctx.JSON(data.Status, data)
 		return
@@ -144,21 +143,27 @@ func (r *Repository) Login(ctx *gin.Context) {
 		return
 	}
 	duration := 20 * time.Hour
-	fmt.Println(duration.Hours())
 
-	accessToken, erro := token.TokenService.CreateToken(user.Email, duration, user.ID)
+	accessToken, err := token.TokenService.CreateToken(user.Email, duration, user.ID)
 
-	if erro != nil {
-		ctx.JSON(http.StatusInternalServerError, erro)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	duration = time.Duration(time.Now().Add(time.Hour * 20).Unix())
 
-	refreshToken, erro := token.TokenService.CreateRefreshToken(user.Email, duration, user.ID)
+	refreshToken, err := token.TokenService.CreateRefreshToken(user.Email, duration, user.ID)
 
-	if erro != nil {
-		ctx.JSON(http.StatusInternalServerError, erro)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
 		return
+	}
+	//send fcm message
+	err = r.messagingService.SendNotification()
+	if err != nil {
+		log.Println(err)
+		//logger.Info("could not send email ")
+		//return
 	}
 	response := loginUserResponse{
 		AccessToken:  accessToken,

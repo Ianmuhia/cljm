@@ -1,14 +1,16 @@
 package controllers
 
 import (
+	"log"
+	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
-	"log"
+
 	"maranatha_web/internal/controllers/token"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/utils/errors"
-	"net/http"
-	"strconv"
 )
 
 type CreatNewsPostRequest struct {
@@ -28,16 +30,17 @@ func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 	var uploadedInfo minio.UploadInfo
 
 	data := r.GetPayloadFromContext(ctx)
+	log.Println(data)
 	file, m, err := ctx.Request.FormFile("cover_image")
-	form, _ := ctx.MultipartForm()
-	files := form.File["other_images"]
+	// form, _ := ctx.MultipartForm()
+	// files := form.File["other_images"]
 
-	for _, file := range files {
-		log.Println(file.Filename)
+	// for _, file := range files {
+	// 	log.Println(file.Filename)
 
-		// Upload the file to specific dst.
-		// c.SaveUploadedFile(file, dst)
-	}
+	// 	// Upload the file to specific dst.
+	// 	// c.SaveUploadedFile(file, dst)
+	// }
 
 	if err != nil {
 		restErr := errors.NewBadRequestError("Please attach image to the request")
@@ -291,6 +294,7 @@ func (r *Repository) GeSingleNewsPost(ctx *gin.Context) {
 
 func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {
 	payload, exists := ctx.Get("authorization_payload")
+	log.Println(payload)
 	if !exists {
 		restErr := errors.NewBadRequestError("could not get auth_payload from context")
 		ctx.JSON(restErr.Status, restErr)

@@ -11,6 +11,7 @@ var Repo *Repository
 
 // Repository is the repository type
 type Repository struct {
+	mailService          services.MailService
 	messagingService     services.FcmService
 	App                  *config.AppConfig
 	MinoStorage          *filestorage.MinioRepo
@@ -30,6 +31,7 @@ type Repository struct {
 
 // NewRepo creates a new repository
 func NewRepo(
+	mailService services.MailService,
 	messagingService services.FcmService,
 	a *config.AppConfig,
 	booksService services.BooksService,
@@ -47,6 +49,7 @@ func NewRepo(
 	volunteerService services.VolunteerChurchJobService,
 ) *Repository {
 	return &Repository{
+		mailService:          mailService,
 		messagingService:     messagingService,
 		App:                  a,
 		MinoStorage:          m,

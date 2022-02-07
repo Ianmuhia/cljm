@@ -9,11 +9,12 @@ import (
 const CLIENT_URL = "http://localhost:8000"
 
 type AppConfig struct {
-	InfoLog       *zap.Logger
-	ErrorLog      *zap.Logger
-	StorageURL    *url.URL
-	StorageBucket string
-	InProduction  bool
+	InfoLog                 *zap.Logger
+	ErrorLog                *zap.Logger
+	StorageURL              *url.URL
+	StorageBucket           string
+	PasswordResetCodeExpiry int
+	InProduction            bool
 }
 
 func NewAppConfig(infoLog *zap.Logger, errorLog *zap.Logger) *AppConfig {

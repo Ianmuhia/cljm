@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/gob"
 	"fmt"
 	"log"
+	redis_db "maranatha_web/internal/datasources/redis"
 	"net/http"
 	"time"
 
@@ -72,17 +75,21 @@ func (r *Repository) RegisterUser(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	log.Println("passed here")
-	type mail services.Mail
+
 	code := utils.GenerateRandomExpiryCode(user.Email)
 
-	m := mail{
-		To:      user.Email,
-		From:    "me@here.com",
-		Subject: "hello",
-		Content: code,
+	from := "me@here.com"
+	to := user.Email
+	subject := "Email Verification for Pass Change"
+	mailType := services.MailConfirmation
+	mailData := &services.MailData{
+		Username: user.UserName,
+		Code:     code,
 	}
-	err := services.MailService.SendMsg(services.Mail(m))
+
+	mailReq := r.mailService.NewMail(from, to, subject, mailType, mailData)
+
+	err := r.mailService.SendMsg(mailReq)
 
 	if err != nil {
 		log.Println(err)
@@ -192,11 +199,11 @@ func (r *Repository) VerifyEmailCode(ctx *gin.Context) {
 		return
 	}
 
-	data := services.MailService.VerifyMailCode(req.Email)
+	data := r.mailService.VerifyMailCode(req.Email)
 
 	if req.Code == data {
 
-		services.MailService.RemoveMailCode(req.Email)
+		r.mailService.RemoveMailCode(req.Email)
 		err := r.userServices.UpdateUserStatus(req.Email)
 
 		if err != nil {
@@ -265,6 +272,79 @@ func (r *Repository) UpdateUserProfileImage(ctx *gin.Context) {
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing upload profile image request")
 		ctx.JSON(data.Status, data)
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, "Profile image upload successful")
+
+}
+
+type GetPasswordResetCode struct {
+	Email string `json:"email"`
+}
+
+func (r *Repository) ForgotPassword(ctx *gin.Context) {
+	var req GetPasswordResetCode
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	user, err := r.userServices.GetUserByEmail(req.Email)
+	if err != nil {
+		restErr := errors.NewBadRequestError("User with that email does not exits")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+
+	// Send verification mail
+	from := "me@gmail.com"
+	to := user.Email
+	subject := "Password Reset for User"
+	mailType := services.PassReset
+	mailData := &services.MailData{
+		Username: user.UserName,
+		Code:     utils.GenerateRandomExpiryCode(user.UserName),
+	}
+
+	log.Println(mailData)
+
+	mailReq := r.mailService.NewMail(from, to, subject, mailType, mailData)
+	err = r.mailService.SendMsg(mailReq)
+	if err != nil {
+		restErr := errors.NewBadRequestError("Unable to send mail.")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+
+	// store the password reset code to db
+	verificationData := &services.VerificationData{
+		Email:     user.Email,
+		Code:      mailData.Code,
+		Type:      string(rune(services.PassReset)),
+		ExpiresAt: time.Now().Add(time.Minute * time.Duration(r.App.PasswordResetCodeExpiry)),
+	}
+
+	var b bytes.Buffer
+	if err := gob.NewEncoder(&b).Encode(verificationData); err != nil {
+		log.Println(err)
+		restErr := errors.NewBadRequestError("Unable to send password reset code. Please try again later")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	err = redis_db.RedisClient.Set(ctx, verificationData.Email, b.Bytes(), time.Minute*time.Duration(r.App.PasswordResetCodeExpiry)).Err()
+	if err != nil {
+		log.Println(err)
+		restErr := errors.NewBadRequestError("Unable to send password reset code. Please try again later")
+		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}

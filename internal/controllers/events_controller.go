@@ -1,16 +1,17 @@
 package controllers
 
 import (
-	"github.com/minio/minio-go/v7"
 	"log"
-	"maranatha_web/internal/models"
-	"maranatha_web/internal/utils/date_utils"
-	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin" //nolint:goimports
+	"github.com/minio/minio-go/v7"
+
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/date_utils"
+	"maranatha_web/internal/utils/errors"
 )
 
 type CreatEventsPostRequest struct {
@@ -289,9 +290,12 @@ func (r *Repository) DeleteEvent(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully deleted events",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Event deleted successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 
 }
 

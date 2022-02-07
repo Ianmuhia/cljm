@@ -1,11 +1,14 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"maranatha_web/internal/models"
-	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/errors"
 )
 
 type CreateGenrePostRequest struct {
@@ -132,9 +135,12 @@ func (r *Repository) DeleteGenre(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully deleted genre",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Genre deleted successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 
 }
 

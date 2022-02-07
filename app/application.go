@@ -1,7 +1,9 @@
 package app
 
 import (
+	"github.com/joho/godotenv"
 	"log"
+	"os"
 
 	"maranatha_web/internal/config"
 	"maranatha_web/internal/controllers"
@@ -17,9 +19,17 @@ import (
 
 var app config.AppConfig
 
-const jwtKey = "*#*Johnte2536290248"
+//const jwtKey = "*#*Johnte2536290248"
 
 func StartApplication() {
+	err := godotenv.Load()
+	if err != nil {
+
+		log.Println(err)
+		log.Fatal("Error  .env file")
+	}
+	jwtKey := os.Getenv("JwtSecret")
+
 	//configure logger
 	zl := logger.GetLogger()
 	log.Println(zl)
@@ -28,11 +38,12 @@ func StartApplication() {
 	_ = config.NewAppConfig(zl, zl)
 
 	//Create the new token maker
-	_, err := token.NewJWTMaker(jwtKey)
+	Maker, err := token.NewJWTMaker(jwtKey)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	log.Println(Maker)
 	//Get database connection
 	db := repository.GetDatabaseConnection()
 	dao := repository.NewPostgresRepo(db, &app)
@@ -44,7 +55,7 @@ func StartApplication() {
 	//
 	//
 	//Get file storage connection
-	connection, bucketname, minioErr := filestorage.GetMinioConnection()
+	connection, bucketName, minioErr := filestorage.GetMinioConnection()
 	if minioErr != nil {
 		log.Panicln(err)
 	}
@@ -56,7 +67,7 @@ func StartApplication() {
 		MinioStorage: connection,
 	}
 	app.StorageURL = connection.EndpointURL()
-	app.StorageBucket = bucketname
+	app.StorageBucket = bucketName
 
 	//initiate services
 	//
@@ -72,12 +83,14 @@ func StartApplication() {
 	usersService := services.NewUsersService(dao)
 	volunteerJobService := services.NewVolunteerChurchJobService(dao)
 	dailyVerseService := services.NewDailyVerseService()
+	mailService := services.NewMailService()
 	fcmService := services.NewFcmService(messagingService)
 
 	redisDb.GetRedisClient()
 	mailClient.GetMailServer()
 
 	allServices := controllers.NewRepo(
+		mailService,
 		fcmService,
 		&app,
 		booksService,

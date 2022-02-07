@@ -37,7 +37,7 @@ func (bs *dailyVerseService) ScheduleDailyVerse(verse CreateDailyVerseReq) error
 	}
 	//return
 
-	t1 := asynq.NewTask(TypeDailyVerse, marshal)
+	t1 := asynq.NewTask("dailyVerse", marshal)
 	info, err := tasks_client.TasksClient.Enqueue(t1, asynq.ProcessIn(2*time.Minute))
 	if err != nil {
 		log.Fatal(err)

@@ -1,13 +1,16 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/minio/minio-go/v7"
 	"log"
-	"maranatha_web/internal/models"
-	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
+
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/errors"
 )
 
 type CreateBookPostRequest struct {
@@ -157,8 +160,7 @@ func (r *Repository) UpdateBook(ctx *gin.Context) {
 	booksData := models.Books{
 		Title:    reqData.Title,
 		Synopsis: reqData.Synopsis,
-		//CreatedBy:   reqData.Author,
-		File: uploadedInfo.Key,
+		File:     uploadedInfo.Key,
 	}
 	errr := r.bookService.UpdateBooksPost(uint(i), booksData)
 	if errr != nil {
@@ -167,10 +169,12 @@ func (r *Repository) UpdateBook(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "news model updated",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Book updated successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 }
 
 func (r *Repository) GetAllBooksPost(ctx *gin.Context) {
@@ -223,9 +227,12 @@ func (r *Repository) DeleteBook(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully deleted book",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Book deleted successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 }
 
 func (r *Repository) GetSingleBookPost(ctx *gin.Context) {

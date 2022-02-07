@@ -1,26 +1,15 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"maranatha_web/internal/models"
-	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/errors"
 )
-
-// import (
-// 	"context"
-// 	"log"
-// 	"net/http"
-// 	"strconv"
-//
-
-// 	"github.com/gin-gonic/gin"
-
-// 	"maranatha_web/models"
-// 	"maranatha_web/services"
-// 	"maranatha_web/utils/errors"
-// )
 
 type CreateTestimonyRequest struct {
 	Content string `json:"content" binding:"required"`
@@ -29,6 +18,12 @@ type CreateTestimonyRequest struct {
 type GetAllTestimoniesResponse struct {
 	Total       int64                 `json:"total"`
 	Testimonies []*models.Testimonies `json:"testimonies"`
+}
+type SuccessResponse struct {
+	TimeStamp time.Time   `json:"time_stamp"`
+	Message   string      `json:"message"`
+	Status    int         `json:"status"`
+	Data      interface{} `json:"data"`
 }
 
 func (r *Repository) CreateTestimony(ctx *gin.Context) {
@@ -50,15 +45,19 @@ func (r *Repository) CreateTestimony(ctx *gin.Context) {
 		Content:  req.Content,
 		AuthorID: user.ID,
 	}
-	testimony, errr := r.testimonyService.CreateTestimony(postData)
+	_, errr := r.testimonyService.CreateTestimony(postData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create testimonies post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
-
-	ctx.JSON(http.StatusCreated, testimony)
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Testimony created successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 
 }
 
@@ -97,9 +96,14 @@ func (r *Repository) UpdateTestimony(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "testimonies model updated",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Testimony created successfully",
+		Status:    http.StatusOK,
+		// Data: ,
+	}
+
+	ctx.JSON(http.StatusCreated, res)
 
 }
 
@@ -224,9 +228,14 @@ func (r *Repository) DeleteTestimony(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully deleted testimonies",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Testimony deleted successfully",
+		Status:    http.StatusOK,
+		// Data: ,
+	}
+
+	ctx.JSON(http.StatusCreated, res)
 
 }
 
@@ -258,7 +267,7 @@ func (r *Repository) GetSingleTestimony(ctx *gin.Context) {
 
 	testimonies, errr := r.testimonyService.GetSingleTestimony(uint(i))
 	if errr != nil {
-		data := errors.NewBadRequestError("Error Processing request")
+		data := errors.NewNotFoundError("Could not find testimony with that id.")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return

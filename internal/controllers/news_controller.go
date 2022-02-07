@@ -55,15 +55,6 @@ func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 	}
 	reqData = CreatNewsPostRequest(postData)
 
-	//TODO: Rework this.
-	user, err := r.userServices.GetUserByEmail(data.Username)
-	if err != nil {
-
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
 	fileContentType := m.Header["Content-Type"][0]
 
 	uploadFile, err := r.MinoStorage.UploadFile(m.Filename, file, m.Size, fileContentType)
@@ -76,7 +67,7 @@ func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 	}
 	uploadedInfo = uploadFile
 	value := models.News{
-		AuthorID:   user.ID,
+		AuthorID:   data.ID,
 		CoverImage: uploadedInfo.Key,
 		Title:      reqData.Title,
 		SubTitle:   reqData.SubTitle,

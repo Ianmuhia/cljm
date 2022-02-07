@@ -1,12 +1,15 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"log"
-	"maranatha_web/internal/models"
-	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/gin-gonic/gin"
+
+	"maranatha_web/internal/models"
+	"maranatha_web/internal/utils/errors"
 )
 
 type GetAllJobsResponse struct {
@@ -131,14 +134,19 @@ func (r *Repository) CreateEventJob(ctx *gin.Context) {
 		ChurchEventID: event.ID,
 	}
 
-	job, errr := r.jobService.CreateEventJob(data)
-	if errr != nil {
+	_, err = r.jobService.CreateEventJob(data)
+	if err != nil {
 		restErr := errors.NewBadRequestError("Error creating the job.")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusCreated, job)
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Event Job created successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 
 }
 
@@ -166,10 +174,12 @@ func (r *Repository) DeleteJob(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully deleted job",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Event Job deleted successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 
 }
 func (r *Repository) UpdateJob(ctx *gin.Context) {
@@ -208,8 +218,11 @@ func (r *Repository) UpdateJob(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully updated job",
-	})
+	res := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Job updated successfully",
+		Status:    http.StatusOK,
+	}
+	ctx.JSON(http.StatusCreated, res)
 
 }

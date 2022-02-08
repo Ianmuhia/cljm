@@ -368,3 +368,39 @@ func (r *Repository) ForgotPassword(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, data)
 
 }
+
+type PasswordResetCode struct {
+	Code  string `json:"code"`
+	Email string `json:"email"`
+}
+
+// VerifyPassWordResetCode   handles the password reset request
+func (r *Repository) VerifyPassWordResetCode(ctx *gin.Context) {
+
+	var req PasswordResetCode
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	data := r.userServices.VerifyPasswordResetCode(req.Email)
+
+	if req.Code != data.Code {
+		e := errors.NewBadRequestError("Invalid code provided.")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+	}
+	r.mailService.RemoveMailCode(req.Email)
+	resp := &SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   " Code  verification successful",
+		Status:    http.StatusOK,
+		Data:      nil,
+	}
+
+	ctx.JSON(resp.Status, resp)
+
+}

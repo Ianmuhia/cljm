@@ -1,7 +1,11 @@
 package services
 
 import (
+	"bytes"
+	"context"
+	"encoding/gob"
 	"log"
+	redis_db "maranatha_web/internal/datasources/redis"
 
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
@@ -18,6 +22,7 @@ type UsersService interface {
 	UpdateUserStatus(email string) error
 	UpdateUserImage(email, imageName string) error
 	GetAllUsers() ([]models.User, error)
+	VerifyPasswordResetCode(key string) VerificationData
 }
 
 func NewUsersService(dao repository.DAO) UsersService {
@@ -65,4 +70,22 @@ func (us *usersService) UpdateUserStatus(email string) error {
 		return err
 	}
 	return nil
+}
+
+func (us *usersService) VerifyPasswordResetCode(key string) VerificationData {
+	var a VerificationData
+	data := redis_db.RedisClient.Get(context.TODO(), key)
+	cmdb, err := data.Bytes()
+	log.Printf("Redis Code %v or %v", data, err)
+	if err != nil {
+		log.Println(err)
+		return a
+	}
+	b := bytes.NewReader(cmdb)
+	if err := gob.NewDecoder(b).Decode(&a); err != nil {
+		log.Println(err)
+		return a
+	}
+	log.Println(a)
+	return a
 }

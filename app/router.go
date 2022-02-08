@@ -20,6 +20,7 @@ func SetupRouter() *gin.Engine {
 			public.POST("/users/register/", controllers.Repo.RegisterUser)
 			public.POST("/users/verifyemail/", controllers.Repo.VerifyEmailCode)
 			public.POST("/users/forgotpassword/", controllers.Repo.ForgotPassword)
+			public.POST("/users/verifypassrstcode/", controllers.Repo.VerifyPassWordResetCode)
 
 		}
 

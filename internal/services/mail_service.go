@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+
 	"os"
 	"time"
 
 	"github.com/hibiken/asynq"
-	mail "github.com/xhit/go-simple-mail/v2" //nolint:goimports
-
+	mail "github.com/xhit/go-simple-mail/v2"
 	mail_client "maranatha_web/internal/datasources/mail"
 	redis_db "maranatha_web/internal/datasources/redis"
 	tasks_client "maranatha_web/tasks/client"
@@ -23,17 +23,21 @@ const (
 	//TypeDailyVerse   = "dailyVerse"
 )
 
-type mailService struct{}
+type mailService struct {
+	mailClient *mail.SMTPClient
+}
 
 type MailService interface {
 	SendMsg(m *Mail) error
 	VerifyMailCode(key string) string
 	RemoveMailCode(key string)
-	NewMail(from string, to string, subject string, mailType MailType, data *MailData) *Mail
+	NewMail(from string, to string, subject string, mailType MailType, body *MailData) *Mail
 }
 
-func NewMailService() MailService {
-	return &mailService{}
+func NewMailService(mailClient *mail.SMTPClient) MailService {
+	return &mailService{
+		mailClient: mailClient,
+	}
 }
 
 type MailType int
@@ -51,48 +55,47 @@ type MailData struct {
 
 // Mail represents a email request
 type Mail struct {
-	from     string
-	to       string
-	subject  string
-	body     string
-	mailType MailType
-	data     *MailData
+	From     string
+	To       string
+	Subject  string
+	Body     *MailData
+	MailType MailType
 }
 
 // VerificationData represents the type for the data stored for verification.
 type VerificationData struct {
 	Email     string    `json:"email" validate:"required" sql:"email"`
 	Code      string    `json:"code" validate:"required" sql:"code"`
-	ExpiresAt time.Time `json:"expires_at" sql:"expiresat"`
+	ExpiresAt time.Time `json:"expires_at" `
 	Type      string    `json:"type" sql:"type"`
 }
 
 func (ms *mailService) SendMsg(m *Mail) error {
 
-	log.Println("send message has been called.")
-
-	marshal, err := json.Marshal(m)
+	log.Println("send message has been called.", m)
+	data, err := json.Marshal(m)
 	if err != nil {
 		return err
 	}
 
-	t1 := asynq.NewTask(TypeWelcomeEmail, marshal)
+	t1 := asynq.NewTask(TypeWelcomeEmail, data)
 	info, err := tasks_client.TasksClient.Enqueue(t1)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return err
 	}
-	log.Printf(" [*] Successfully enqueued task: %+v", info)
+	log.Printf(" [*] Successfully enqueued task: %+v", info.Type)
 	return nil
 }
 
 // NewMail returns a new mail request.
-func (ms *mailService) NewMail(from string, to string, subject string, mailType MailType, data *MailData) *Mail {
+func (ms *mailService) NewMail(from string, to string, subject string, mailType MailType, body *MailData) *Mail {
 	return &Mail{
-		from:     from,
-		to:       to,
-		subject:  subject,
-		mailType: mailType,
-		data:     data,
+		From:     from,
+		To:       to,
+		Subject:  subject,
+		MailType: mailType,
+		Body:     body,
 	}
 }
 
@@ -104,7 +107,8 @@ func HandleVerifyEmailTask(ctx context.Context, t *asynq.Task) error {
 	}
 	log.Println(m)
 	email := mail.NewMSG()
-	email.SetFrom(m.from).AddTo(m.to).SetSubject(m.subject).SetBody(mail.TextPlain, m.body)
+	email.SetFrom(m.From).AddTo(m.To).SetSubject(m.Subject).SetBody(mail.TextPlain, m.Body.Code)
+	log.Println(email)
 	mc := mail_client.GetMailServer()
 	err := email.Send(mc)
 
@@ -112,7 +116,7 @@ func HandleVerifyEmailTask(ctx context.Context, t *asynq.Task) error {
 		log.Println(err)
 		return err
 	}
-	log.Printf(" [*] Send Welcome Email to User %s", m.to)
+	log.Printf(" [*] Send Welcome Email to User %s", m.To)
 	return nil
 }
 

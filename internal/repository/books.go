@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"log"
+	"time"
+
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"log"
-	"maranatha_web/internal/models"
-
 	"gorm.io/gorm/clause" //nolint:goimports
+
+	"maranatha_web/internal/models"
 )
 
 type BookQuery interface {
@@ -35,7 +37,7 @@ func (bq *bookQuery) DeleteBook(id uint) error {
 	var book models.Books
 	err := bq.dbRepo.DB.Debug().Where("id = ?", id).Delete(&book).Error
 	if err != nil {
-		bq.dbRepo.App.ErrorLog.Info("error when trying to delete book post", zap.Any("error", err))
+		bq.dbRepo.App.ErrorLog.Info("error when trying to delete book post", zap.Any("error", err), zap.Any("error", time.Now()))
 		return err
 	}
 	return nil

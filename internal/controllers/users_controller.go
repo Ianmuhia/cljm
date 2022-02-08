@@ -81,6 +81,7 @@ func (r *Repository) RegisterUser(c *gin.Context) {
 	from := "me@here.com"
 	to := user.Email
 	subject := "Email Verification for Pass Change"
+	//subject := "Email Verification for Pass Change"
 	mailType := services.MailConfirmation
 	mailData := &services.MailData{
 		Username: user.UserName,
@@ -306,15 +307,23 @@ func (r *Repository) ForgotPassword(ctx *gin.Context) {
 	from := "me@gmail.com"
 	to := user.Email
 	subject := "Password Reset for User"
+	//body := "Password Reset for User"
 	mailType := services.PassReset
 	mailData := &services.MailData{
 		Username: user.UserName,
 		Code:     utils.GenerateRandomExpiryCode(user.UserName),
 	}
 
-	log.Println(mailData)
+	//mailReq := r.mailService.NewMail(from, to, subject, body, mailType, mailData)
+	mailReq := &services.Mail{
+		From:     from,
+		To:       to,
+		Subject:  subject,
+		Body:     mailData,
+		MailType: mailType,
+	}
 
-	mailReq := r.mailService.NewMail(from, to, subject, mailType, mailData)
+	log.Println(mailReq)
 	err = r.mailService.SendMsg(mailReq)
 	if err != nil {
 		restErr := errors.NewBadRequestError("Unable to send mail.")
@@ -349,6 +358,13 @@ func (r *Repository) ForgotPassword(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, "Profile image upload successful")
+	data := &SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Password reset code sent successfully",
+		Status:    http.StatusOK,
+		Data:      nil,
+	}
+
+	ctx.JSON(http.StatusOK, data)
 
 }

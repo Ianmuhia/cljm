@@ -2,6 +2,7 @@ package mail_client
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	mail "github.com/xhit/go-simple-mail/v2"
@@ -24,6 +25,7 @@ func GetMailServer() *mail.SMTPClient {
 	if err != nil {
 		fmt.Println(err)
 	}
+	log.Println("Mail server connected successfully")
 	MailClient = client
 	MailServer = server
 	return client

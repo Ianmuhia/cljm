@@ -24,26 +24,23 @@ var app config.AppConfig
 func StartApplication() {
 	err := godotenv.Load()
 	if err != nil {
-
-		log.Println(err)
 		log.Fatal("Error  .env file")
 	}
 	jwtKey := os.Getenv("JwtSecret")
 
 	//configure logger
 	zl := logger.GetLogger()
-	log.Println(zl)
 	app.ErrorLog = zl
 	app.InfoLog = zl
 	_ = config.NewAppConfig(zl, zl)
 
 	//Create the new token maker
-	Maker, err := token.NewJWTMaker(jwtKey)
+	_, err = token.NewJWTMaker(jwtKey)
 	if err != nil {
-		log.Println(err)
+
 		return
 	}
-	log.Println(Maker)
+
 	//Get database connection
 	db := repository.GetDatabaseConnection()
 	dao := repository.NewPostgresRepo(db, &app)
@@ -69,8 +66,10 @@ func StartApplication() {
 	app.StorageURL = connection.EndpointURL()
 	app.StorageBucket = bucketName
 
+	//connect to mail server
+	mailServer := mailClient.GetMailServer()
+
 	//initiate services
-	//
 	booksService := services.NewBookService(dao)
 	eventsService := services.NewEventsService(dao)
 	genresService := services.NewGenreService(dao)
@@ -83,11 +82,10 @@ func StartApplication() {
 	usersService := services.NewUsersService(dao)
 	volunteerJobService := services.NewVolunteerChurchJobService(dao)
 	dailyVerseService := services.NewDailyVerseService()
-	mailService := services.NewMailService()
+	mailService := services.NewMailService(mailServer)
 	fcmService := services.NewFcmService(messagingService)
 
 	redisDb.GetRedisClient()
-	mailClient.GetMailServer()
 
 	allServices := controllers.NewRepo(
 		mailService,

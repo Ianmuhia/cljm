@@ -13,7 +13,7 @@ var (
 )
 
 func GetRedisClient() *redis.Client {
-
+	//TODO:use address from env file
 	RedisClient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "",

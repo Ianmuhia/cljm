@@ -150,6 +150,8 @@ func (r *Repository) Login(ctx *gin.Context) {
 		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("invalid email or password "))
 		return
 	}
+
+	//TODO:token lifetime should be from env
 	duration := 20 * time.Hour
 
 	accessToken, err := token.TokenService.CreateToken(user.Email, duration, user.ID)
@@ -393,10 +395,87 @@ func (r *Repository) VerifyPassWordResetCode(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	r.mailService.RemoveMailCode(req.Email)
+
 	resp := &SuccessResponse{
 		TimeStamp: time.Now(),
-		Message:   " Code  verification successful",
+		Message:   "Code verification successful",
+		Status:    http.StatusOK,
+		Data:      nil,
+	}
+
+	ctx.JSON(resp.Status, resp)
+
+}
+
+type PasswordResetReq struct {
+	Password        string `json:"password"`
+	PasswordConfirm string `json:"password_confirm"`
+	Email           string `json:"email"`
+	Code            string `json:"code"`
+}
+
+// ResetPassword  handles the password reset request
+func (r *Repository) ResetPassword(ctx *gin.Context) {
+
+	var req PasswordResetReq
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		fmt.Println(err)
+		ctx.JSON(http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	user, err := r.userServices.GetUserByEmail(req.Email)
+	if user == nil {
+		log.Println(err)
+		data := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		ctx.JSON(data.Status, data)
+		return
+	}
+
+	data := r.userServices.VerifyPasswordResetCode(req.Email)
+	if req.Code != data.Code {
+		log.Println(data)
+		e := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+	}
+
+	if req.Code != data.Code {
+		r.App.ErrorLog.Error("verification code did not match even after verifying PassReset")
+		e := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+	}
+
+	if req.Password != req.PasswordConfirm {
+		r.App.ErrorLog.Error("password and password re-enter did not match")
+		e := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+
+	}
+	newPassword := crypto_utils.Hash(req.Password)
+	var pwd = models.User{
+		PasswordHash: newPassword,
+	}
+	err = r.userServices.UpdateUserDetails(user.ID, pwd)
+	if err != nil {
+		r.App.ErrorLog.Error("update user failed")
+		e := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+
+	}
+	//r.mailService.RemoveMailCode(req.Email)
+
+	resp := &SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Password reset successful",
 		Status:    http.StatusOK,
 		Data:      nil,
 	}

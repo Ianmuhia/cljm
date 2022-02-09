@@ -2,6 +2,7 @@ package repository
 
 import (
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"log"
 	"maranatha_web/internal/models"
 )
@@ -12,6 +13,7 @@ type UserQuery interface {
 	Create(user *models.User) error
 	GetAllUsers() ([]models.User, error)
 	UpdateUserImage(email, imageName string) error
+	UpdateUser(id uint, userModel models.User) error
 }
 
 type userQuery struct {
@@ -25,6 +27,15 @@ func (uq *userQuery) GetUserByEmail(email string) (*models.User, error) {
 		return &user, err
 	}
 	return &user, nil
+}
+
+func (uq *userQuery) UpdateUser(id uint, userModel models.User) error {
+	err := uq.repo.DB.Debug().Where("id = ?", id).Updates(&userModel).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		uq.repo.App.ErrorLog.Error("error when trying to update prayer post", zap.Any("error", err))
+		return err
+	}
+	return nil
 }
 func (uq *userQuery) UpdateVerifiedUserStatus(param string) error {
 	err := uq.repo.DB.Table("users").Debug().Where("email = ?", param).Update("is_verified", true).Error
@@ -54,9 +65,8 @@ func (uq *userQuery) GetAllUsers() ([]models.User, error) {
 func (uq *userQuery) UpdateUserImage(email, imageName string) error {
 	err := uq.repo.DB.Table("users").Debug().Where("email = ?", email).Update("profile_image", imageName).Error
 	if err != nil {
-		log.Panicln(err)
-
+		log.Println(err)
+		return err
 	}
 	return nil
-
 }

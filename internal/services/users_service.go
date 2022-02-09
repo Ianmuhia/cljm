@@ -23,6 +23,7 @@ type UsersService interface {
 	UpdateUserImage(email, imageName string) error
 	GetAllUsers() ([]models.User, error)
 	VerifyPasswordResetCode(key string) VerificationData
+	UpdateUserDetails(id uint, userModel models.User) error
 }
 
 func NewUsersService(dao repository.DAO) UsersService {
@@ -72,11 +73,19 @@ func (us *usersService) UpdateUserStatus(email string) error {
 	return nil
 }
 
+func (us *usersService) UpdateUserDetails(id uint, userModel models.User) error {
+	err := us.dao.NewUserQuery().UpdateUser(id, userModel)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
+
 func (us *usersService) VerifyPasswordResetCode(key string) VerificationData {
 	var a VerificationData
 	data := redis_db.RedisClient.Get(context.TODO(), key)
 	cmdb, err := data.Bytes()
-	log.Printf("Redis Code %v or %v", data, err)
 	if err != nil {
 		log.Println(err)
 		return a
@@ -86,6 +95,5 @@ func (us *usersService) VerifyPasswordResetCode(key string) VerificationData {
 		log.Println(err)
 		return a
 	}
-	log.Println(a)
 	return a
 }

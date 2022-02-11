@@ -11,7 +11,7 @@ type UserQuery interface {
 	GetUserByEmail(email string) (*models.User, error)
 	UpdateVerifiedUserStatus(param string) error
 	Create(user *models.User) error
-	GetAllUsers() ([]models.User, error)
+	GetAllUsers() (int, []*models.User, error)
 	UpdateUserImage(email, imageName string) error
 	UpdateUser(id uint, userModel models.User) error
 }
@@ -52,15 +52,16 @@ func (uq *userQuery) Create(user *models.User) error {
 	}
 	return nil
 }
-func (uq *userQuery) GetAllUsers() ([]models.User, error) {
-	var users []models.User
+func (uq *userQuery) GetAllUsers() (int, []*models.User, error) {
+	var users []*models.User
+	var total int
 	err := uq.repo.DB.Debug().Find(&users).Error
 	if err != nil {
 		uq.repo.App.ErrorLog.Error("error when trying to save user", zap.Any("error", err))
-		return users, err
+		return total, users, err
 	}
-	log.Println(users)
-	return users, nil
+	total = len(users)
+	return total, users, nil
 }
 func (uq *userQuery) UpdateUserImage(email, imageName string) error {
 	err := uq.repo.DB.Table("users").Debug().Where("email = ?", email).Update("profile_image", imageName).Error

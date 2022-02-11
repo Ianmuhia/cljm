@@ -21,7 +21,7 @@ type UsersService interface {
 	CreateUser(models.User) error
 	UpdateUserStatus(email string) error
 	UpdateUserImage(email, imageName string) error
-	GetAllUsers() ([]models.User, error)
+	GetAllUsers() (int, []*models.User, error)
 	VerifyPasswordResetCode(key string) VerificationData
 	UpdateUserDetails(id uint, userModel models.User) error
 }
@@ -47,12 +47,12 @@ func (us *usersService) GetUserByEmail(email string) (*models.User, error) {
 	return user, err
 }
 
-func (us *usersService) GetAllUsers() ([]models.User, error) {
-	users, err := us.dao.NewUserQuery().GetAllUsers()
+func (us *usersService) GetAllUsers() (int, []*models.User, error) {
+	total, users, err := us.dao.NewUserQuery().GetAllUsers()
 	if err != nil {
-		return users, err
+		return total, users, err
 	}
-	return users, nil
+	return total, users, nil
 }
 
 func (us *usersService) UpdateUserImage(email, imageName string) error {

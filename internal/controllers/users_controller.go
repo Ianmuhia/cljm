@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+	"gorm.io/gorm"
 	"log"
 	redis_db "maranatha_web/internal/datasources/redis"
 	"net/http"
@@ -128,7 +129,7 @@ func (r *Repository) Login(ctx *gin.Context) {
 	}
 
 	user, err := r.userServices.GetUserByEmail(req.Email)
-	if user == nil {
+	if err == gorm.ErrRecordNotFound {
 		data := errors.NewBadRequestError("The user does not exist.Please create an account to continue")
 		ctx.JSON(data.Status, data)
 		return
@@ -217,34 +218,41 @@ func (r *Repository) VerifyEmailCode(ctx *gin.Context) {
 			ctx.Abort()
 			return
 		}
-		message := verifyEmailResponse{
-			Message: "Email has been verified you can now login to your account",
+		resp := SuccessResponse{
+			TimeStamp: time.Now(),
+			Message:   "Email has been verified you can now login to your account",
+			Status:    http.StatusOK,
+			Data:      nil,
 		}
-		ctx.JSON(http.StatusOK, message)
+
+		ctx.JSON(resp.Status, resp)
 		ctx.Abort()
 		return
 	}
-	message := verifyEmailResponse{
-		Message: "Email verification failed invalid code provided",
-	}
-	ctx.JSON(http.StatusBadRequest, message)
+
+	resp := errors.NewBadRequestError("Email verification failed invalid code provided")
+	ctx.JSON(resp.Status, resp)
 
 }
 
-func TryAuthMiddlewareMiddleware(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, "hello welcome")
+type GetAllUsersResponse struct {
+	Total int            `json:"total"`
+	Users []*models.User `json:"users"`
 }
 
 func (r *Repository) GetAllUsers(ctx *gin.Context) {
-	data, err := r.userServices.GetAllUsers()
+	total, users, err := r.userServices.GetAllUsers()
 	if err != nil {
 		restErr := errors.NewBadRequestError("Error getting all users.")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
-
-	ctx.JSON(http.StatusOK, data)
+	resp := GetAllUsersResponse{
+		Total: total,
+		Users: users,
+	}
+	ctx.JSON(http.StatusOK, resp)
 }
 
 func (r *Repository) UpdateUserProfileImage(ctx *gin.Context) {
@@ -471,7 +479,7 @@ func (r *Repository) ResetPassword(ctx *gin.Context) {
 		return
 
 	}
-	//r.mailService.RemoveMailCode(req.Email)
+	r.mailService.RemoveMailCode(req.Email)
 
 	resp := &SuccessResponse{
 		TimeStamp: time.Now(),

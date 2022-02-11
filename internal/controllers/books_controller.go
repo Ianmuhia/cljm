@@ -272,3 +272,7 @@ func (r *Repository) GetSingleBookPost(ctx *gin.Context) {
 	//_ = services.CacheService.SetBooks(context.Background(), books)
 	ctx.JSON(http.StatusOK, books)
 }
+
+func (r *Repository) batchUpload(ctx *gin.Context) {
+
+}

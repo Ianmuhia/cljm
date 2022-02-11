@@ -5,7 +5,6 @@ import (
 	"log"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
-	"time"
 )
 
 type NewsService interface {
@@ -37,20 +36,21 @@ func (ns *newsService) GetAllNewsPost() ([]*models.News, int64, error) {
 	for _, v := range data {
 		v.CoverImage = fmt.Sprintf("http://localhost:9000/mono/%s", v.CoverImage)
 
-		d := v.CreatedAt.Format(time.RFC822)
+		//v.CreatedAt
+		//d := v.CreatedAt.Format(time.RFC822)
 
-		myDate, err := time.Parse(time.RFC822, d)
-		if err != nil {
-			panic(err)
-		}
-
-		v.CreatedAt = myDate
-		fmt.Println(v.CreatedAt.Format(time.RFC1123))
-		// d, e := time.Parse("January 02, 2006",string(v.CreatedAt))
-		// if e!=nil {
-		// 	log.Println(e)
-		// }
-		// v.CreatedAt = d
+		//myDate, err := time.Parse(time.RFC822, d)
+		//if err != nil {
+		//	panic(err)
+		//}
+		//
+		//v.CreatedAt = myDate
+		//fmt.Println(v.CreatedAt.Format(time.RFC1123))
+		//d, e := time.Parse("January 02, 2006",string(v.CreatedAt))
+		//if e!=nil {
+		//	log.Println(e)
+		//}
+		//v.CreatedAt = d
 	}
 	if err != nil {
 		return data, count, err

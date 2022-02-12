@@ -480,7 +480,6 @@ func (r *Repository) ResetPassword(ctx *gin.Context) {
 
 	}
 	r.mailService.RemoveMailCode(req.Email)
-
 	resp := &SuccessResponse{
 		TimeStamp: time.Now(),
 		Message:   "Password reset successful",

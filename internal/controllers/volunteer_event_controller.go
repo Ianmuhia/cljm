@@ -1,12 +1,14 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type SubScribeToEventJobRequest struct {
@@ -16,14 +18,6 @@ type SubScribeToEventJobRequest struct {
 func (r *Repository) SubscribeToEventJob(ctx *gin.Context) {
 	//var req SubScribeToEventJobRequest
 	data := r.GetPayloadFromContext(ctx)
-	//if err := ctx.ShouldBindJSON(&req); err != nil {
-	//
-	//	restErr := errors.NewBadRequestError("invalid json body")
-	//	ctx.JSON(restErr.Status, restErr)
-	//	ctx.Abort()
-	//	return
-	//}
-
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
 	if id == "" || value == 0 {
@@ -59,7 +53,7 @@ func (r *Repository) SubscribeToEventJob(ctx *gin.Context) {
 		VolunteerID: user.ID,
 		ChurchJobID: job.ID,
 	}
-	jobSubscribe, errr := r.volunteerService.CreateSubscribeToChurchJob(subJob)
+	jobSubscribe, err := r.volunteerService.CreateSubscribeToChurchJob(subJob)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing create sermon request")
 		ctx.JSON(data.Status, data)
@@ -68,5 +62,35 @@ func (r *Repository) SubscribeToEventJob(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, jobSubscribe)
+
+}
+
+type UserVolunteeredJobsResponse struct {
+	Total int                          `json:"total"`
+	Jobs  []*models.VolunteerChurchJob `json:"jobs"`
+}
+
+func (r *Repository) GetUserVolunteeredJobs(ctx *gin.Context) {
+
+	payload := r.GetPayloadFromContext(ctx)
+	total, jobs, err := r.volunteerService.GetUserVolunteeredJobs(int(payload.ID))
+	if err != nil {
+		fmt.Println(err)
+		resp := errors.NewBadRequestError("Could not get user volunteered jobs.")
+		ctx.JSON(resp.Status, resp)
+		return
+	}
+	response := UserVolunteeredJobsResponse{
+		Total: total,
+		Jobs:  jobs,
+	}
+	resp := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Successfully got all user volunteered jobs",
+		Status:    http.StatusOK,
+		Data:      response,
+	}
+
+	ctx.JSON(resp.Status, resp)
 
 }

@@ -303,7 +303,7 @@ func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {
 	}
 	log.Println(user)
 	//TODO:upload news images
-	//TODO:Work on user profile, reset password , forgot password
+	//TODO:Work on user profile, reset password
 
 	return data
 

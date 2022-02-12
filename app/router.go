@@ -106,6 +106,7 @@ func SetupRouter() *gin.Engine {
 
 			//Volunteer Job Routes
 			protected.POST("/sub-event-job/", controllers.Repo.SubscribeToEventJob)
+			protected.GET("/get-user-volunteered-jobs/", controllers.Repo.GetUserVolunteeredJobs)
 
 		}
 	}

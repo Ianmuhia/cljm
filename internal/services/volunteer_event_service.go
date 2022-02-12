@@ -11,6 +11,7 @@ type volunteerChurchJobService struct {
 
 type VolunteerChurchJobService interface {
 	CreateSubscribeToChurchJob(churchPartnersModel models.VolunteerChurchJob) (*models.VolunteerChurchJob, error)
+	GetUserVolunteeredJobs(id int) (int, []*models.VolunteerChurchJob, error)
 }
 
 func NewVolunteerChurchJobService(dao repository.DAO) VolunteerChurchJobService {
@@ -22,4 +23,12 @@ func (vs *volunteerChurchJobService) CreateSubscribeToChurchJob(churchPartnersMo
 		return nil, err
 	}
 	return &churchPartnersModel, nil
+}
+func (vs *volunteerChurchJobService) GetUserVolunteeredJobs(id int) (int, []*models.VolunteerChurchJob, error) {
+
+	total, jobs, err := vs.dao.NewVolunteerQuery().GetUserVolunteeredJobs(id)
+	if err != nil {
+		return total, jobs, err
+	}
+	return total, jobs, nil
 }

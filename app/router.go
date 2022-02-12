@@ -33,6 +33,7 @@ func SetupRouter() *gin.Engine {
 			//protected.GET("/profile/", controllers.Repo.TryAuthMiddlewareMiddleware)
 			protected.POST("/update-profile-image/", controllers.Repo.UpdateUserProfileImage)
 			protected.GET("/get-users/", controllers.Repo.GetAllUsers)
+			protected.POST("/update-password/", controllers.Repo.UpdateUserPassword)
 
 			///News Routes
 			protected.POST("/create-news/", controllers.Repo.CreatNewsPost)

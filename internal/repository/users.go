@@ -14,6 +14,7 @@ type UserQuery interface {
 	GetAllUsers() (int, []*models.User, error)
 	UpdateUserImage(email, imageName string) error
 	UpdateUser(id uint, userModel models.User) error
+	UpdateUserPassword(id uint, newPasswd string) error
 }
 
 type userQuery struct {
@@ -24,6 +25,7 @@ func (uq *userQuery) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 	err := uq.repo.DB.Where("email = ?", email).First(&user).Error
 	if err != nil {
+		uq.repo.App.ErrorLog.Error("error when trying to get user", zap.Any("error", err))
 		return &user, err
 	}
 	return &user, nil
@@ -32,7 +34,16 @@ func (uq *userQuery) GetUserByEmail(email string) (*models.User, error) {
 func (uq *userQuery) UpdateUser(id uint, userModel models.User) error {
 	err := uq.repo.DB.Debug().Where("id = ?", id).Updates(&userModel).Error
 	if err != nil || err == gorm.ErrRecordNotFound {
-		uq.repo.App.ErrorLog.Error("error when trying to update prayer post", zap.Any("error", err))
+		uq.repo.App.ErrorLog.Error("error when trying to update user ", zap.Any("error", err))
+		return err
+	}
+	return nil
+}
+func (uq *userQuery) UpdateUserPassword(id uint, newPasswd string) error {
+	var userModel models.User
+	err := uq.repo.DB.Debug().Model(&userModel).Where("id = ?", id).Update("password_hash", newPasswd).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
+		uq.repo.App.ErrorLog.Error("error when trying to update user  password", zap.Any("error", err))
 		return err
 	}
 	return nil
@@ -57,7 +68,7 @@ func (uq *userQuery) GetAllUsers() (int, []*models.User, error) {
 	var total int
 	err := uq.repo.DB.Debug().Find(&users).Error
 	if err != nil {
-		uq.repo.App.ErrorLog.Error("error when trying to save user", zap.Any("error", err))
+		uq.repo.App.ErrorLog.Error("error when trying to get users", zap.Any("error", err))
 		return total, users, err
 	}
 	total = len(users)

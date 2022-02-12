@@ -24,6 +24,7 @@ type UsersService interface {
 	GetAllUsers() (int, []*models.User, error)
 	VerifyPasswordResetCode(key string) VerificationData
 	UpdateUserDetails(id uint, userModel models.User) error
+	UpdateUserPassword(id uint, newPasswd string) error
 }
 
 func NewUsersService(dao repository.DAO) UsersService {
@@ -75,6 +76,15 @@ func (us *usersService) UpdateUserStatus(email string) error {
 
 func (us *usersService) UpdateUserDetails(id uint, userModel models.User) error {
 	err := us.dao.NewUserQuery().UpdateUser(id, userModel)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
+
+func (us *usersService) UpdateUserPassword(id uint, newPasswd string) error {
+	err := us.dao.NewUserQuery().UpdateUserPassword(id, newPasswd)
 	if err != nil {
 		log.Println(err)
 		return err

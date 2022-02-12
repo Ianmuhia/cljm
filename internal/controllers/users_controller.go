@@ -372,7 +372,7 @@ func (r *Repository) ForgotPassword(ctx *gin.Context) {
 		TimeStamp: time.Now(),
 		Message:   "Password reset code sent successfully",
 		Status:    http.StatusOK,
-		Data:      nil,
+		Data:      mailData.Code,
 	}
 
 	ctx.JSON(http.StatusOK, data)
@@ -488,5 +488,33 @@ func (r *Repository) ResetPassword(ctx *gin.Context) {
 	}
 
 	ctx.JSON(resp.Status, resp)
+
+}
+
+type UpdateUerPasswordRequest struct {
+	NewPassword string `json:"new_password"`
+}
+
+func (r *Repository) UpdateUserPassword(ctx *gin.Context) {
+	user := r.GetPayloadFromContext(ctx)
+
+	var req UpdateUerPasswordRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	newPassword := crypto_utils.Hash(req.NewPassword)
+	err := r.userServices.UpdateUserPassword(user.ID, newPassword)
+	if err != nil {
+		r.App.ErrorLog.Error("update user failed")
+		e := errors.NewBadRequestError("Unable to update password. Please try again later")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+
+	}
 
 }

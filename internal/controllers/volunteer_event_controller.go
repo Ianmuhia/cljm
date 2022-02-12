@@ -71,7 +71,6 @@ type UserVolunteeredJobsResponse struct {
 }
 
 func (r *Repository) GetUserVolunteeredJobs(ctx *gin.Context) {
-
 	payload := r.GetPayloadFromContext(ctx)
 	total, jobs, err := r.volunteerService.GetUserVolunteeredJobs(int(payload.ID))
 	if err != nil {
@@ -86,7 +85,7 @@ func (r *Repository) GetUserVolunteeredJobs(ctx *gin.Context) {
 	}
 	resp := SuccessResponse{
 		TimeStamp: time.Now(),
-		Message:   "Successfully got all user volunteered jobs",
+		Message:   "Successfully got  user volunteered jobs",
 		Status:    http.StatusOK,
 		Data:      response,
 	}

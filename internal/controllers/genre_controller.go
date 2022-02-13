@@ -33,15 +33,16 @@ func (r *Repository) CreatGenrePost(ctx *gin.Context) {
 	postData := models.Genre{
 		Name: req.Name,
 	}
-	genre, errr := r.genreService.CreateGenrePost(postData)
-	if errr != nil {
+	genre, err := r.genreService.CreateGenrePost(postData)
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing create genre post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, genre)
+	resp := NewStatusCreatedResponse("Genre created successfully", genre)
+	ctx.JSON(resp.Status, resp)
 
 }
 

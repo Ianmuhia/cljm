@@ -55,8 +55,8 @@ func (cps *churchPartnersService) DeleteChurchPartner(id uint) error {
 
 func (cps *churchPartnersService) GetSingleChurchPartner(id uint) (*models.ChurchPartner, error) {
 	data, err := cps.dao.NewPartnersQuery().GetSingleChurchPartner(id)
-	strg := cps.cfg.StorageURL.String()
-	url := fmt.Sprintf("%s/%s", strg, data.Image)
+	storageURL := cps.cfg.StorageURL.String()
+	url := fmt.Sprintf("%s/%s", storageURL, data.Image)
 	data.Image = url
 	if err != nil {
 		log.Println(err)
@@ -67,7 +67,7 @@ func (cps *churchPartnersService) GetSingleChurchPartner(id uint) (*models.Churc
 
 func (cps *churchPartnersService) UpdateChurchPartner(id uint, newModel models.ChurchPartner) error {
 	data, err := cps.dao.NewPartnersQuery().UpdateChurchPartner(id, newModel)
-	url := fmt.Sprintf("http://localhost:9000/mono/%s", data.Image)
+	url := fmt.Sprintf("%s/%s/%s", cps.cfg.StorageURL.String(), cps.cfg.StorageBucket, data.Image)
 	data.Image = url
 	if err != nil {
 		log.Println(err)

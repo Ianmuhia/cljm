@@ -86,8 +86,8 @@ func (r *Repository) CreatEventsPost(ctx *gin.Context) {
 		Age:         intVar,
 	}
 
-	events, errr := r.eventsService.CreateEvent(eventsData)
-	if errr != nil {
+	events, err := r.eventsService.CreateEvent(eventsData)
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing create events post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
@@ -229,6 +229,7 @@ func (r *Repository) GetAllEventsByAuthor(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, data)
 
 }
+
 func (r *Repository) GetAllEventsByAuthorAdmin(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
@@ -324,8 +325,8 @@ func (r *Repository) GetSingleEvent(ctx *gin.Context) {
 	//	return
 	//}
 
-	events, errr := r.eventsService.GetSingleEvent(uint(i))
-	if errr != nil {
+	events, err := r.eventsService.GetSingleEvent(uint(i))
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()

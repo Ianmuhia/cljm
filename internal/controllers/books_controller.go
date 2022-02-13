@@ -26,6 +26,7 @@ type GetAllBooksResponse struct {
 
 //CreateBook is incomplete, integrate with Genre.
 func (r *Repository) CreateBook(ctx *gin.Context) {
+
 	type req CreateBookPostRequest
 	var reqData CreateBookPostRequest
 	var uploadedInfo minio.UploadInfo
@@ -47,6 +48,7 @@ func (r *Repository) CreateBook(ctx *gin.Context) {
 	reqData = CreateBookPostRequest(postData)
 
 	fileContentType := m.Header["Content-Type"][0]
+
 	uploadFile, err := r.MinoStorage.UploadFile(m.Filename, file, m.Size, fileContentType)
 	if err != nil {
 		restErr := errors.NewBadRequestError("could not upload file to server")
@@ -56,18 +58,11 @@ func (r *Repository) CreateBook(ctx *gin.Context) {
 
 	}
 	uploadedInfo = uploadFile
-	if err != nil {
-
-		data := errors.NewBadRequestError("Error Processing request")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
 
 	creator := r.GetPayloadFromContext(ctx)
+
 	user, err := r.userServices.GetUserByEmail(creator.Username)
 	if err != nil {
-
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
@@ -91,15 +86,16 @@ func (r *Repository) CreateBook(ctx *gin.Context) {
 		GenreID:     genre.ID,
 		File:        uploadedInfo.Key,
 	}
-	books, err := r.bookService.CreateBooksPost(value)
+	book, err := r.bookService.CreateBooksPost(value)
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing creating book post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
+	resp := NewStatusCreatedResponse("Book created successfully", book)
 
-	ctx.JSON(http.StatusCreated, books)
+	ctx.JSON(resp.Status, resp)
 }
 
 func (r *Repository) UpdateBook(ctx *gin.Context) {

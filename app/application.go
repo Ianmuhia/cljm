@@ -82,7 +82,7 @@ func StartApplication() {
 	eventsService := services.NewEventsService(dao)
 	genresService := services.NewGenreService(dao)
 	jobsService := services.NewJobsService(dao)
-	newsService := services.NewNewsService(dao)
+	newsService := services.NewNewsService(dao, &app)
 	partnersService := services.NewChurchPartnersService(dao, &app)
 	prayerRequestService := services.NewPrayerRequestService(dao)
 	sermonServices := services.NewSermonService(dao)

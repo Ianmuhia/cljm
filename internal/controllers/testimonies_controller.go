@@ -22,12 +22,6 @@ type GetAllTestimoniesResponse struct {
 	Total       int64                 `json:"total"`
 	Testimonies []*models.Testimonies `json:"testimonies"`
 }
-type SuccessResponse struct {
-	TimeStamp time.Time   `json:"time_stamp"`
-	Message   string      `json:"message"`
-	Status    int         `json:"status"`
-	Data      interface{} `json:"data"`
-}
 
 func (r *Repository) CreateTestimony(ctx *gin.Context) {
 

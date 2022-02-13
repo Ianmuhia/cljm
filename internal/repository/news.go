@@ -13,8 +13,8 @@ type NewsQuery interface {
 	DeleteNewsPost(id uint) error
 	GetSingleNewsPost(id uint) (*models.News, error)
 	UpdateNewsPost(id uint, newsModel models.News) (*models.News, error)
-	GetAllNewsPost() ([]*models.News, int64, error)
-	GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error)
+	GetAllNewsPost() ([]*models.News, int, error)
+	GetAllNewsPostByAuthor(id uint) ([]*models.News, int, error)
 }
 
 type newsQuery struct {
@@ -57,23 +57,25 @@ func (nq *newsQuery) UpdateNewsPost(id uint, newsModel models.News) (*models.New
 	return &newsModel, nil
 }
 
-func (nq *newsQuery) GetAllNewsPost() ([]*models.News, int64, error) {
+func (nq *newsQuery) GetAllNewsPost() ([]*models.News, int, error) {
 	var news []*models.News
-	var count int64
-	val := nq.dbRepo.DB.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
-	if val != nil {
-		log.Println(val)
-		return nil, 0, val
+	var count int
+	err := nq.dbRepo.DB.Debug().Preload(clause.Associations).Order("created_at desc").Find(&news).Error
+	if err != nil {
+		log.Println(err)
+		return nil, 0, err
 	}
+	count = len(news)
 	return news, count, nil
 }
 
-func (nq *newsQuery) GetAllNewsPostByAuthor(id uint) ([]*models.News, int64, error) {
+func (nq *newsQuery) GetAllNewsPostByAuthor(id uint) ([]*models.News, int, error) {
 	var news []*models.News
-	var count int64
-	val := nq.dbRepo.DB.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Count(&count).Error
+	var count int
+	val := nq.dbRepo.DB.Debug().Where("author_id = ?", id).Preload("Author").Order("created_at desc").Find(&news).Error
 	if val != nil {
 		return nil, 0, val
 	}
+	count = len(news)
 	return news, count, nil
 }

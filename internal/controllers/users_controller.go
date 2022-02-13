@@ -152,8 +152,8 @@ func (r *Repository) Login(ctx *gin.Context) {
 		return
 	}
 
-	//TODO:token lifetime should be from env
-	duration := 20 * time.Hour
+	//t := r.App.TokenLifeTime
+	duration := 10 * time.Hour
 	//duration :=
 
 	accessToken, err := token.TokenService.CreateToken(user.Email, duration, user.ID)

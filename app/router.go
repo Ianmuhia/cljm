@@ -36,19 +36,19 @@ func SetupRouter() *gin.Engine {
 			protected.POST("/update-password/", controllers.Repo.UpdateUserPassword)
 
 			///News Routes
-			protected.POST("/create-news/", controllers.Repo.CreatNewsPost)
+			protected.POST("/news/", controllers.Repo.CreatNewsPost)
 			protected.POST("/get-author-news/", controllers.Repo.GetAllNewsPostByAuthor)
-			protected.GET("/get-news/", controllers.Repo.GetAllNewsPost)
-			protected.DELETE("/delete-news/", controllers.Repo.DeleteNewsPost)
-			protected.GET("/get-single-news/", controllers.Repo.GeSingleNewsPost)
-			protected.PUT("/update-news/", controllers.Repo.UpdateNewsPost)
+			protected.GET("/news/", controllers.Repo.GetAllNewsPost)
+			protected.DELETE("/news/", controllers.Repo.DeleteNewsPost)
+			protected.GET("/news/:id", controllers.Repo.GeSingleNewsPost)
+			protected.PUT("/news/", controllers.Repo.UpdateNewsPost)
 
 			///Church Partners Routes
-			protected.POST("/create-partner/", controllers.Repo.CreateChurchPartner)
-			protected.GET("/get-partner/", controllers.Repo.GetSingleChurchPartner)
-			protected.DELETE("/delete-partner/", controllers.Repo.DeleteChurchPartner)
-			protected.GET("/get-partners/", controllers.Repo.GetAllChurchPartner)
-			protected.PUT("/update-partner/", controllers.Repo.UpdateChurchPartner)
+			protected.POST("/partner/", controllers.Repo.CreateChurchPartner)
+			protected.GET("/partner/", controllers.Repo.GetSingleChurchPartner)
+			protected.DELETE("/partner/", controllers.Repo.DeleteChurchPartner)
+			protected.GET("/partners/", controllers.Repo.GetAllChurchPartner)
+			protected.PUT("/partner/", controllers.Repo.UpdateChurchPartner)
 
 			///Sermon Routes
 			protected.POST("/create-sermon/", controllers.Repo.CreateSermon)

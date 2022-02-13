@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
@@ -20,7 +21,7 @@ type CreatNewsPostRequest struct {
 }
 
 type GetAllNewsResponse struct {
-	Total int64          `json:"total"`
+	Total int            `json:"total"`
 	News  []*models.News `json:"news"`
 }
 
@@ -30,7 +31,6 @@ func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 	var uploadedInfo minio.UploadInfo
 
 	data := r.GetPayloadFromContext(ctx)
-	log.Println(data)
 	file, m, err := ctx.Request.FormFile("cover_image")
 	// form, _ := ctx.MultipartForm()
 	// files := form.File["other_images"]
@@ -41,7 +41,7 @@ func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 	// 	// Upload the file to specific dst.
 	// 	// c.SaveUploadedFile(file, dst)
 	// }
-
+	log.Println(file)
 	if err != nil {
 		restErr := errors.NewBadRequestError("Please attach image to the request")
 		ctx.JSON(restErr.Status, restErr)
@@ -73,15 +73,17 @@ func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 		SubTitle:   reqData.SubTitle,
 		Content:    reqData.Content,
 	}
-	news, errr := r.newsService.CreateNewsPost(value)
-	if errr != nil {
+	news, err := r.newsService.CreateNewsPost(value)
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing create news post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, news)
+	resp := NewStatusCreatedResponse("News created successfully", news)
+
+	ctx.JSON(resp.Status, resp)
 
 }
 
@@ -155,13 +157,13 @@ func (r *Repository) UpdateNewsPost(ctx *gin.Context) {
 }
 
 func (r *Repository) GetAllNewsPost(ctx *gin.Context) {
-	//cacheData, errr := services.CacheService.GetNewsList(context.Background(), "news-list")
+	//cacheData, err := services.CacheService.GetNewsList(context.Background(), "news-list")
 	//
-	//if errr == nil {
+	//if err == nil {
 	//	ctx.JSON(http.StatusOK, cacheData)
 	//	return
 	//}
-	news, count, err := r.newsService.GetAllNewsPost()
+	data, count, err := r.newsService.GetAllNewsPost()
 	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
@@ -171,11 +173,14 @@ func (r *Repository) GetAllNewsPost(ctx *gin.Context) {
 
 	// _ = services.CacheService.SetNewsList(context.Background(), news)
 
-	data := GetAllNewsResponse{
+	news := GetAllNewsResponse{
 		Total: count,
-		News:  news,
+		News:  data,
 	}
-	ctx.JSON(http.StatusOK, data)
+
+	resp := NewStatusOkResponse("Got news successfully", news)
+
+	ctx.JSON(resp.Status, resp)
 
 }
 
@@ -196,34 +201,23 @@ func (r *Repository) GetAllNewsPostByAuthor(ctx *gin.Context) {
 		return
 
 	}
-	news, count, errr := r.newsService.GetAllNewsPostByAuthor(uint(i))
-	if errr != nil {
+	news, count, err := r.newsService.GetAllNewsPostByAuthor(uint(i))
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
-	type GetAllNewsResponse2 struct {
-		Total int64          `json:"total"`
-		News  []*models.News `json:"news"`
-	}
-	data := GetAllNewsResponse2{
+	data := GetAllNewsResponse{
 		Total: count,
 		News:  news,
 	}
-	ctx.JSON(http.StatusOK, data)
-
+	resp := NewStatusOkResponse("All news by this author.", data)
+	ctx.JSON(resp.Status, resp)
 }
 
 func (r *Repository) DeleteNewsPost(ctx *gin.Context) {
 	id := ctx.Query("id")
-	value, _ := strconv.ParseInt(id, 10, 32)
-	if id == "" || value == 0 {
-		data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
 	i, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		data := errors.NewBadRequestError("Provide an id to the request.")
@@ -232,36 +226,27 @@ func (r *Repository) DeleteNewsPost(ctx *gin.Context) {
 		return
 
 	}
-	errr := r.newsService.DeleteNewsPost(uint(i))
-	if errr != nil {
+	err = r.newsService.DeleteNewsPost(uint(i))
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"Message": "Successfully deleted news",
-	})
+	resp := NewDeleteResponse("Successfully deleted news", nil)
+	ctx.JSON(resp.Status, resp)
 
 }
 
 func (r *Repository) GeSingleNewsPost(ctx *gin.Context) {
-	id := ctx.Query("id")
-	value, _ := strconv.ParseInt(id, 10, 32)
-	if id == "" || value == 0 {
-		data := errors.NewBadRequestError("Provide an id to the request.Id cannot be zero")
-		ctx.JSON(data.Status, data)
-		ctx.Abort()
-		return
-	}
+	id := ctx.Param("id")
+
 	i, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		data := errors.NewBadRequestError("Provide an id to the request.")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
-
 	}
 
 	//newsData, bg := services.CacheService.GetNews(context.Background(), "single-news")
@@ -271,15 +256,22 @@ func (r *Repository) GeSingleNewsPost(ctx *gin.Context) {
 	//	return
 	//}
 
-	news, errr := r.newsService.GetSingleNewsPost(uint(i))
-	if errr != nil {
+	news, err := r.newsService.GetSingleNewsPost(uint(i))
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			data := errors.NewNotFoundError("Not found")
+			ctx.JSON(data.Status, data)
+			ctx.Abort()
+			return
+		}
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
+	resp := NewStatusOkResponse("Get single new success.", news)
 	//_ = services.CacheService.SetNews(context.Background(), news)
-	ctx.JSON(http.StatusOK, news)
+	ctx.JSON(resp.Status, resp)
 
 }
 
@@ -293,7 +285,7 @@ func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {
 
 	}
 	data := payload.(*token.Payload)
-	user, err := r.userServices.GetUserByEmail(data.Username)
+	_, err := r.userServices.GetUserByEmail(data.Username)
 	if err != nil {
 		//log.Println(user)
 		data := errors.NewBadRequestError("Error Processing request")
@@ -301,9 +293,7 @@ func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {
 		ctx.Abort()
 
 	}
-	log.Println(user)
 	//TODO:upload news images
-
 	return data
 
 }

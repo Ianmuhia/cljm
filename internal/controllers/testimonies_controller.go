@@ -173,6 +173,7 @@ func (r *Repository) GetAllTestimoniesByAuthor(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, data)
 
 }
+
 func (r *Repository) GetAllTestimoniesByAuthorAdmin(ctx *gin.Context) {
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)

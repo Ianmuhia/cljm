@@ -6,8 +6,6 @@ import (
 	"go.uber.org/zap"
 )
 
-const CLIENT_URL = "http://localhost:8000"
-
 type AppConfig struct {
 	InfoLog                 *zap.Logger
 	ErrorLog                *zap.Logger
@@ -15,6 +13,7 @@ type AppConfig struct {
 	StorageBucket           string
 	PasswordResetCodeExpiry int
 	InProduction            bool
+	TokenLifeTime           int
 }
 
 func NewAppConfig(infoLog *zap.Logger, errorLog *zap.Logger) *AppConfig {

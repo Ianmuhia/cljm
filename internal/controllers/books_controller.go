@@ -192,13 +192,18 @@ func (r *Repository) GetAllBooksPost(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
 	data := GetAllBooksResponse{
 		Total: count,
 		Books: books,
 	}
+	resp := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Get all books success",
+		Status:    http.StatusOK,
+		Data:      data,
+	}
 
-	ctx.JSON(http.StatusOK, data)
+	ctx.JSON(resp.Status, resp)
 
 }
 

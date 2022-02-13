@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"maranatha_web/internal/config"
 	"maranatha_web/internal/controllers/token"
 	"maranatha_web/internal/utils/errors"
 )
@@ -16,7 +15,7 @@ import (
 // CORSMiddleware //
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", config.CLIENT_URL)
+		//c.Writer.Header().Set("Access-Control-Allow-Origin", "localho")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")

@@ -4,6 +4,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strconv"
 
 	"maranatha_web/internal/config"
 	"maranatha_web/internal/controllers"
@@ -27,6 +28,7 @@ func StartApplication() {
 		log.Fatal("Error  .env file")
 	}
 	jwtKey := os.Getenv("JwtSecret")
+	tokenLifeTime := os.Getenv("TLT")
 
 	//configure logger
 	zl := logger.GetLogger()
@@ -35,12 +37,18 @@ func StartApplication() {
 	_ = config.NewAppConfig(zl, zl)
 
 	//Create the new token maker
+	//
 	_, err = token.NewJWTMaker(jwtKey)
 	if err != nil {
-
 		return
 	}
-
+	//
+	//Token lifetime
+	intVar, err := strconv.Atoi(tokenLifeTime)
+	if err != nil {
+		log.Panicln(err)
+	}
+	app.TokenLifeTime = intVar
 	//Get database connection
 	db := repository.GetDatabaseConnection()
 	dao := repository.NewPostgresRepo(db, &app)
@@ -54,7 +62,7 @@ func StartApplication() {
 	//Get file storage connection
 	connection, bucketName, minioErr := filestorage.GetMinioConnection()
 	if minioErr != nil {
-		log.Panicln(err)
+		log.Panicln(minioErr)
 	}
 	filestorage.NewMinoRepo(connection, &app)
 	log.Printf("mino endpoint is %s", connection.EndpointURL())

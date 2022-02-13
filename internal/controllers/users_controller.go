@@ -497,9 +497,7 @@ type UpdateUerPasswordRequest struct {
 
 func (r *Repository) UpdateUserPassword(ctx *gin.Context) {
 	user := r.GetPayloadFromContext(ctx)
-
 	var req UpdateUerPasswordRequest
-
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)

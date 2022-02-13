@@ -36,12 +36,10 @@ func (ts *testimoniesService) GetAllTestimonies() ([]*models.Testimonies, int64,
 	data, count, err := ts.dao.NewTestimonyQuery().GetAllTestimonies()
 	for _, v := range data {
 		d := v.CreatedAt.Format(time.RFC822)
-
 		myDate, err := time.Parse(time.RFC822, d)
 		if err != nil {
 			panic(err)
 		}
-
 		v.CreatedAt = myDate
 		fmt.Println(v.CreatedAt.Format(time.RFC1123))
 	}

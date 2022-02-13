@@ -103,10 +103,12 @@ type books models.Books
 type genre models.Genre
 
 type prayer models.Prayer
-type churchEvent models.ChurchEvent
+
+//type churchEvent models.ChurchEvent
 type testimonies models.Testimonies
-type churchJob models.ChurchJob
-type volunteerChurchJob models.VolunteerChurchJob
+
+//type churchJob models.ChurchJob
+//type volunteerChurchJob models.VolunteerChurchJob
 
 func GetDatabaseConnection() *gorm.DB {
 
@@ -132,7 +134,7 @@ func GetDatabaseConnection() *gorm.DB {
 		Logger:                 logger.Default,
 	})
 
-	// MigrateTables(database)
+	//MigrateTables(database)
 
 	database.Logger.LogMode(logger.Info)
 	Client = database
@@ -153,10 +155,10 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 		&churchPartner{},
 		&sermon{},
 		&books{},
-		genre{},
-		&churchJob{},
-		&churchEvent{},
-		&volunteerChurchJob{},
+		&genre{},
+		//&churchJob{},
+		//&churchEvent{},
+		//&volunteerChurchJob{},
 		&prayer{},
 		&testimonies{},
 	); err != nil {

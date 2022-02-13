@@ -162,8 +162,8 @@ func (r *Repository) UpdateBook(ctx *gin.Context) {
 		Synopsis: reqData.Synopsis,
 		File:     uploadedInfo.Key,
 	}
-	errr := r.bookService.UpdateBooksPost(uint(i), booksData)
-	if errr != nil {
+	err = r.bookService.UpdateBooksPost(uint(i), booksData)
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing create books post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
@@ -178,9 +178,9 @@ func (r *Repository) UpdateBook(ctx *gin.Context) {
 }
 
 func (r *Repository) GetAllBooksPost(ctx *gin.Context) {
-	//cacheData, errr := services.CacheService.GetBooksList(context.Background(), "books-list")
+	//cacheData, err := services.CacheService.GetBooksList(context.Background(), "books-list")
 	//
-	//if errr == nil {
+	//if err == nil {
 	//	ctx.JSON(http.StatusOK, cacheData)
 	//	return
 	//}
@@ -219,8 +219,8 @@ func (r *Repository) DeleteBook(ctx *gin.Context) {
 		return
 
 	}
-	errr := r.bookService.DeleteBook(uint(i))
-	if errr != nil {
+	err = r.bookService.DeleteBook(uint(i))
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
@@ -262,8 +262,8 @@ func (r *Repository) GetSingleBookPost(ctx *gin.Context) {
 	//	return
 	//}
 
-	books, errr := r.bookService.GetSingleBooksPost(uint(i))
-	if errr != nil {
+	books, err := r.bookService.GetSingleBooksPost(uint(i))
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()

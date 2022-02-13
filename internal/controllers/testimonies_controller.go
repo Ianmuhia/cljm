@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -12,7 +13,9 @@ import (
 )
 
 type CreateTestimonyRequest struct {
+	//TODO:User can save notes and send them to cloud
 	Content string `json:"content" binding:"required"`
+	Title   string `json:"title" binding:"required"`
 }
 
 type GetAllTestimoniesResponse struct {
@@ -31,7 +34,8 @@ func (r *Repository) CreateTestimony(ctx *gin.Context) {
 	var req CreateTestimonyRequest
 	data := r.GetPayloadFromContext(ctx)
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		restErr := errors.NewBadRequestError("invalid json body")
+		log.Println(err)
+		restErr := errors.NewBadRequestError("invalid json body.provide all fields")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
@@ -42,11 +46,12 @@ func (r *Repository) CreateTestimony(ctx *gin.Context) {
 		return
 	}
 	postData := models.Testimonies{
-		Content:  req.Content,
 		AuthorID: user.ID,
+		Content:  req.Content,
+		Title:    req.Title,
 	}
-	_, errr := r.testimonyService.CreateTestimony(postData)
-	if errr != nil {
+	testimony, err := r.testimonyService.CreateTestimony(postData)
+	if err != nil {
 		data := errors.NewBadRequestError("Error Processing create testimonies post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
@@ -55,9 +60,10 @@ func (r *Repository) CreateTestimony(ctx *gin.Context) {
 	res := SuccessResponse{
 		TimeStamp: time.Now(),
 		Message:   "Testimony created successfully",
-		Status:    http.StatusOK,
+		Status:    http.StatusCreated,
+		Data:      testimony,
 	}
-	ctx.JSON(http.StatusCreated, res)
+	ctx.JSON(res.Status, res)
 
 }
 

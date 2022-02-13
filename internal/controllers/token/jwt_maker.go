@@ -73,7 +73,7 @@ func (maker *JWTMaker) CreateRefreshToken(email string, duration time.Duration, 
 		return "", err
 	}
 
-	jwtrefreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+	refresherToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 
-	return jwtrefreshToken.SignedString([]byte(maker.secretKey))
+	return refresherToken.SignedString([]byte(maker.secretKey))
 }

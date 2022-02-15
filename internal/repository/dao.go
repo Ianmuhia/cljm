@@ -134,7 +134,7 @@ func GetDatabaseConnection() *gorm.DB {
 		Logger:                 logger.Default,
 	})
 
-	//MigrateTables(database)
+	// MigrateTables(database)
 
 	database.Logger.LogMode(logger.Info)
 	Client = database

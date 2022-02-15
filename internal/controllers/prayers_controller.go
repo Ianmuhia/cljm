@@ -10,7 +10,7 @@ import (
 )
 
 type CreatePrayerRequest struct {
-	Content string `json:"content" binding:"required"`
+	Content string `json:"content"`
 }
 
 type GetAllPrayerRequestResponse struct {

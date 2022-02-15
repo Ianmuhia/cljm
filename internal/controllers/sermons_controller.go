@@ -1,12 +1,13 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/minio/minio-go/v7"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
 )
 
 type CreatSermonRequest struct {
@@ -24,8 +25,8 @@ type UpdateSermonRequest struct {
 }
 
 type GetAllSermonsResponse struct {
-	Total   int64           `json:"total"`
-	Sermons []models.Sermon `json:"sermons"`
+	Total   int64            `json:"total"`
+	Sermons []*models.Sermon `json:"sermons"`
 }
 
 func (r *Repository) CreateSermon(ctx *gin.Context) {

@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"log"
+	"maranatha_web/internal/config"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
 	"time"
@@ -10,7 +11,7 @@ import (
 
 type SermonService interface {
 	CreateSermon(partnersModel models.Sermon) (*models.Sermon, error)
-	GetAllSermon() ([]models.Sermon, int64, error)
+	GetAllSermon() ([]*models.Sermon, int64, error)
 	DeleteSermon(id uint) error
 	GetSingleSermon(id uint) (*models.Sermon, error)
 	UpdateSermon(id uint, newModel models.Sermon) error
@@ -18,10 +19,11 @@ type SermonService interface {
 
 type sermonService struct {
 	dao repository.DAO
+	cfg *config.AppConfig
 }
 
-func NewSermonService(dao repository.DAO) SermonService {
-	return &sermonService{dao: dao}
+func NewSermonService(dao repository.DAO, cfg *config.AppConfig) SermonService {
+	return &sermonService{dao: dao, cfg: cfg}
 }
 
 func (ss *sermonService) CreateSermon(churchPartnersModel models.Sermon) (*models.Sermon, error) {
@@ -32,10 +34,10 @@ func (ss *sermonService) CreateSermon(churchPartnersModel models.Sermon) (*model
 	return &churchPartnersModel, nil
 }
 
-func (ss *sermonService) GetAllSermon() ([]models.Sermon, int64, error) {
+func (ss *sermonService) GetAllSermon() ([]*models.Sermon, int64, error) {
 	data, count, err := ss.dao.NewSermonQuery().GetAllSermon()
 	for _, v := range data {
-		v.CoverImage = fmt.Sprintf("http://0.0.0.0:9000/clj/%s", v.CoverImage)
+		v.CoverImage = fmt.Sprintf("%s/%s/%s", ss.cfg.StorageURL.String(), ss.cfg.StorageBucket, v.CoverImage)
 
 		d := v.CreatedAt.Format(time.RFC822)
 

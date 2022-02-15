@@ -1,10 +1,11 @@
 package app
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 
 	"maranatha_web/internal/config"
 	"maranatha_web/internal/controllers"
@@ -85,7 +86,7 @@ func StartApplication() {
 	newsService := services.NewNewsService(dao, &app)
 	partnersService := services.NewChurchPartnersService(dao, &app)
 	prayerRequestService := services.NewPrayerRequestService(dao)
-	sermonServices := services.NewSermonService(dao)
+	sermonServices := services.NewSermonService(dao, &app)
 	testimonyService := services.NewTestimoniesService(dao)
 	usersService := services.NewUsersService(dao)
 	volunteerJobService := services.NewVolunteerChurchJobService(dao)

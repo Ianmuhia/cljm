@@ -17,6 +17,11 @@ type CreateTestimonyRequest struct {
 	Content string `json:"content" binding:"required"`
 	Title   string `json:"title" binding:"required"`
 }
+type updateTestimonyRequest struct {
+	//TODO:User can save notes and send the"required"m to cloud
+	Content string `json:"content"`
+	Title   string `json:"title"`
+}
 
 type GetAllTestimoniesResponse struct {
 	Total       int64                 `json:"total"`
@@ -78,7 +83,7 @@ func (r *Repository) UpdateTestimony(ctx *gin.Context) {
 		return
 
 	}
-	var req CreateTestimonyRequest
+	var req updateTestimonyRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)
@@ -87,6 +92,7 @@ func (r *Repository) UpdateTestimony(ctx *gin.Context) {
 	}
 	testimoniesData := models.Testimonies{
 		Content: req.Content,
+		Title:   req.Title,
 	}
 	errr := r.testimonyService.UpdateTestimony(uint(i), testimoniesData)
 	if errr != nil {

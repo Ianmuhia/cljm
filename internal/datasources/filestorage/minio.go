@@ -82,9 +82,11 @@ func GetMinioConnection() (*minio.Client, string, error) {
 //	UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error)
 //}
 
-//TODO:Add this upload file to services
+// UploadFile TODO:Add this upload file to services
 func (s *MinioRepo) UploadFile(objectName string, fileBuffer multipart.File, fileSize int64, contentType string) (minio.UploadInfo, error) {
 	ctx := context.Background()
+	//var fv minio.S3
+
 	// Upload the zip file with PutObject
 	info, err := s.MinioStorage.PutObject(ctx, "clj", objectName, fileBuffer, fileSize, minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {

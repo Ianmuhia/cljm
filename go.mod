@@ -31,6 +31,7 @@ require (
 
 require (
 	firebase.google.com/go v3.13.0+incompatible
+	github.com/aws/aws-sdk-go v1.42.52
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.7
 	google.golang.org/api v0.67.0
@@ -42,17 +43,6 @@ require (
 	cloud.google.com/go/firestore v1.6.1 // indirect
 	cloud.google.com/go/iam v0.1.1 // indirect
 	cloud.google.com/go/storage v1.10.0 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.13.0 // indirect
-	github.com/aws/aws-sdk-go-v2/config v1.13.1 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.8.0 // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.10.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.4 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.2.0 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.5 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.7.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.9.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.14.0 // indirect
-	github.com/aws/smithy-go v1.10.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
@@ -73,6 +63,7 @@ require (
 	github.com/jackc/pgtype v1.9.0 // indirect
 	github.com/jackc/pgx/v4 v4.14.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
 	github.com/klauspost/compress v1.13.5 // indirect
@@ -90,7 +81,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect

@@ -14,6 +14,8 @@ func SetupRouter() *gin.Engine {
 
 	api := router.Group("/api")
 	{
+		api.POST("/batch-upload/", controllers.Repo.BatchUpload)
+
 		public := api.Group("/auth")
 		{
 			public.POST("/users/login/", controllers.Repo.Login)
@@ -34,6 +36,7 @@ func SetupRouter() *gin.Engine {
 			protected.POST("/update-profile-image/", controllers.Repo.UpdateUserProfileImage)
 			protected.GET("/get-users/", controllers.Repo.GetAllUsers)
 			protected.POST("/update-password/", controllers.Repo.UpdateUserPassword)
+			protected.POST("/update-profile/", controllers.Repo.UpdateUserDetails)
 
 			///News Routes
 			protected.POST("/news/", controllers.Repo.CreatNewsPost)

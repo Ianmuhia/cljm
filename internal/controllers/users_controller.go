@@ -341,7 +341,6 @@ func (r *Repository) ForgotPassword(ctx *gin.Context) {
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
-
 	}
 
 	// store the password reset code to db
@@ -369,7 +368,7 @@ func (r *Repository) ForgotPassword(ctx *gin.Context) {
 		return
 	}
 
-	data := &SuccessResponse{
+	data := SuccessResponse{
 		TimeStamp: time.Now(),
 		Message:   "Password reset code sent successfully",
 		Status:    http.StatusOK,
@@ -494,6 +493,45 @@ func (r *Repository) ResetPassword(ctx *gin.Context) {
 
 type UpdateUerPasswordRequest struct {
 	NewPassword string `json:"new_password"`
+}
+
+type updateUserDetails struct {
+	Username string `json:"username"`
+	FullName string `json:"full_name"`
+	Email    string `json:"email"`
+}
+
+func (r *Repository) UpdateUserDetails(ctx *gin.Context) {
+
+	user := r.GetPayloadFromContext(ctx)
+	var req updateUserDetails
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		restErr := errors.NewBadRequestError("invalid json body")
+		log.Println(err)
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	um := models.User{
+		UserName: req.Username,
+		FullName: req.FullName,
+		Email:    req.Email,
+	}
+	err := r.userServices.UpdateUserDetails(user.ID, um)
+	if err != nil {
+		restErr := errors.NewBadRequestError("Unable to update user details.")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	data := SuccessResponse{
+		TimeStamp: time.Now(),
+		Message:   "Details updated  successfully",
+		Status:    http.StatusOK,
+		Data:      nil,
+	}
+
+	ctx.JSON(http.StatusOK, data)
 }
 
 func (r *Repository) UpdateUserPassword(ctx *gin.Context) {

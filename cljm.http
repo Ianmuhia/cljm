@@ -19,7 +19,7 @@ Content-Type: application/json
 
 
 {
-  "password": "*#*Johnte2536",
+  "password": "password",
   "email": "ianmuhia3@gmail.com"
 }
 > {%

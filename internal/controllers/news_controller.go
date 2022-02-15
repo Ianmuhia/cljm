@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
+	"gorm.io/gorm"
 
 	"maranatha_web/internal/controllers/token"
 	"maranatha_web/internal/models"
@@ -25,6 +25,7 @@ type GetAllNewsResponse struct {
 	News  []*models.News `json:"news"`
 }
 
+//TODO:Update user details
 func (r *Repository) CreatNewsPost(ctx *gin.Context) {
 	type req CreatNewsPostRequest
 	var reqData CreatNewsPostRequest
@@ -273,6 +274,47 @@ func (r *Repository) GeSingleNewsPost(ctx *gin.Context) {
 	//_ = services.CacheService.SetNews(context.Background(), news)
 	ctx.JSON(resp.Status, resp)
 
+}
+
+func (r *Repository) BatchUpload(ctx *gin.Context) {
+	var _ minio.PutObjectOptions
+
+	form, _ := ctx.MultipartForm()
+	files := form.File["other_images"]
+	log.Println(len(files))
+	for _, file := range files {
+		log.Println(file.Filename)
+		open, err := file.Open()
+		if err != nil {
+			return
+		}
+		err = open.Close()
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		go func() {
+			uploadFile, err := r.MinoStorage.UploadFile(file.Filename, open, file.Size, "")
+			if err != nil {
+				log.Println(err)
+			}
+			log.Println(uploadFile)
+		}()
+		if err != nil {
+			restErr := errors.NewBadRequestError("could not upload image to server")
+			ctx.JSON(restErr.Status, restErr)
+			ctx.Abort()
+			return
+
+		}
+		// Upload the file to specific dst.
+		//err := ctx.SaveUploadedFile(file, "logs")
+		//if err != nil {
+		//	log.Println(err)
+		//	return
+		//}
+	}
 }
 
 func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {

@@ -118,7 +118,7 @@ func StartApplication() {
 
 	r := SetupRouter()
 
-	err = r.Run("192.168.1.66:8090")
+	err = r.Run("192.168.2.70:8090")
 	if err != nil {
 		log.Println(err)
 		panic(err)

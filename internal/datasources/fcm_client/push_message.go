@@ -2,10 +2,11 @@ package fcm_client
 
 import (
 	"context"
+	"log"
+
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/messaging"
 	"google.golang.org/api/option"
-	"log"
 )
 
 var ctx context.Context
@@ -19,7 +20,7 @@ func GetFcmConnection() *messaging.Client {
 	//	return
 	//}
 	// or pass the file path directly
-	opts := []option.ClientOption{option.WithCredentialsFile("/home/wise/Documents/web/cljm/internal/datasources/fcm_client/google-services.json")}
+	opts := []option.ClientOption{option.WithCredentialsFile("/home/ianmuhia/projects/personal/golang/clj_maranatha/cljm/internal/datasources/fcm_client/google-services.json")}
 	//
 	// if we have a raw JSON credentials value, we use the FIREBASE_CONFIG env var
 	//err = os.Setenv("FIREBASE_CONFIG", "{...}")

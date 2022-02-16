@@ -34,7 +34,7 @@ func init() {
 			EncodeName:       nil,
 			ConsoleSeparator: "",
 		},
-		OutputPaths:      []string{"stdout", "/home/wise/Documents/web/cljm/logs/cljm.log.json"},
+		OutputPaths:      []string{"stdout", "./logs/cljm.log.json"},
 		ErrorOutputPaths: nil,
 		InitialFields:    nil,
 	}

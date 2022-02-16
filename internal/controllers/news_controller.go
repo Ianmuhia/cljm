@@ -240,7 +240,7 @@ func (r *Repository) DeleteNewsPost(ctx *gin.Context) {
 }
 
 func (r *Repository) GeSingleNewsPost(ctx *gin.Context) {
-	id := ctx.Param("id")
+	id := ctx.Query("id")
 
 	i, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {

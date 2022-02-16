@@ -43,7 +43,7 @@ func SetupRouter() *gin.Engine {
 			protected.POST("/get-author-news/", controllers.Repo.GetAllNewsPostByAuthor)
 			protected.GET("/news/", controllers.Repo.GetAllNewsPost)
 			protected.DELETE("/news/", controllers.Repo.DeleteNewsPost)
-			protected.GET("/news/:id", controllers.Repo.GeSingleNewsPost)
+			protected.GET("/news-detail/", controllers.Repo.GeSingleNewsPost)
 			protected.PUT("/news/", controllers.Repo.UpdateNewsPost)
 
 			///Church Partners Routes

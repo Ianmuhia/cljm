@@ -5,15 +5,14 @@ import (
 	"encoding/gob"
 	"fmt"
 	"log"
-	redis_db "maranatha_web/internal/datasources/redis"
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"github.com/gin-gonic/gin"
-
 	"maranatha_web/internal/controllers/token"
+	redis_db "maranatha_web/internal/datasources/redis"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/services"
 	"maranatha_web/internal/utils"
@@ -290,7 +289,7 @@ func (r *Repository) UpdateUserProfileImage(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-
+	//TODO:Add response model
 	ctx.JSON(http.StatusCreated, "Profile image upload successful")
 
 }

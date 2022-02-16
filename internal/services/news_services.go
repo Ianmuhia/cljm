@@ -3,10 +3,11 @@ package services
 import (
 	"fmt"
 	"log"
+	"time"
+
 	"maranatha_web/internal/config"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
-	"time"
 )
 
 type NewsService interface {
@@ -66,7 +67,9 @@ func (ns *newsService) DeleteNewsPost(id uint) error {
 func (ns *newsService) GetSingleNewsPost(id uint) (*models.News, error) {
 	news, err := ns.dao.NewNewsQuery().GetSingleNewsPost(id)
 	url := fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, news.CoverImage)
+	url2 := fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, news.Author.ProfileImage)
 	news.CoverImage = url
+	news.Author.ProfileImage = url2
 	if err != nil {
 		log.Println(err)
 		return news, err

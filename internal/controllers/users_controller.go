@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"gorm.io/gorm"
 	"log"
 	redis_db "maranatha_web/internal/datasources/redis"
 	"net/http"
 	"time"
+
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 
@@ -186,8 +187,8 @@ func (r *Repository) Login(ctx *gin.Context) {
 }
 
 type verifyEmailRequest struct {
-	Code  string `json:"code" binding:"required"`
-	Email string `json:"email" binding:"required"`
+	Code  string `json:"code"`
+	Email string `json:"email"`
 }
 
 type verifyEmailResponse struct {
@@ -199,6 +200,7 @@ func (r *Repository) VerifyEmailCode(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
+		log.Print(err)
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
@@ -232,6 +234,7 @@ func (r *Repository) VerifyEmailCode(ctx *gin.Context) {
 	}
 
 	resp := errors.NewBadRequestError("Email verification failed invalid code provided")
+	log.Println(resp)
 	ctx.JSON(resp.Status, resp)
 
 }

@@ -12,7 +12,7 @@ type SermonQuery interface {
 	DeleteSermon(id uint) error
 	GetSingleSermon(id uint) (*models.Sermon, error)
 	UpdateSermon(id uint, sermonModel models.Sermon) (*models.Sermon, error)
-	GetAllSermon() ([]models.Sermon, int64, error)
+	GetAllSermon() ([]*models.Sermon, int64, error)
 }
 
 type sermonQuery struct {
@@ -53,8 +53,8 @@ func (sq *sermonQuery) UpdateSermon(id uint, sermonModel models.Sermon) (*models
 	}
 	return &sermonModel, nil
 }
-func (sq *sermonQuery) GetAllSermon() ([]models.Sermon, int64, error) {
-	var sermons []models.Sermon
+func (sq *sermonQuery) GetAllSermon() ([]*models.Sermon, int64, error) {
+	var sermons []*models.Sermon
 	var count int64
 	val := sq.repo.DB.Debug().Order("created_at desc").Find(&sermons).Error
 	if val != nil {

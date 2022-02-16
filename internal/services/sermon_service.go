@@ -1,14 +1,17 @@
 package services
 
 import (
+	"fmt"
 	"log"
+	"maranatha_web/internal/config"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
+	"time"
 )
 
 type SermonService interface {
 	CreateSermon(partnersModel models.Sermon) (*models.Sermon, error)
-	GetAllSermon() ([]models.Sermon, int64, error)
+	GetAllSermon() ([]*models.Sermon, int64, error)
 	DeleteSermon(id uint) error
 	GetSingleSermon(id uint) (*models.Sermon, error)
 	UpdateSermon(id uint, newModel models.Sermon) error
@@ -16,10 +19,11 @@ type SermonService interface {
 
 type sermonService struct {
 	dao repository.DAO
+	cfg *config.AppConfig
 }
 
-func NewSermonService(dao repository.DAO) SermonService {
-	return &sermonService{dao: dao}
+func NewSermonService(dao repository.DAO, cfg *config.AppConfig) SermonService {
+	return &sermonService{dao: dao, cfg: cfg}
 }
 
 func (ss *sermonService) CreateSermon(churchPartnersModel models.Sermon) (*models.Sermon, error) {
@@ -30,8 +34,22 @@ func (ss *sermonService) CreateSermon(churchPartnersModel models.Sermon) (*model
 	return &churchPartnersModel, nil
 }
 
-func (ss *sermonService) GetAllSermon() ([]models.Sermon, int64, error) {
+func (ss *sermonService) GetAllSermon() ([]*models.Sermon, int64, error) {
 	data, count, err := ss.dao.NewSermonQuery().GetAllSermon()
+	for _, v := range data {
+		v.CoverImage = fmt.Sprintf("%s/%s/%s", ss.cfg.StorageURL.String(), ss.cfg.StorageBucket, v.CoverImage)
+
+		d := v.CreatedAt.Format(time.RFC822)
+
+		myDate, err := time.Parse(time.RFC822, d)
+		if err != nil {
+			panic(err)
+		}
+
+		v.CreatedAt = myDate
+		fmt.Println(v.CreatedAt.Format(time.RFC1123))
+
+	}
 	if err != nil {
 		return data, count, err
 
@@ -48,9 +66,10 @@ func (ss *sermonService) DeleteSermon(id uint) error {
 	}
 	return nil
 }
-
 func (ss *sermonService) GetSingleSermon(id uint) (*models.Sermon, error) {
 	data, err := ss.dao.NewSermonQuery().GetSingleSermon(id)
+	url := fmt.Sprintf("http://0.0.0.0:9000/clj/%s", data.CoverImage)
+	data.CoverImage = url
 	if err != nil {
 		log.Println(err)
 		return data, err
@@ -59,7 +78,9 @@ func (ss *sermonService) GetSingleSermon(id uint) (*models.Sermon, error) {
 }
 
 func (ss *sermonService) UpdateSermon(id uint, newModel models.Sermon) error {
-	_, err := ss.dao.NewSermonQuery().UpdateSermon(id, newModel)
+	sermon, err := ss.dao.NewSermonQuery().UpdateSermon(id, newModel)
+	url := fmt.Sprintf("http://0.0.0.0:9000/clj/%s", sermon.CoverImage)
+	sermon.CoverImage = url
 	if err != nil {
 		log.Println(err)
 		return err

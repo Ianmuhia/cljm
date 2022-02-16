@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	"github.com/gin-gonic/gin"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/utils/errors"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
 )
 
 type CreatSermonRequest struct {
@@ -23,41 +25,65 @@ type UpdateSermonRequest struct {
 }
 
 type GetAllSermonsResponse struct {
-	Total   int64           `json:"total"`
-	Sermons []models.Sermon `json:"sermons"`
+	Total   int64            `json:"total"`
+	Sermons []*models.Sermon `json:"sermons"`
 }
 
 func (r *Repository) CreateSermon(ctx *gin.Context) {
-	var req CreatSermonRequest
+	type req CreatSermonRequest
+	var reqData CreatSermonRequest
+	var uploadedInfo minio.UploadInfo
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	file, m, err := ctx.Request.FormFile("cover_image")
 
-		restErr := errors.NewBadRequestError("invalid json body")
+	if err != nil {
+		restErr := errors.NewBadRequestError("Please attach image to the request")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
 
-	value := models.Sermon{
-		Title:    req.Title,
-		Url:      req.Url,
-		DatePub:  req.DatePub,
-		Duration: req.Duration,
+	postData := req{
+		Title:    ctx.PostForm("title"),
+		Url:      ctx.PostForm("url"),
+		DatePub:  ctx.PostForm("date_pub"),
+		Duration: ctx.PostForm("duration"),
 	}
-	partner, errr := r.sermonService.CreateSermon(value)
-	if errr != nil {
-		data := errors.NewBadRequestError("Error Processing create sermon request")
+	reqData = CreatSermonRequest(postData)
+	fileContentType := m.Header["Content-Type"][0]
+
+	uploadFile, err := r.MinoStorage.UploadFile(m.Filename, file, m.Size, fileContentType)
+	if err != nil {
+		restErr := errors.NewBadRequestError("could not upload image to server")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+	uploadedInfo = uploadFile
+	sermonData := models.Sermon{
+		Title:      reqData.Title,
+		Url:        reqData.Url,
+		DatePub:    reqData.DatePub,
+		Duration:   reqData.Duration,
+		CoverImage: uploadedInfo.Key,
+	}
+	sermon, err := r.sermonService.CreateSermon(sermonData)
+	if err != nil {
+		data := errors.NewBadRequestError("Error Processing creating sermon post request")
 		ctx.JSON(data.Status, data)
 		ctx.Abort()
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, partner)
+	ctx.JSON(http.StatusCreated, sermon)
 
 }
 
 func (r *Repository) UpdateSermon(ctx *gin.Context) {
-	var req UpdateSermonRequest
+	type req UpdateSermonRequest
+	var reqData UpdateSermonRequest
+	var uploadedInfo minio.UploadInfo
 
 	id := ctx.Query("id")
 	value, _ := strconv.ParseInt(id, 10, 32)
@@ -75,22 +101,42 @@ func (r *Repository) UpdateSermon(ctx *gin.Context) {
 		return
 
 	}
+	file, m, err := ctx.Request.FormFile("cover_image")
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		restErr := errors.NewBadRequestError("invalid json body")
+	if err != nil {
+		restErr := errors.NewBadRequestError("Please attach image to the request")
 		ctx.JSON(restErr.Status, restErr)
 		ctx.Abort()
 		return
 	}
 
-	sermon := models.Sermon{
-		Title:    req.Title,
-		Url:      req.Url,
-		DatePub:  req.DatePub,
-		Duration: req.Duration,
+	postData := req{
+		Title:    ctx.PostForm("title"),
+		Url:      ctx.PostForm("url"),
+		DatePub:  ctx.PostForm("date_pub"),
+		Duration: ctx.PostForm("duration"),
+	}
+	reqData = UpdateSermonRequest(postData)
+	fileContentType := m.Header["Content-Type"][0]
+
+	uploadFile, err := r.MinoStorage.UploadFile(m.Filename, file, m.Size, fileContentType)
+	if err != nil {
+		restErr := errors.NewBadRequestError("could not upload image to server")
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+
+	}
+	uploadedInfo = uploadFile
+	sermonData := models.Sermon{
+		Title:      reqData.Title,
+		Url:        reqData.Url,
+		DatePub:    reqData.DatePub,
+		Duration:   reqData.Duration,
+		CoverImage: uploadedInfo.Key,
 	}
 
-	errr := r.sermonService.UpdateSermon(uint(i), sermon)
+	errr := r.sermonService.UpdateSermon(uint(i), sermonData)
 	if errr != nil {
 		data := errors.NewBadRequestError("Error Processing update partner request")
 		ctx.JSON(data.Status, data)

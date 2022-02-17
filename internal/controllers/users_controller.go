@@ -526,14 +526,9 @@ func (r *Repository) UpdateUserDetails(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	data := SuccessResponse{
-		TimeStamp: time.Now(),
-		Message:   "Details updated  successfully",
-		Status:    http.StatusOK,
-		Data:      nil,
-	}
+	data := NewStatusOkResponse("Successfully updated profile", nil)
 
-	ctx.JSON(http.StatusOK, data)
+	ctx.JSON(data.Status, data)
 }
 
 func (r *Repository) UpdateUserPassword(ctx *gin.Context) {

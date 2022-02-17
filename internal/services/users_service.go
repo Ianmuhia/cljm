@@ -18,6 +18,7 @@ type usersService struct {
 
 type UsersService interface {
 	GetUserByEmail(email string) (*models.User, error)
+	GetUserByID(id uint) (*models.User, error)
 	CreateUser(models.User) error
 	UpdateUserStatus(email string) error
 	UpdateUserImage(email, imageName string) error
@@ -42,6 +43,13 @@ func (us *usersService) CreateUser(user models.User) error {
 
 func (us *usersService) GetUserByEmail(email string) (*models.User, error) {
 	user, err := us.dao.NewUserQuery().GetUserByEmail(email)
+	if err != nil {
+		return user, err
+	}
+	return user, err
+}
+func (us *usersService) GetUserByID(id uint) (*models.User, error) {
+	user, err := us.dao.NewUserQuery().GetUserByID(id)
 	if err != nil {
 		return user, err
 	}

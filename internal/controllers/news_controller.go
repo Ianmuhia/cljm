@@ -327,7 +327,7 @@ func (r *Repository) GetPayloadFromContext(ctx *gin.Context) *token.Payload {
 
 	}
 	data := payload.(*token.Payload)
-	_, err := r.userServices.GetUserByEmail(data.Username)
+	_, err := r.userServices.GetUserByID(data.ID)
 	if err != nil {
 		//log.Println(user)
 		data := errors.NewBadRequestError("Error Processing request")

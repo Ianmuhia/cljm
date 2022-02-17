@@ -9,6 +9,7 @@ import (
 
 type UserQuery interface {
 	GetUserByEmail(email string) (*models.User, error)
+	GetUserByID(id uint) (*models.User, error)
 	UpdateVerifiedUserStatus(param string) error
 	Create(user *models.User) error
 	GetAllUsers() (int, []*models.User, error)
@@ -24,6 +25,16 @@ type userQuery struct {
 func (uq *userQuery) GetUserByEmail(email string) (*models.User, error) {
 	var user models.User
 	err := uq.repo.DB.Where("email = ?", email).First(&user).Error
+	if err != nil {
+		uq.repo.App.ErrorLog.Error("error when trying to get user", zap.Any("error", err))
+		return &user, err
+	}
+	return &user, nil
+}
+
+func (uq *userQuery) GetUserByID(id uint) (*models.User, error) {
+	var user models.User
+	err := uq.repo.DB.Where("id = ?", id).First(&user).Error
 	if err != nil {
 		uq.repo.App.ErrorLog.Error("error when trying to get user", zap.Any("error", err))
 		return &user, err

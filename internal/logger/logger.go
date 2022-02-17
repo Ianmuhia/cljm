@@ -34,7 +34,7 @@ func init() {
 			EncodeName:       nil,
 			ConsoleSeparator: "",
 		},
-		OutputPaths:      []string{"stdout", "./logs/cljm.log.json"},
+		OutputPaths:      []string{"stdout"},
 		ErrorOutputPaths: nil,
 		InitialFields:    nil,
 	}

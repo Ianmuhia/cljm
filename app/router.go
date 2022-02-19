@@ -1,6 +1,9 @@
 package app
 
 import (
+	"time"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"maranatha_web/internal/controllers"
@@ -9,6 +12,15 @@ import (
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT", "PATCH, POST, HEAD, GET, OPTIONS"},
+		AllowHeaders:     []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"},
+		ExposeHeaders:    []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	// router.Use(middleware.CORSMiddleware())
 
 	_ = router.SetTrustedProxies([]string{"0.0.0.0", "localhost"})
 
@@ -29,10 +41,10 @@ func SetupRouter() *gin.Engine {
 
 		// here
 		protected := api.Group("/protected").Use(middleware.AuthMiddleware())
-		// protected := api.Group("/protected")
+
 		{
 			///Users Routes
-			//protected.GET("/profile/", controllers.Repo.TryAuthMiddlewareMiddleware)
+			protected.GET("/get-user/", controllers.Repo.GetUser)
 			protected.POST("/update-profile-image/", controllers.Repo.UpdateUserProfileImage)
 			protected.GET("/get-users/", controllers.Repo.GetAllUsers)
 			protected.POST("/update-password/", controllers.Repo.UpdateUserPassword)

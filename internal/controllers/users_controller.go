@@ -21,10 +21,11 @@ import (
 )
 
 type createUserRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required,min=6"`
-	FullName string `json:"full_name" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
+	Username        string `json:"username" binding:"required"`
+	Password        string `json:"password" binding:"required,min=6"`
+	PasswordConfirm string `json:"password_confirm" binding:"required,min=6"`
+	FullName        string `json:"full_name" binding:"required"`
+	Email           string `json:"email" binding:"required,email"`
 }
 
 type userResponse struct {
@@ -51,29 +52,40 @@ func newUserResponse(user *models.User) userResponse {
 }
 
 //RegisterUser new user
-func (r *Repository) RegisterUser(c *gin.Context) {
+func (r *Repository) RegisterUser(ctx *gin.Context) {
 
-	var registerModel createUserRequest
+	var req createUserRequest
 
-	if err := c.ShouldBindJSON(&registerModel); err != nil {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		log.Println(err)
 		restErr := errors.NewBadRequestError("invalid json body")
-		c.JSON(restErr.Status, restErr)
-		c.Abort()
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
 		return
 	}
 
+	if req.Password != req.PasswordConfirm {
+		r.App.ErrorLog.Error("password and password re-enter did not match")
+		e := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		ctx.JSON(e.Status, e)
+		ctx.Abort()
+		return
+
+	}
+	newPassword := crypto_utils.Hash(req.Password)
+
 	user := models.User{
-		UserName:     registerModel.Username,
-		FullName:     registerModel.FullName,
-		Email:        registerModel.Email,
-		PasswordHash: registerModel.Password,
+		UserName:     req.Username,
+		FullName:     req.FullName,
+		Email:        req.Email,
+		PasswordHash: newPassword,
 	}
 	saveErr := r.userServices.CreateUser(user)
 
 	if saveErr != nil {
 		err := errors.NewBadRequestError("Could not save user.")
-		c.JSON(err.Status, saveErr)
-		c.Abort()
+		ctx.JSON(err.Status, saveErr)
+		ctx.Abort()
 		return
 	}
 
@@ -103,7 +115,7 @@ func (r *Repository) RegisterUser(c *gin.Context) {
 		Message:  message,
 		EmailUrl: "localhost:8090/api/users/",
 	}
-	c.JSON(http.StatusOK, response)
+	ctx.JSON(http.StatusOK, response)
 }
 
 //
@@ -256,6 +268,21 @@ func (r *Repository) GetAllUsers(ctx *gin.Context) {
 		Users: users,
 	}
 	ctx.JSON(http.StatusOK, resp)
+}
+
+func (r *Repository) GetUser(ctx *gin.Context) {
+	user := r.GetPayloadFromContext(ctx)
+
+	data, err := r.userServices.GetUserByID(user.ID)
+	if err != nil {
+		restErr := errors.NewNotFoundError("user does not exits")
+		log.Print(err)
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	res := NewStatusOkResponse("Successfully got user", data)
+	ctx.JSON(res.Status, res)
 }
 
 func (r *Repository) UpdateUserProfileImage(ctx *gin.Context) {

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -284,6 +285,22 @@ func (r *Repository) GetUser(ctx *gin.Context) {
 	res := NewStatusOkResponse("Successfully got user", data)
 	ctx.JSON(res.Status, res)
 }
+func (r *Repository) DeleteUser(ctx *gin.Context) {
+	r.GetPayloadFromContext(ctx)
+
+	id, _ := strconv.Atoi(ctx.Param("id"))
+
+	err := r.userServices.DeleteUser(uint(id))
+	if err != nil {
+		restErr := errors.NewNotFoundError("user does not exits")
+		log.Print(err)
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
+		return
+	}
+	res := NewStatusOkResponse("Successfully got user", nil)
+	ctx.JSON(res.Status, res)
+}
 
 func (r *Repository) UpdateUserProfileImage(ctx *gin.Context) {
 	data := r.GetPayloadFromContext(ctx)
@@ -520,7 +537,7 @@ func (r *Repository) ResetPassword(ctx *gin.Context) {
 
 }
 
-type UpdateUerPasswordRequest struct {
+type UpdateUserPasswordRequest struct {
 	NewPassword string `json:"new_password"`
 }
 
@@ -560,7 +577,9 @@ func (r *Repository) UpdateUserDetails(ctx *gin.Context) {
 
 func (r *Repository) UpdateUserPassword(ctx *gin.Context) {
 	user := r.GetPayloadFromContext(ctx)
-	var req UpdateUerPasswordRequest
+
+	var req UpdateUserPasswordRequest
+
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		restErr := errors.NewBadRequestError("invalid json body")
 		ctx.JSON(restErr.Status, restErr)

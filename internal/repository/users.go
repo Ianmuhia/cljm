@@ -1,9 +1,11 @@
 package repository
 
 import (
+	"log"
+
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"log"
+
 	"maranatha_web/internal/models"
 )
 
@@ -16,6 +18,7 @@ type UserQuery interface {
 	UpdateUserImage(email, imageName string) error
 	UpdateUser(id uint, userModel models.User) error
 	UpdateUserPassword(id uint, newPasswd string) error
+	DeleteUser(id uint) error
 }
 
 type userQuery struct {
@@ -40,6 +43,15 @@ func (uq *userQuery) GetUserByID(id uint) (*models.User, error) {
 		return &user, err
 	}
 	return &user, nil
+}
+func (uq *userQuery) DeleteUser(id uint) error {
+	var user models.User
+	err := uq.repo.DB.Where("id = ?", id).Delete(&user).Error
+	if err != nil {
+		uq.repo.App.ErrorLog.Error("error when trying to delete user", zap.Any("error", err))
+		return err
+	}
+	return nil
 }
 
 func (uq *userQuery) UpdateUser(id uint, userModel models.User) error {

@@ -47,6 +47,7 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-user/", controllers.Repo.GetUser)
 			protected.POST("/update-profile-image/", controllers.Repo.UpdateUserProfileImage)
 			protected.GET("/get-users/", controllers.Repo.GetAllUsers)
+			protected.DELETE("/delete-user/", controllers.Repo.DeleteUser)
 			protected.POST("/update-password/", controllers.Repo.UpdateUserPassword)
 			protected.POST("/update-profile/", controllers.Repo.UpdateUserDetails)
 

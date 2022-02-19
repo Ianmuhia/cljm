@@ -5,8 +5,8 @@ import (
 	"context"
 	"encoding/gob"
 	"log"
-	redis_db "maranatha_web/internal/datasources/redis"
 
+	redis_db "maranatha_web/internal/datasources/redis"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
 	"maranatha_web/internal/utils/crypto_utils"
@@ -26,6 +26,7 @@ type UsersService interface {
 	VerifyPasswordResetCode(key string) VerificationData
 	UpdateUserDetails(id uint, userModel models.User) error
 	UpdateUserPassword(id uint, newPasswd string) error
+	DeleteUser(id uint) error
 }
 
 func NewUsersService(dao repository.DAO) UsersService {
@@ -54,6 +55,13 @@ func (us *usersService) GetUserByID(id uint) (*models.User, error) {
 		return user, err
 	}
 	return user, err
+}
+func (us *usersService) DeleteUser(id uint) error {
+	err := us.dao.NewUserQuery().DeleteUser(id)
+	if err != nil {
+		return err
+	}
+	return err
 }
 
 func (us *usersService) GetAllUsers() (int, []*models.User, error) {

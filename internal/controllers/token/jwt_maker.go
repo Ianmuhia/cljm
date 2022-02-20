@@ -31,6 +31,7 @@ func (maker *JWTMaker) CreateToken(email string, duration time.Duration, ID uint
 	}
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+
 	return jwtToken.SignedString([]byte(maker.secretKey))
 }
 

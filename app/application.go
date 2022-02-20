@@ -149,6 +149,8 @@ func StartApplication() {
 	genresService := services.NewGenreService(dao)
 	jobsService := services.NewJobsService(dao)
 	newsService := services.NewNewsService(dao, &app)
+	podcastService := services.NewPodcastService(dao, &app)
+
 	partnersService := services.NewChurchPartnersService(dao, &app)
 	prayerRequestService := services.NewPrayerRequestService(dao)
 	sermonServices := services.NewSermonService(dao, &app)
@@ -172,6 +174,7 @@ func StartApplication() {
 		genresService,
 		jobsService,
 		newsService,
+		podcastService,
 		partnersService,
 		prayerRequestService,
 		sermonServices,
@@ -183,7 +186,7 @@ func StartApplication() {
 
 	r := SetupRouter()
 
-	err = r.Run("192.168.2.70:8090")
+	err = r.Run("localhost:8090")
 	if err != nil {
 		log.Println(err)
 		panic(err)

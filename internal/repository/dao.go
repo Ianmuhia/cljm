@@ -28,6 +28,7 @@ type DAO interface {
 	NewUserQuery() UserQuery
 	NewTestimonyQuery() TestimonyQuery
 	NewVolunteerQuery() VolunteerQuery
+	NewPodcastQuery() PodcastQuery
 }
 
 type postgresDBRepo struct {
@@ -82,6 +83,9 @@ func (d *postgresDBRepo) NewUserQuery() UserQuery {
 func (d *postgresDBRepo) NewVolunteerQuery() VolunteerQuery {
 	return &volunteerQuery{repo: *d}
 }
+func (d *postgresDBRepo) NewPodcastQuery() PodcastQuery {
+	return &podcastQuery{dbRepo: *d}
+}
 
 const (
 	DbUsername = "DB_USER"
@@ -103,6 +107,7 @@ type books models.Books
 type genre models.Genre
 
 type prayer models.Prayer
+type podcast models.Podcast
 
 //type churchEvent models.ChurchEvent
 type testimonies models.Testimonies
@@ -161,6 +166,7 @@ func MigrateTables(db *gorm.DB) *errors.RestErr {
 		//&volunteerChurchJob{},
 		&prayer{},
 		&testimonies{},
+		&podcast{},
 	); err != nil {
 		fmt.Println(err)
 		panic(err)

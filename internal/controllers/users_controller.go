@@ -36,6 +36,7 @@ type userResponse struct {
 	Email             string `json:"email"`
 	PasswordChangedAt string `json:"password_changed_at"`
 	CreatedAt         string `json:"created_at"`
+	ProfileImage      string `json:"profile_image"`
 }
 
 type registerUserResponse struct {
@@ -45,10 +46,11 @@ type registerUserResponse struct {
 
 func newUserResponse(user *models.User) userResponse {
 	return userResponse{
-		Username: user.UserName,
-		FullName: user.FullName,
-		Email:    user.Email,
-		ID:       int(user.ID),
+		Username:     user.UserName,
+		FullName:     user.FullName,
+		Email:        user.Email,
+		ID:           int(user.ID),
+		ProfileImage: user.ProfileImage,
 	}
 }
 

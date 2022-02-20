@@ -8,7 +8,7 @@ import (
 
 type ChurchEvent struct {
 	gorm.Model
-	Organizer   *User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Organizer   *User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET CASCADE;"`
 	OrganizerID uint  `gorm:"index:,option:CONCURRENTLY"`
 	CoverImage  string
 	Title       string

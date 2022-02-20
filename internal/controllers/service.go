@@ -21,6 +21,7 @@ type Repository struct {
 	genreService         services.GenreService
 	jobService           services.JobsService
 	newsService          services.NewsService
+	podcastService       services.PodcastService
 	partnersService      services.ChurchPartnersService
 	prayerRequestService services.PrayerRequestService
 	sermonService        services.SermonService
@@ -41,6 +42,7 @@ func NewRepo(
 	genreService services.GenreService,
 	jobService services.JobsService,
 	newsService services.NewsService,
+	podcastService services.PodcastService,
 	partnersService services.ChurchPartnersService,
 	prayerRequestService services.PrayerRequestService,
 	sermonService services.SermonService,
@@ -59,6 +61,7 @@ func NewRepo(
 		genreService:         genreService,
 		jobService:           jobService,
 		newsService:          newsService,
+		podcastService:       podcastService,
 		partnersService:      partnersService,
 		prayerRequestService: prayerRequestService,
 		sermonService:        sermonService,

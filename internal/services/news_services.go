@@ -28,19 +28,19 @@ func NewNewsService(dao repository.DAO, cfg *config.AppConfig) NewsService {
 	return &newsService{dao: dao, cfg: cfg}
 }
 
-func (ns *newsService) CreateNewsPost(newsModel models.News) (*models.News, error) {
-	if err := ns.dao.NewNewsQuery().CreateNewsPost(&newsModel); err != nil {
+func (ps *newsService) CreateNewsPost(newsModel models.News) (*models.News, error) {
+	if err := ps.dao.NewNewsQuery().CreateNewsPost(&newsModel); err != nil {
 		return nil, err
 	}
 	return &newsModel, nil
 }
 
-func (ns *newsService) GetAllNewsPost() ([]*models.News, int, error) {
-	data, count, err := ns.dao.NewNewsQuery().GetAllNewsPost()
+func (ps *newsService) GetAllNewsPost() ([]*models.News, int, error) {
+	data, count, err := ps.dao.NewNewsQuery().GetAllNewsPost()
 	for _, v := range data {
 		//TODO:get this from app config
 
-		v.CoverImage = fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, v.CoverImage)
+		v.CoverImage = fmt.Sprintf("%s/%s/%s", ps.cfg.StorageURL.String(), ps.cfg.StorageBucket, v.CoverImage)
 		j, e := time.Parse(time.RFC3339, v.CreatedAt.Format(time.RFC3339))
 		log.Println(j)
 		if e != nil {
@@ -55,8 +55,8 @@ func (ns *newsService) GetAllNewsPost() ([]*models.News, int, error) {
 	return data, count, nil
 }
 
-func (ns *newsService) DeleteNewsPost(id uint) error {
-	err := ns.dao.NewNewsQuery().DeleteNewsPost(id)
+func (ps *newsService) DeleteNewsPost(id uint) error {
+	err := ps.dao.NewNewsQuery().DeleteNewsPost(id)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -64,10 +64,10 @@ func (ns *newsService) DeleteNewsPost(id uint) error {
 	return nil
 }
 
-func (ns *newsService) GetSingleNewsPost(id uint) (*models.News, error) {
-	news, err := ns.dao.NewNewsQuery().GetSingleNewsPost(id)
-	url := fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, news.CoverImage)
-	url2 := fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, news.Author.ProfileImage)
+func (ps *newsService) GetSingleNewsPost(id uint) (*models.News, error) {
+	news, err := ps.dao.NewNewsQuery().GetSingleNewsPost(id)
+	url := fmt.Sprintf("%s/%s/%s", ps.cfg.StorageURL.String(), ps.cfg.StorageBucket, news.CoverImage)
+	url2 := fmt.Sprintf("%s/%s/%s", ps.cfg.StorageURL.String(), ps.cfg.StorageBucket, news.Author.ProfileImage)
 	news.CoverImage = url
 	news.Author.ProfileImage = url2
 	if err != nil {
@@ -77,9 +77,9 @@ func (ns *newsService) GetSingleNewsPost(id uint) (*models.News, error) {
 	return news, nil
 }
 
-func (ns *newsService) UpdateNewsPost(id uint, newModel models.News) error {
-	news, err := ns.dao.NewNewsQuery().UpdateNewsPost(id, newModel)
-	url := fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, news.CoverImage)
+func (ps *newsService) UpdateNewsPost(id uint, newModel models.News) error {
+	news, err := ps.dao.NewNewsQuery().UpdateNewsPost(id, newModel)
+	url := fmt.Sprintf("%s/%s/%s", ps.cfg.StorageURL.String(), ps.cfg.StorageBucket, news.CoverImage)
 	news.CoverImage = url
 	if err != nil {
 		log.Println(err)
@@ -88,10 +88,10 @@ func (ns *newsService) UpdateNewsPost(id uint, newModel models.News) error {
 	return nil
 }
 
-func (ns *newsService) GetAllNewsPostByAuthor(id uint) ([]*models.News, int, error) {
-	newsData, count, err := ns.dao.NewNewsQuery().GetAllNewsPostByAuthor(id)
+func (ps *newsService) GetAllNewsPostByAuthor(id uint) ([]*models.News, int, error) {
+	newsData, count, err := ps.dao.NewNewsQuery().GetAllNewsPostByAuthor(id)
 	for _, v := range newsData {
-		v.CoverImage = fmt.Sprintf("%s/%s/%s", ns.cfg.StorageURL.String(), ns.cfg.StorageBucket, v.CoverImage)
+		v.CoverImage = fmt.Sprintf("%s/%s/%s", ps.cfg.StorageURL.String(), ps.cfg.StorageBucket, v.CoverImage)
 	}
 	if err != nil {
 		log.Println(err)

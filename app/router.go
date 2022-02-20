@@ -130,6 +130,14 @@ func SetupRouter() *gin.Engine {
 			protected.POST("/sub-event-job/", controllers.Repo.SubscribeToEventJob)
 			protected.GET("/get-user-volunteered-jobs/", controllers.Repo.GetUserVolunteeredJobs)
 
+			//Podcast Routes
+			protected.POST("/podcast/", controllers.Repo.CreatePodcast)
+			protected.POST("/get-author-podcast/", controllers.Repo.GetAllPodcastByAuthor)
+			protected.GET("/podcast/", controllers.Repo.GetAllPodcast)
+			protected.DELETE("/podcast/", controllers.Repo.DeletePodcast)
+			protected.GET("/podcast-detail/", controllers.Repo.GetSinglePodcast)
+			protected.PUT("/podcast/", controllers.Repo.UpdatePodcast)
+
 		}
 	}
 

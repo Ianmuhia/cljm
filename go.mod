@@ -24,7 +24,7 @@ require (
 	github.com/hibiken/asynq v0.20.0
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
-	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27 // indirect
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 )
@@ -44,9 +44,11 @@ require (
 	cloud.google.com/go/iam v0.1.1 // indirect
 	cloud.google.com/go/storage v1.10.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/gin-contrib/cors v1.3.1 // indirect
+	github.com/gin-contrib/pprof v1.3.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
@@ -54,7 +56,9 @@ require (
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
+	github.com/google/pprof v0.0.0-20220218203455-0368bd9e19a7 // indirect
 	github.com/googleapis/gax-go/v2 v2.1.1 // indirect
+	github.com/ianlancetaylor/demangle v0.0.0-20220203202831-b7f99f1dbc96 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.10.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect

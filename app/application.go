@@ -2,6 +2,7 @@ package app
 
 import (
 	"log"
+	_ "net/http/pprof"
 	"os"
 	"strconv"
 

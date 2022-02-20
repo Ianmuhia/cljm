@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 
 	"maranatha_web/internal/controllers"
@@ -12,9 +13,10 @@ import (
 
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
+
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"PUT", "PATCH, POST, HEAD, GET, OPTIONS"},
+		AllowMethods:     []string{"PUT", "PATCH, POST, HEAD, GET, OPTIONS , DELETE"},
 		AllowHeaders:     []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"},
 		ExposeHeaders:    []string{"Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"},
 		AllowCredentials: true,
@@ -47,7 +49,7 @@ func SetupRouter() *gin.Engine {
 			protected.GET("/get-user/", controllers.Repo.GetUser)
 			protected.POST("/update-profile-image/", controllers.Repo.UpdateUserProfileImage)
 			protected.GET("/get-users/", controllers.Repo.GetAllUsers)
-			protected.DELETE("/delete-user/", controllers.Repo.DeleteUser)
+			protected.DELETE("/delete-user/:id", controllers.Repo.DeleteUser)
 			protected.POST("/update-password/", controllers.Repo.UpdateUserPassword)
 			protected.POST("/update-profile/", controllers.Repo.UpdateUserDetails)
 
@@ -127,6 +129,8 @@ func SetupRouter() *gin.Engine {
 
 		}
 	}
+
+	pprof.Register(router)
 
 	return router
 }

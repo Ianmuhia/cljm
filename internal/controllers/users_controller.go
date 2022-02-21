@@ -138,8 +138,10 @@ func (r *Repository) Login(ctx *gin.Context) {
 
 	var req loginUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		fmt.Println(err)
-		ctx.JSON(http.StatusUnprocessableEntity, err)
+		restErr := errors.NewBadRequestError("invalid json body")
+		log.Print(err)
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
 		return
 	}
 
@@ -156,11 +158,6 @@ func (r *Repository) Login(ctx *gin.Context) {
 		return
 
 	}
-
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
-		return
-	}
 	ok := crypto_utils.CheckPasswordHash(req.Password, user.PasswordHash)
 	if !ok {
 		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("invalid email or password "))
@@ -174,7 +171,10 @@ func (r *Repository) Login(ctx *gin.Context) {
 	accessToken, err := token.TokenService.CreateToken(user.Email, duration, user.ID)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		restErr := errors.NewBadRequestError("An error occurred please login again")
+		log.Print(err)
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
 		return
 	}
 	duration = time.Duration(time.Now().Add(time.Hour * 20).Unix())
@@ -182,7 +182,10 @@ func (r *Repository) Login(ctx *gin.Context) {
 	refreshToken, err := token.TokenService.CreateRefreshToken(user.Email, duration, user.ID)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		restErr := errors.NewBadRequestError("An error occurred please login again")
+		log.Print(err)
+		ctx.JSON(restErr.Status, restErr)
+		ctx.Abort()
 		return
 	}
 	//send fcm message

@@ -13,8 +13,6 @@ var ctx context.Context
 
 func GetFcmConnection() *messaging.Client {
 
-	//opts := []option.ClientOption{option.WithCredentialsFile("/home/wise/Documents/web/cljm/internal/datasources/fcm_client/google-services.json")}
-	//opts := []option.ClientOption{option.WithCredentialsJSON("/home/ianmuhia/projects/personal/golang/clj_maranatha/cljm/internal/datasources/fcm_client/fcm_client/google-services.json")}
 	opts := []option.ClientOption{option.WithCredentialsJSON([]byte(`{
   "type": "service_account",
   "project_id": "itara-89760",
@@ -27,22 +25,7 @@ func GetFcmConnection() *messaging.Client {
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-75cq4%40itara-89760.iam.gserviceaccount.com"
 }`))}
-	//
-	// if we have a raw JSON credentials value, we use the FIREBASE_CONFIG env var
-	// err = os.Setenv("FIREBASE_CONFIG", "{...}")
-	// if err != nil {
-	// 	return
-	// }
 
-	// or we can pass the raw JSON value directly as an option
-	//opts := []option.ClientOption{option.WithAPIKey("AIzaSyARI2UaZJEJBFjTVp3RfrYr0P0nAEpSa6s")}
-	//cfg := firebase.Config{
-	//	AuthOverride:     nil,
-	//	DatabaseURL:      "",
-	//	ProjectID:        "itara-89760",
-	//	ServiceAccountID: "",
-	//	StorageBucket:    "",
-	//}
 	app, err := firebase.NewApp(ctx, nil, opts...)
 	if err != nil {
 		log.Fatalf("new firebase app: %s", err)

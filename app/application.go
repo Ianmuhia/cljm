@@ -86,8 +86,8 @@ func initTracer() func(context.Context) error {
 func StartApplication() {
 
 	///Setup signoz
-	cleanup := initTracer()
-	defer cleanup(context.Background())
+	//cleanup := initTracer()
+	//defer cleanup(context.Background())
 
 	err := godotenv.Load()
 	if err != nil {
@@ -186,7 +186,8 @@ func StartApplication() {
 
 	r := SetupRouter()
 
-	err = r.Run("192.168.2.70:8090")
+	err = r.Run("localhost:8090")
+	//err = r.Run("192.168.2.70:8090")
 	if err != nil {
 		log.Println(err)
 		panic(err)

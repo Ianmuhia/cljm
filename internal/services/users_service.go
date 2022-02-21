@@ -9,7 +9,6 @@ import (
 	redis_db "maranatha_web/internal/datasources/redis"
 	"maranatha_web/internal/models"
 	"maranatha_web/internal/repository"
-	"maranatha_web/internal/utils/crypto_utils"
 )
 
 type usersService struct {
@@ -34,9 +33,7 @@ func NewUsersService(dao repository.DAO) UsersService {
 }
 
 func (us *usersService) CreateUser(user models.User) error {
-	user.PasswordHash = crypto_utils.Hash(user.PasswordHash)
 	if err := us.dao.NewUserQuery().Create(&user); err != nil {
-		log.Println(user.PasswordHash)
 		return err
 	}
 	return nil

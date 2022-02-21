@@ -69,25 +69,31 @@ func (r *Repository) RegisterUser(ctx *gin.Context) {
 
 	if req.Password != req.PasswordConfirm {
 		r.App.ErrorLog.Error("password and password re-enter did not match")
-		e := errors.NewBadRequestError("Unable to reset password. Please try again later")
+		e := errors.NewBadRequestError("password and password re-enter did not match")
 		ctx.JSON(e.Status, e)
 		ctx.Abort()
 		return
 
 	}
-	newPassword := crypto_utils.Hash(req.Password)
+	pass, err := crypto_utils.Hash(req.Password)
+	if err != nil {
+		data := errors.NewBadRequestError("An error occurred registering the user.")
+		ctx.JSON(data.Status, data)
+		return
+	}
+	log.Println(pass)
 
 	user := models.User{
 		UserName:     req.Username,
 		FullName:     req.FullName,
 		Email:        req.Email,
-		PasswordHash: newPassword,
+		PasswordHash: pass,
 	}
 	saveErr := r.userServices.CreateUser(user)
 
 	if saveErr != nil {
 		err := errors.NewBadRequestError("Could not save user.")
-		ctx.JSON(err.Status, saveErr)
+		ctx.JSON(err.Status, err)
 		ctx.Abort()
 		return
 	}
@@ -97,7 +103,6 @@ func (r *Repository) RegisterUser(ctx *gin.Context) {
 	from := "me@here.com"
 	to := user.Email
 	subject := "Email Verification for Pass Change"
-	//subject := "Email Verification for Pass Change"
 	mailType := services.MailConfirmation
 	mailData := &services.MailData{
 		Username: user.UserName,
@@ -106,7 +111,7 @@ func (r *Repository) RegisterUser(ctx *gin.Context) {
 
 	mailReq := r.mailService.NewMail(from, to, subject, mailType, mailData)
 
-	err := r.mailService.SendMsg(mailReq)
+	err = r.mailService.SendMsg(mailReq)
 
 	if err != nil {
 		log.Println(err)
@@ -159,8 +164,10 @@ func (r *Repository) Login(ctx *gin.Context) {
 
 	}
 	ok := crypto_utils.CheckPasswordHash(req.Password, user.PasswordHash)
+	log.Printf("pass is %v ", ok)
 	if !ok {
-		ctx.JSON(http.StatusUnauthorized, errors.NewBadRequestError("invalid email or password "))
+		data := errors.NewBadRequestError("invalid email or password ")
+		ctx.JSON(data.Status, data)
 		return
 	}
 
@@ -517,9 +524,14 @@ func (r *Repository) ResetPassword(ctx *gin.Context) {
 		return
 
 	}
-	newPassword := crypto_utils.Hash(req.Password)
+	pass, err := crypto_utils.Hash(req.Password)
+	if err != nil {
+		data := errors.NewBadRequestError("An error occurred registering the user.")
+		ctx.JSON(data.Status, data)
+		return
+	}
 	var pwd = models.User{
-		PasswordHash: newPassword,
+		PasswordHash: pass,
 	}
 	err = r.userServices.UpdateUserDetails(user.ID, pwd)
 	if err != nil {
@@ -591,8 +603,13 @@ func (r *Repository) UpdateUserPassword(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	newPassword := crypto_utils.Hash(req.NewPassword)
-	err := r.userServices.UpdateUserPassword(user.ID, newPassword)
+	pass, err := crypto_utils.Hash("123456")
+	if err != nil {
+		data := errors.NewBadRequestError("An error occurred registering the user.")
+		ctx.JSON(data.Status, data)
+		return
+	}
+	err = r.userServices.UpdateUserPassword(user.ID, pass)
 	if err != nil {
 		r.App.ErrorLog.Error("update user failed")
 		e := errors.NewBadRequestError("Unable to update password. Please try again later")
